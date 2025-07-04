@@ -6,14 +6,11 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->boolean('is_verified')->default(false);
@@ -21,7 +18,6 @@ return new class extends Migration
             $table->integer('verification_code')->nullable();
             $table->date('verification_code_sent_at')->nullable();
             $table->integer('verification_attempts')->default(0);
-            $table->date('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

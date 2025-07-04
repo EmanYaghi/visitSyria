@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Models\Role;
 
 class User extends Authenticatable implements JWTSubject,MustVerifyEmail
 {
@@ -29,10 +31,6 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function profile()
-    {
-        return $this->hasOne(Profile::class);
-    }
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -41,4 +39,77 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return [];
     }
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
+    }
+    public function trips()
+    {
+        return $this->hasMany(Trip::class);
+    }
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    public function supports()
+    {
+        return $this->hasOne(Support::class);
+    }
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    public function saves()
+    {
+        return $this->hasMany(Save::class);
+    }
+    public function ratings()
+    {
+        return $this->hasMany(Rating::class);
+    }
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+    public function creditcards()
+    {
+        return $this->hasMany(CreditCard::class);
+    }
+    public function media()
+    {
+        return $this->hasOne(Media::class);
+    } 
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
+    }
+    public function prefrencess()
+    {
+        return $this->hasOne(Preference::class);
+    }
+    public function smart_assistant_answers()
+    {
+        return $this->hasMany(SmartAssistantAnswer::class);
+    }
+    public function flights()
+    {
+        return $this->hasMany(Flight::class);
+    }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
 }
