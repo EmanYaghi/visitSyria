@@ -9,9 +9,12 @@ class Preference extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'preferred_season', 'preferred_activities', 'duration', 'cities'
+        'user_id',
+        'preferred_season',
+        'preferred_activities',
+        'duration',
+        'cities'
     ];
-
     public function user()
     {
         return $this->belongsTo(User::class);

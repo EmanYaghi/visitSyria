@@ -25,11 +25,19 @@ Route::group([
     Route::post('changePassword',[AuthController::class,'changePassword'])->middleware('auth:api');
     Route::post('forgetPassword',[AuthController::class,'forgetPassword']);
     Route::post('resetPassword',[AuthController::class,'resetPassword']);
-    Route::post('profile', [AuthController::class,'profile'])->middleware('auth:api');
     Route::post('resendVerificationCode',[AuthController::class,'resendVerificationCode']);
     Route::post('verifyCode', [AuthController::class,'verifyCode']);
     Route::post('deleteAccount', [AuthController::class,'deleteAccount'])->middleware('auth:api');
     Route::post('loginWithGoogle', [AuthController::class, 'loginWithGoogle']);
+
+    Route::post('setProfile', [AuthController::class,'setProfile'])->middleware('auth:api');
+    Route::post('updateProfile', [AuthController::class,'updateProfile'])->middleware('auth:api');
+    Route::get('profile', [AuthController::class,'getProfile'])->middleware('auth:api');
+    Route::post('setPreference', [AuthController::class,'setPreference'])->middleware('auth:api');
+    Route::post('updatePreference', [AuthController::class,'updatePreference'])->middleware('auth:api');
+    Route::post('setAdminProfile', [AuthController::class,'setAdminProfile'])->middleware('auth:api');
+    Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
+    Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
 
 });
 

@@ -3,18 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\str;
+
 use App\Http\Requests\Auth\{
     ChangePasswordRequest,
+    CreateAdminProfileRequest,
+    CreatePrefereneRequest,
+    CreateProfileRequest,
     DeleteAccountRequest,
     LoginRequest,
     LoginWithGoogleRequest,
     RegisterRequest,
     ResetPasswordRequest,
     SendCodeRequest,
+    UpdateAdminProfileRequest,
+    UpdatePrefereneRequest,
+    UpdateProfileRequest,
     VerifyCodeRequest
 };
 use App\Services\AuthService;
 use App\Services\GoogleAuthService;
+use Illuminate\Support\Facades\Storage;
 use Throwable;
 class AuthController extends Controller
 {
@@ -106,11 +115,6 @@ class AuthController extends Controller
         ));
     }
 
-    public function profile()
-    {
-        return $this->handle(fn() => $this->authService->profile());
-    }
-
     public function logout()
     {
         return $this->handle(fn() => $this->authService->logout());
@@ -121,5 +125,55 @@ class AuthController extends Controller
         return $this->handle(fn() => $this->authService->deleteAccount(
             $request->validated()
         ));
+    }
+     public function setPreference(CreatePrefereneRequest $request)
+    {
+         return $this->handle(fn() => $this->authService->setPreference(
+            $request->validated()
+        ));
+    }
+     public function updatePreference(UpdatePrefereneRequest $request)
+    {
+         return $this->handle(fn() => $this->authService->updatePreference(
+            $request->validated()
+        ));
+    }
+    public function setProfile(CreateProfileRequest $request)
+    {
+        $data= $request->validated();
+        $data['photo']=str::random(32).".".$request->image->getClientOriginalExtension();
+        Storage::disk('public')->put($data['photo'],file_get_contents($request->image));
+         return $this->handle(fn() => $this->authService->setProfile(
+           $data
+        ));
+    }
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        $data= $request->validated();
+        $data['photo']=str::random(32).".".$request->image->getClientOriginalExtension();
+        Storage::disk('public')->put($data['photo'],file_get_contents($request->image));
+        return $this->handle(fn() => $this->authService->updateProfile(
+            $data
+        ));
+    }
+     public function getProfile()
+    {
+        return $this->handle(fn() => $this->authService->getProfile());
+    }
+     public function setAdminProfile(CreateAdminProfileRequest $request)
+    {
+        return $this->handle(fn() => $this->authService->setAdminProfile(
+            $request->validated()
+        ));
+    }
+     public function updateAdminProfile(UpdateAdminProfileRequest $request)
+    {
+        return $this->handle(fn() => $this->authService->updateAdminProfile(
+            $request->validated()
+        ));
+    }
+    public function getAdminProfile()
+    {
+        return $this->handle(fn() => $this->authService->getAdminProfile());
     }
 }
