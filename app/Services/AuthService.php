@@ -293,18 +293,6 @@ class AuthService
         $code=200;
         return ['message'=>$message,'code'=>$code,'profile'=>$user->profile];
     }
-      public function getProfile()
-    {
-        $user = Auth::user();
-        $message= 'profile updated';
-        $code=200;
-        return [
-            'message'=>$message,
-            'code'=>$code,
-            'profile'=>$user->profile,
-            'preference'=>$user->prefrence
-        ];
-    }
      public function setAdminProfile( $request)
     {
         $user = Auth::user();
@@ -323,16 +311,5 @@ class AuthService
         $message= 'profile updated';
         $code=200;
         return ['message'=>$message,'code'=>$code];
-    }
-    public function getAdminProfile()
-    {
-        $profile = Auth::user()->adminProfile;
-        $message= 'profile founded';
-        $code=200;
-        return [
-            'message'=>$message,
-            'code'=>$code,
-            'profile'=>$profile
-        ];
     }
 }

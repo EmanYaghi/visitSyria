@@ -20,7 +20,8 @@ class AdminProfile extends Model
         'longitude',
         'status',
         'number_of_trips',
-        'rating'
+        'rating',
+        'photo'
     ];
      public function user()
     {

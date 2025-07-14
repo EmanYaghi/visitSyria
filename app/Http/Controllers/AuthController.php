@@ -21,8 +21,12 @@ use App\Http\Requests\Auth\{
     UpdateProfileRequest,
     VerifyCodeRequest
 };
+use App\Http\Resources\Auth\AdminProfileResource;
+use App\Http\Resources\Auth\PreferenceResource;
+use App\Http\Resources\Auth\ProfileResource;
 use App\Services\AuthService;
 use App\Services\GoogleAuthService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 class AuthController extends Controller
@@ -158,7 +162,22 @@ class AuthController extends Controller
     }
      public function getProfile()
     {
-        return $this->handle(fn() => $this->authService->getProfile());
+        $profile=null;
+        $user = Auth::user();
+        if (!$user) {
+            $message='User not found.';
+            $code=404;
+        }
+        else{
+            $message= 'user founded';
+            $code=200;
+            $profile=$user->profile;
+        }
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>new ProfileResource($profile),
+        ];
     }
      public function setAdminProfile(CreateAdminProfileRequest $request)
     {
@@ -174,6 +193,19 @@ class AuthController extends Controller
     }
     public function getAdminProfile()
     {
-        return $this->handle(fn() => $this->authService->getAdminProfile());
+        $user = Auth::user();
+        if (!$user) {
+            $message= 'User not found.';
+            $code=404;
+        }
+        else{
+            $message= 'user founded';
+            $code=200;
+        }
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>new AdminProfileResource($user->adminProfile),
+        ];
     }
 }
