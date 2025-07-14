@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "aeb9662a-cd36-4b56-a0aa-48ff015d7b5d",
+		"name": "Events",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40522740"
+	},
+	"item": [
+		{
+			"name": "getAllEvents",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIzODQwMDIsImV4cCI6MTc1MjM4NzYwMiwibmJmIjoxNzUyMzg0MDAyLCJqdGkiOiI5dEp0cDJUM0NHTmRjTnFwIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.8oJnAc6NjHaUJI99gbLOrsNpB6JNi57mwMvR9jIiVlM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/events",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createEvent (bySuperAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1MTU4NjcsImV4cCI6MTc1MjUxOTQ2NywibmJmIjoxNzUyNTE1ODY3LCJqdGkiOiI3Nk5GN1B3ak1pSlZ5VnRyIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eMEbMvhwk_P89_UEK5vQJwPyiCKlQV3oF6GDeoV8KOY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "مهرجان مرمريتا",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "مهرجان مرمريتا هو حدث سنوي يقام في بلدة مرمريتا، حيث يحتفل الزوار بالثقافة السورية من خلال عروض موسيقية، فنون شعبية، ومعارض تقليدية. يعتبر هذا المهرجان فرصة رائعة للتعرف على التراث المحلي والتمتع بأجواء ساحرة.",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "36.3083",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "33.5082",
+							"type": "text"
+						},
+						{
+							"key": "place",
+							"value": "حمص, وادي النصارى",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "2025-07-10 12:00:00",
+							"type": "text"
+						},
+						{
+							"key": "duration_days",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "duration_hours",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "tickets",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "event_type",
+							"value": "limited",
+							"type": "text"
+						},
+						{
+							"key": "price_type",
+							"value": "free",
+							"type": "text"
+						},
+						{
+							"key": "pre_booking",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+						},
+						{
+							"key": "images[1]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/events",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateEvent (bySuperAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1MTU4NjcsImV4cCI6MTc1MjUxOTQ2NywibmJmIjoxNzUyNTE1ODY3LCJqdGkiOiI3Nk5GN1B3ak1pSlZ5VnRyIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eMEbMvhwk_P89_UEK5vQJwPyiCKlQV3oF6GDeoV8KOY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "حفل مروان خوري",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "fbgfbgnfg",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "76.3083",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "33.5082",
+							"type": "text"
+						},
+						{
+							"key": "place",
+							"value": "حمص, وادي النصارى 2",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+						},
+						{
+							"key": "images[1]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/events/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"events",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteEvent (bySuperAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIxMDUyODEsImV4cCI6MTc1MjEwODg4MSwibmJmIjoxNzUyMTA1MjgxLCJqdGkiOiJxcjMxVTZpd0VEUEh3c2ttIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xCCS5bMjwMuI_I4KrOY_4JmiFqeskKjztvw_EHodYRE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/events/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"events",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getEventById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIxMDUyODEsImV4cCI6MTc1MjEwODg4MSwibmJmIjoxNzUyMTA1MjgxLCJqdGkiOiJxcjMxVTZpd0VEUEh3c2ttIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xCCS5bMjwMuI_I4KrOY_4JmiFqeskKjztvw_EHodYRE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/events/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"events",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

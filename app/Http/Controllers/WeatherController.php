@@ -19,4 +19,10 @@ class WeatherController extends Controller
         $forecasts = $this->weatherService->getForecasts();
         return response()->json($forecasts);
     }
+    public function todayWeather(WeatherService $weatherService)
+    {
+        $todayWeather = $weatherService->getTodayWeather();
+        return response()->json($todayWeather);
+    }
+
 }

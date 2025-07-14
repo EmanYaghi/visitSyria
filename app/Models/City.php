@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,10 +13,6 @@ class City extends Model
     public function places()
     {
         return $this->hasMany(Place::class);
-    }
-        public function events()
-    {
-        return $this->hasMany(Event::class);
     }
     public function  media()
     {

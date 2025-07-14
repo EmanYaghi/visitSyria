@@ -106,11 +106,6 @@ class AuthController extends Controller
         ));
     }
 
-    public function profile()
-    {
-        return $this->handle(fn() => $this->authService->profile());
-    }
-
     public function logout()
     {
         return $this->handle(fn() => $this->authService->logout());

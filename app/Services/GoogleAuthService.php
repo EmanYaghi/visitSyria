@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
+use libphonenumber\PhoneNumberUtil;
+use League\ISO3166\ISO3166;
 
 class GoogleAuthService
 {
@@ -23,24 +26,27 @@ class GoogleAuthService
 
         $googleUser = $googleResponse->json();
 
-        $firstName = $googleUser['given_name']  ?? null;
+        $firstName = $googleUser['given_name'] ?? null;
         $lastName  = $googleUser['family_name'] ?? null;
-        $locale = $googleUser['locale'] ?? 'ar-SY';
+        $countryCode = strtoupper($data['country_code'] ?? 'SY');
 
-        if (str_contains($locale, '-')) {
-            [, $countryCode] = explode('-', $locale, 2);
-        } else {
-            $countryCode = $locale;
+        $phoneUtil = PhoneNumberUtil::getInstance();
+        try {
+            $countryPhoneCode = '+' . $phoneUtil->getCountryCodeForRegion($countryCode);
+        } catch (\Exception $e) {
+            $countryPhoneCode = '+963';
         }
 
-        $countryList = include base_path('vendor/umpirsky/country-list/data/en/country.php');
-        $countryCode = strtoupper($countryCode);
-        $countryName = $countryList[$countryCode] ?? $countryCode;
+        $iso3166 = new ISO3166();
+        try {
+            $countryName = $iso3166->alpha2($countryCode)['name'];
+        } catch (\Exception $e) {
+            $countryName = 'Syria';
+        }
 
         $user = User::firstOrCreate(
             ['email' => $googleUser['email']],
             [
-                'name'              => $googleUser['name'] ?? $googleUser['email'],
                 'password'          => bcrypt(Str::random(16)),
                 'email_verified_at' => now(),
             ]
@@ -52,7 +58,8 @@ class GoogleAuthService
                 'first_name'   => $firstName,
                 'last_name'    => $lastName,
                 'country'      => $countryName,
-                'country_code' => $countryCode,
+                'country_code' => $countryPhoneCode,
+                'lang'         => $countryCode,
             ]
         );
 
@@ -65,7 +72,7 @@ class GoogleAuthService
             'first_name'   => $firstName,
             'last_name'    => $lastName,
             'country'      => $countryName,
-            'country_code' => $countryCode,
+            'country_code' => $countryPhoneCode,
         ];
     }
 }

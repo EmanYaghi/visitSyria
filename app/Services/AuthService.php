@@ -247,10 +247,4 @@ class AuthService
         }
         return['message'=>$message,'code'=>$code];
     }
-    public function profile()
-    {
-        $user=Auth::user()->profile;
-        $message='user found.';
-        return['message'=>$message,'user'=>$user];
-    }
 }

@@ -10,16 +10,19 @@ public function up()
 {
     Schema::create('events', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('city_id')->constrained('cities')->onDelete('cascade');
         $table->string('name');
         $table->text('description');
         $table->decimal('longitude', 10, 7);
         $table->decimal('latitude', 10, 7);
-        $table->date('date');
-        $table->integer('duration');
         $table->string('place');
-        $table->integer('tickets');
+        $table->date('date');
+        $table->integer('duration_days')->nullable();
+        $table->integer('duration_hours')->nullable();
+        $table->integer('tickets')->default(0);
         $table->decimal('price', 8, 2);
+        $table->enum('event_type', ['limited', 'unlimited'])->default('limited');
+        $table->enum('price_type', ['free', 'paid'])->default('free');
+        $table->boolean('pre_booking')->default(false);
         $table->timestamps();
     });
 }

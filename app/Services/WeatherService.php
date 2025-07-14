@@ -60,4 +60,40 @@ class WeatherService
 
         return $allForecasts;
     }
+
+    // Get today's weather for all cities
+public function getTodayWeather(): array
+{
+    $todayWeather = [];
+
+    foreach ($this->cities as $city) {
+        $response = Http::get("http://api.weatherapi.com/v1/forecast.json", [
+            'key'    => $this->apiKey,
+            'q'      => $city,
+            'days'   => 1,
+            'aqi'    => 'no',
+            'alerts' => 'no',
+        ]);
+
+        if (! $response->successful()) {
+            continue;
+        }
+
+        $data = $response->json();
+        $day = $data['forecast']['forecastday'][0] ?? null;
+
+        if ($day) {
+            $text = $day['day']['condition']['text'];
+            $todayWeather[] = [
+                'location'       => $data['location']['name'] ?? $city,
+                'date'           => $day['date'],
+                'day_name'       => date('l', strtotime($day['date'])),
+                'temp_c'         => $day['day']['maxtemp_c'],
+                'condition_type' => WeatherConditionClassifier::classify($text),
+            ];
+        }
+    }
+
+    return $todayWeather;
+}
 }

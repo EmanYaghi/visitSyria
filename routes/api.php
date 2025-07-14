@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\WeatherController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EventController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -31,8 +30,24 @@ Route::group([
     Route::post('deleteAccount', [AuthController::class,'deleteAccount'])->middleware('auth:api');
     Route::post('loginWithGoogle', [AuthController::class, 'loginWithGoogle']);
 
+    Route::post('setProfile', [AuthController::class,'setProfile'])->middleware('auth:api');
+    Route::post('updateProfile', [AuthController::class,'updateProfile'])->middleware('auth:api');
+    Route::get('profile', [AuthController::class,'getProfile'])->middleware('auth:api');
+    Route::post('setPreference', [AuthController::class,'setPreference'])->middleware('auth:api');
+    Route::post('updatePreference', [AuthController::class,'updatePreference'])->middleware('auth:api');
+    Route::post('setAdminProfile', [AuthController::class,'setAdminProfile'])->middleware('auth:api');
+    Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
+    Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
+
 });
 
-Route::get('weather', [WeatherController::class, 'getForecast']);
+    Route::get('weather', [WeatherController::class, 'getForecast']);
+    Route::get('/weather/today', [WeatherController::class, 'todayWeather']);
 
+    Route::middleware('auth:api')->group(function () {
+    Route::resource('events', EventController::class);
+    });
+
+    Route::get('cities', [CityController::class, 'index']);
+    Route::get('cities/{id}', [CityController::class, 'show']);
 ?>

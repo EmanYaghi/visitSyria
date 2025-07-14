@@ -14,10 +14,10 @@ class CreateProfilesTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->date('date_of_birth')->nullable();
-            $table->enum('gender', ['male', 'female', 'other']);
+            $table->enum('gender', ['male', 'female']);
             $table->string('country');
             $table->string('phone')->nullable();
-            $table->string('country_code');
+            $table->string('country_code')->default('+963');
             $table->string('lang')->default('en');
             $table->string('theme_mode')->default('light');
             $table->boolean('allow_notification')->default(true);
