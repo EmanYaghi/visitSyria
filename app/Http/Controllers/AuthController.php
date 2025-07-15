@@ -21,9 +21,11 @@ use App\Http\Requests\Auth\{
     UpdateProfileRequest,
     VerifyCodeRequest
 };
-use App\Http\Resources\Auth\AdminProfileResource;
-use App\Http\Resources\Auth\PreferenceResource;
-use App\Http\Resources\Auth\ProfileResource;
+use App\Http\Resources\Auth\{
+    AdminProfileResource,
+    PreferenceResource,
+    ProfileResource,
+};
 use App\Services\AuthService;
 use App\Services\GoogleAuthService;
 use Illuminate\Support\Facades\Auth;

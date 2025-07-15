@@ -5,6 +5,7 @@ use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\TripController;
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -44,8 +45,13 @@ Route::group([
     Route::get('/weather/today', [WeatherController::class, 'todayWeather']);
 
     Route::middleware('auth:api')->group(function () {
-    Route::resource('events', EventController::class);
+        Route::resource('events', EventController::class);
+        Route::post('updateEvent/{id}', [EventController::class,'updateُ']);
+
+        Route::resource('trips', TripController::class);
+        Route::post('trips/company/{id}', [TripController::class,'companyTrips']);
     });
+
 
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);

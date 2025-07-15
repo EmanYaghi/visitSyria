@@ -35,7 +35,7 @@ class EventController extends Controller
         $event = $this->eventService->createEvent($request);
         return response()->json(['data' => $event], 201);
     }
-public function update(UpdateEventRequest $request, $id)
+public function updateُ(UpdateEventRequest $request, $id)
 {
     try {
         $event = $this->eventService->updateEvent($request, $id);

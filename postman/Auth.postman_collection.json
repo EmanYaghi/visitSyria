@@ -198,7 +198,14 @@
 			"name": "delete account",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [
@@ -213,28 +220,23 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "kyhhrfj@gmail.com",
+							"value": "",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "1234567890",
-							"type": "text"
-						},
-						{
-							"key": "password_confirmation",
-							"value": "1234567890",
+							"value": "",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}auth/register",
+					"raw": "{{URL}}auth/deleteAccount",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						"register"
+						"deleteAccount"
 					]
 				}
 			},
@@ -363,7 +365,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTAzMjYwNTAsImV4cCI6MTc1MDMyOTY1MCwibmJmIjoxNzUwMzI2MDUwLCJqdGkiOiJNa1Q3eXpTY2JHWk1sbEZ5Iiwic3ViIjoiNSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xAkJ0zZUcRwRbhkZ9dFqPld-V29MsE-DpE31gvKB0As",
+							"value": "",
 							"type": "string"
 						}
 					]
@@ -375,28 +377,33 @@
 					"formdata": [
 						{
 							"key": "code",
-							"value": "1126",
+							"value": "8806",
 							"type": "text"
 						},
 						{
 							"key": "new_password",
-							"value": "1234567890",
+							"value": "123456789",
 							"type": "text"
 						},
 						{
-							"key": "new_password_verification",
-							"value": "1234567890",
+							"key": "new_password_confirmation",
+							"value": "123456789",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "kyhhrfj@gmail.com",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}auth/changePassword",
+					"raw": "{{URL}}auth/resetPassword",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						"changePassword"
+						"resetPassword"
 					]
 				}
 			},
@@ -406,7 +413,14 @@
 			"name": "create profile",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIxODY5MDUsImV4cCI6MTc1MjE5MDUwNSwibmJmIjoxNzUyMTg2OTA1LCJqdGkiOiJ2MUNrWnF4ZnFackdxY0hnIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.FqaEwEiVcBzjtzdkG0vingJTmbuRhRqJp7QFYlxanH0",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
@@ -415,17 +429,17 @@
 					"formdata": [
 						{
 							"key": "first_name",
-							"value": "",
+							"value": "jjjj",
 							"type": "text"
 						},
 						{
 							"key": "last_name",
-							"value": "",
+							"value": "llll",
 							"type": "text"
 						},
 						{
 							"key": "gender",
-							"value": "",
+							"value": "male",
 							"type": "text"
 						},
 						{
@@ -435,7 +449,7 @@
 						},
 						{
 							"key": "country",
-							"value": "",
+							"value": "mk",
 							"type": "text"
 						},
 						{
@@ -445,18 +459,23 @@
 						},
 						{
 							"key": "country_code",
-							"value": "",
+							"value": "+963",
 							"type": "text"
+						},
+						{
+							"key": "photo",
+							"type": "file",
+							"src": "/C:/Users/aya/Downloads/DB_Project.drawio.png"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}auth/",
+					"raw": "{{URL}}auth/setProfile",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
+						"setProfile"
 					]
 				}
 			},
@@ -558,17 +577,24 @@
 			"name": "get profile",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI0OTY5NTAsImV4cCI6MTc1MjUwMDU1MCwibmJmIjoxNzUyNDk2OTUwLCJqdGkiOiJOTjBFaUtvcTZZYjVDbTlsIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-7PeKb46eIHWevhaIQdXhy1blWlWVhk9rdJJfqKMX-s",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}auth/",
+					"raw": "{{URL}}auth/profile",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
+						"profile"
 					]
 				}
 			},
@@ -578,17 +604,24 @@
 			"name": "create admin profile",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNTc3MjcsImV4cCI6MTc1MjE2MTMyNywibmJmIjoxNzUyMTU3NzI3LCJqdGkiOiJCTU9ya3F0TEhVZWp5THpDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uI41-dsmkxm1KZINMNVMgVs10XMf37izt7pfZBuNHRs",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}auth/?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
+					"raw": "{{URL}}auth/setAdminProfile?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
+						"setAdminProfile"
 					],
 					"query": [
 						{
@@ -709,17 +742,24 @@
 			"name": "get admin profile",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "http://127.0.0.1:8000/api/",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}auth/",
+					"raw": "{{URL}}auth/adminProfile",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
+						"adminProfile"
 					]
 				}
 			},
@@ -729,35 +769,49 @@
 			"name": "create preference",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI0OTY5NTAsImV4cCI6MTc1MjUwMDU1MCwibmJmIjoxNzUyNDk2OTUwLCJqdGkiOiJOTjBFaUtvcTZZYjVDbTlsIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-7PeKb46eIHWevhaIQdXhy1blWlWVhk9rdJJfqKMX-s",
+							"type": "string"
+						}
+					]
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "preferred_season",
+							"value": "[\"winter\",\"summer\"]",
+							"type": "text"
+						},
+						{
+							"key": "preferred_activities",
+							"value": "[\"family trip\"]",
+							"type": "text"
+						},
+						{
+							"key": "duratoin",
+							"value": "[\"one_day\",\"2-3 day\",\"one weak\"]",
+							"type": "text"
+						},
+						{
+							"key": "cities",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "{{URL}}auth/?preferred_season&preferred_activities&duration&cities",
+					"raw": "{{URL}}auth/setPreference",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
-					],
-					"query": [
-						{
-							"key": "preferred_season",
-							"value": null
-						},
-						{
-							"key": "preferred_activities",
-							"value": null
-						},
-						{
-							"key": "duration",
-							"value": null
-						},
-						{
-							"key": "cities",
-							"value": null
-						}
+						"setPreference"
 					]
 				}
 			},
@@ -767,35 +821,51 @@
 			"name": "update preference",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIxNjUyNzgsImV4cCI6MTc1MjE2ODg3OCwibmJmIjoxNzUyMTY1Mjc4LCJqdGkiOiJEZGdCOWdqNE1XWDd1TGFuIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.F2pIfewmsOMm8yQrHTqZ7UURlstof4gOo7dSvzbeeiQ",
+							"type": "string"
+						}
+					]
 				},
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "preferred_season",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "preferred_activities",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "duration",
+							"value": "[\"0ne month\"]",
+							"type": "text"
+						},
+						{
+							"key": "cities",
+							"value": "[\"homs \",\"damas\"]",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
-					"raw": "{{URL}}auth/?preferred_season&preferred_activities&duration&cities",
+					"raw": "{{URL}}auth/updatePreference",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						""
-					],
-					"query": [
-						{
-							"key": "preferred_season",
-							"value": null
-						},
-						{
-							"key": "preferred_activities",
-							"value": null
-						},
-						{
-							"key": "duration",
-							"value": null
-						},
-						{
-							"key": "cities",
-							"value": null
-						}
+						"updatePreference"
 					]
 				}
 			},

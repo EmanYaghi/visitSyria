@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "aeb9662a-cd36-4b56-a0aa-48ff015d7b5d",
+		"_postman_id": "a107ca38-edf6-4f94-a4d0-065df2fc16cd",
 		"name": "Events",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40522740"
+		"_exporter_id": "38928530"
 	},
 	"item": [
 		{
@@ -52,7 +52,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1MTU4NjcsImV4cCI6MTc1MjUxOTQ2NywibmJmIjoxNzUyNTE1ODY3LCJqdGkiOiI3Nk5GN1B3ak1pSlZ5VnRyIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eMEbMvhwk_P89_UEK5vQJwPyiCKlQV3oF6GDeoV8KOY",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
 							"type": "string"
 						}
 					]
@@ -170,12 +170,12 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1MTU4NjcsImV4cCI6MTc1MjUxOTQ2NywibmJmIjoxNzUyNTE1ODY3LCJqdGkiOiI3Nk5GN1B3ak1pSlZ5VnRyIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eMEbMvhwk_P89_UEK5vQJwPyiCKlQV3oF6GDeoV8KOY",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
 							"type": "string"
 						}
 					]
 				},
-				"method": "PUT",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Accept",
@@ -192,7 +192,7 @@
 						},
 						{
 							"key": "description",
-							"value": "fbgfbgnfg",
+							"value": "اتتبنرات",
 							"type": "text"
 						},
 						{
@@ -207,7 +207,7 @@
 						},
 						{
 							"key": "place",
-							"value": "حمص, وادي النصارى 2",
+							"value": "حمص, وادي النصارى gh",
 							"type": "text"
 						},
 						{
@@ -223,7 +223,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/events/1",
+					"raw": "http://127.0.0.1:8000/api/updateEvent/1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -234,7 +234,7 @@
 					"port": "8000",
 					"path": [
 						"api",
-						"events",
+						"updateEvent",
 						"1"
 					]
 				}
