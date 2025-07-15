@@ -16,6 +16,8 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
 {
     use HasFactory, Notifiable,HasRoles;
 
+    public static array $status=['accept','reject','on hold'];
+
     protected $fillable = [
         'email',
         'password',
@@ -42,6 +44,10 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     public function profile()
     {
         return $this->hasOne(Profile::class);
+    }
+    public function adminProfile()
+    {
+        return $this->hasOne(AdminProfile::class);
     }
     public function trips()
     {
@@ -86,12 +92,12 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     public function media()
     {
         return $this->hasOne(Media::class);
-    } 
+    }
     public function tags()
     {
         return $this->hasMany(Tag::class);
     }
-    public function prefrencess()
+    public function preference()
     {
         return $this->hasOne(Preference::class);
     }

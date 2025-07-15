@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,6 +19,7 @@ return new class extends Migration
             $table->integer('verification_code')->nullable();
             $table->date('verification_code_sent_at')->nullable();
             $table->integer('verification_attempts')->default(0);
+            $table->enum('status',User::$status)->default('on hold');
             $table->rememberToken();
             $table->timestamps();
         });

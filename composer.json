@@ -9,6 +9,7 @@
         "php": "^8.2",
         "giggsey/libphonenumber-for-php": "^9.0",
         "google/apiclient": "2.14",
+        "google/apiclient-services": "*",
         "laravel/framework": "^12.0",
         "laravel/socialite": "*",
         "laravel/tinker": "^2.10.1",

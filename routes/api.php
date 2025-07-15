@@ -24,7 +24,6 @@ Route::group([
     Route::post('changePassword',[AuthController::class,'changePassword'])->middleware('auth:api');
     Route::post('forgetPassword',[AuthController::class,'forgetPassword']);
     Route::post('resetPassword',[AuthController::class,'resetPassword']);
-    Route::post('profile', [AuthController::class,'profile'])->middleware('auth:api');
     Route::post('resendVerificationCode',[AuthController::class,'resendVerificationCode']);
     Route::post('verifyCode', [AuthController::class,'verifyCode']);
     Route::post('deleteAccount', [AuthController::class,'deleteAccount'])->middleware('auth:api');
@@ -51,3 +50,5 @@ Route::group([
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 ?>
+
+

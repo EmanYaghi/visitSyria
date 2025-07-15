@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Mail\PasswordReset;
 use App\Mail\VerifyEmail;
+use App\Models\AdminProfile;
+use App\Models\Preference;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
@@ -230,7 +233,7 @@ class AuthService
     }
      public function deleteAccount($request)
     {
-        $user = JWTAuth::parseToken()->authenticate(); 
+        $user = JWTAuth::parseToken()->authenticate();
         if($user)
         {
             if($user->email==$request['email']&&Hash::check($request['password'],$user->password)){
@@ -246,5 +249,71 @@ class AuthService
             $code=404;
         }
         return['message'=>$message,'code'=>$code];
+    }
+
+    public function updatePreference( $request)
+    {
+        $user = Auth::user();
+        $user->preference->update($request);
+        $message= 'preferences updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code];
+    }
+     public function setPreference( $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        Preference::create(array_merge(
+        ['user_id' => $user->id],
+        $request->all()
+    ));
+
+        $message= 'preferences created';
+        $code=201;
+        return ['message'=>$message,'code'=>$code];
+    }
+    public function setProfile( $request)
+    {
+
+        $user = Auth::user();
+        Profile::create(array_merge(
+        ['user_id' => $user->id],
+        $request->all()
+    ));
+
+        $message= 'profile created';
+        $code=201;
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>$user->profile
+        ];
+    }
+    public function updateProfile( $request)
+    {
+        $user = Auth::user();
+        $user->profile->update($request);
+        $message= 'profile updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code,'profile'=>$user->profile];
+    }
+     public function setAdminProfile( $request)
+    {
+        $user = Auth::user();
+        AdminProfile::create(array_merge(
+        ['user_id' => $user->id],
+        $request->all()
+    ));
+
+        $message= 'profile created';
+        $code=201;
+        return ['message'=>$message,'code'=>$code];
+    }
+      public function updateAdminProfile( $request)
+    {
+        $user = Auth::user();
+        $user->adminProfile->update($request);
+        $message= 'profile updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code];
     }
 }
