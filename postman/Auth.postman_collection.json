@@ -16,7 +16,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "kyhhrfj@gmail.com",
+							"value": "fgh@kjhjk.y",
 							"type": "text"
 						},
 						{
@@ -47,14 +47,7 @@
 			"name": "resend verification code",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTAzMjQ1OTEsImV4cCI6MTc1MDMyODE5MSwibmJmIjoxNzUwMzI0NTkxLCJqdGkiOiIwYm5MRTdpVmEyZmMyUjZ3Iiwic3ViIjoiNCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.tQEawxMixlG2HxDfIyiYJ_7PHJ9ZeDSqureFR9j_Ts0",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "POST",
 				"header": [],
@@ -62,29 +55,19 @@
 					"mode": "formdata",
 					"formdata": [
 						{
-							"key": "old_password",
-							"value": "000000000",
-							"type": "text"
-						},
-						{
-							"key": "new_password",
-							"value": "1234567890",
-							"type": "text"
-						},
-						{
-							"key": "new_password_verification",
-							"value": "1234567890",
+							"key": "email",
+							"value": "",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}auth/changePassword",
+					"raw": "{{URL}}auth/resendVerificationCode",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
-						"changePassword"
+						"resendVerificationCode"
 					]
 				}
 			},
@@ -106,12 +89,12 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "kyhhrfj@gmail.com",
+							"value": "fgh@kjhjk.y",
 							"type": "text"
 						},
 						{
 							"key": "code",
-							"value": "6176",
+							"value": "4111",
 							"type": "text"
 						}
 					]
@@ -172,39 +155,6 @@
 			"response": []
 		},
 		{
-			"name": "profile",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTAxMDg3MzYsImV4cCI6MTc1MDExMjMzNiwibmJmIjoxNzUwMTA4NzM2LCJqdGkiOiJ3NUp4SXhaTU5GbWFwNVdpIiwic3ViIjoiOCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.9VblrcuGgDR--_-msy2atoPmVyheLTDz8FY9EpzOqTA",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}auth/profile",
-					"host": [
-						"{{URL}}auth"
-					],
-					"path": [
-						"profile"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "logout",
 			"request": {
 				"auth": {
@@ -212,7 +162,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTAyNzk2MTgsImV4cCI6MTc1MDI4MzIxOCwibmJmIjoxNzUwMjc5NjE4LCJqdGkiOiJad3lwaFJzenZNSlNtUlFYIiwic3ViIjoiNCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.sAKN6fnsLycH8WiFlQBRcpYp6dapzyW5gPmKy2mNMCY",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNDYxMDAsImV4cCI6MTc1MjE0OTcwMCwibmJmIjoxNzUyMTQ2MTAwLCJqdGkiOiIzbWdicW5SZEZIUE1WWTl4Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.tMqd-3mMm4TONrhOTVnqdpTmCC8UXXlULZldA6lNW4g",
 							"type": "string"
 						}
 					]
@@ -447,6 +397,405 @@
 					],
 					"path": [
 						"changePassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create profile",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "date_of_birth",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "country_code",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}auth/",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNTc3MjcsImV4cCI6MTc1MjE2MTMyNywibmJmIjoxNzUyMTU3NzI3LCJqdGkiOiJCTU9ya3F0TEhVZWp5THpDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uI41-dsmkxm1KZINMNVMgVs10XMf37izt7pfZBuNHRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "first_name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "last_name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "date_of_birth",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "country",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "country_code",
+							"value": "+963",
+							"type": "text"
+						},
+						{
+							"key": "lang",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "theme_mode",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "allaw_notification",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "photo",
+							"type": "file",
+							"src": []
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}auth/updateProfile",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						"updateProfile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get profile",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create admin profile",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "name_of_company",
+							"value": null
+						},
+						{
+							"key": "name_of_owner",
+							"value": null
+						},
+						{
+							"key": "founding_date",
+							"value": null
+						},
+						{
+							"key": "license_number",
+							"value": null
+						},
+						{
+							"key": "phone",
+							"value": null
+						},
+						{
+							"key": "country_code",
+							"value": null
+						},
+						{
+							"key": "description",
+							"value": null
+						},
+						{
+							"key": "location",
+							"value": null
+						},
+						{
+							"key": "latitude",
+							"value": null
+						},
+						{
+							"key": "longitude",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update admin profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNTc3MjcsImV4cCI6MTc1MjE2MTMyNywibmJmIjoxNzUyMTU3NzI3LCJqdGkiOiJCTU9ya3F0TEhVZWp5THpDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uI41-dsmkxm1KZINMNVMgVs10XMf37izt7pfZBuNHRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/updateAdminProfile?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						"updateAdminProfile"
+					],
+					"query": [
+						{
+							"key": "name_of_company",
+							"value": null
+						},
+						{
+							"key": "name_of_owner",
+							"value": null
+						},
+						{
+							"key": "founding_date",
+							"value": null
+						},
+						{
+							"key": "license_number",
+							"value": null
+						},
+						{
+							"key": "phone",
+							"value": null
+						},
+						{
+							"key": "country_code",
+							"value": null
+						},
+						{
+							"key": "description",
+							"value": null
+						},
+						{
+							"key": "location",
+							"value": null
+						},
+						{
+							"key": "latitude",
+							"value": null
+						},
+						{
+							"key": "longitude",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get admin profile",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create preference",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/?preferred_season&preferred_activities&duration&cities",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "preferred_season",
+							"value": null
+						},
+						{
+							"key": "preferred_activities",
+							"value": null
+						},
+						{
+							"key": "duration",
+							"value": null
+						},
+						{
+							"key": "cities",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update preference",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}auth/?preferred_season&preferred_activities&duration&cities",
+					"host": [
+						"{{URL}}auth"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "preferred_season",
+							"value": null
+						},
+						{
+							"key": "preferred_activities",
+							"value": null
+						},
+						{
+							"key": "duration",
+							"value": null
+						},
+						{
+							"key": "cities",
+							"value": null
+						}
 					]
 				}
 			},

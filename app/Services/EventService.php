@@ -82,49 +82,39 @@ class EventService
     }
 public function updateEvent(UpdateEventRequest $request, $id)
 {
-    // تحقق من الصلاحية
     $this->checkAuthorization();
-    
-    // استرجاع الحدث
+
     $event = $this->eventRepository->find($id);
     if (! $event) {
         throw new NotFoundHttpException('Event not found.');
     }
 
-    // تخزين الصور الجديدة إذا كانت موجودة
-    $imageUrls = [];
+    $updatedData = $request->validated();
+
+    $updatedEvent = $this->eventRepository->update($event, $updatedData);
+
     if ($request->hasFile('images')) {
         $images = $request->file('images');
         if (count($images) > 4) {
-            return response()->json(['message' => 'Cannot upload more than 4 images.'], 400);
+            throw new \Exception('Cannot upload more than 4 images.');
         }
         foreach ($images as $image) {
-            $imageUrls[] = $image->store('events', 'public');
+            $url = $image->store('events', 'public');
+            $updatedEvent->media()->create([
+                'event_id' => $updatedEvent->id,
+                'url' => $url,
+            ]);
         }
     }
 
-    // تحديث البيانات الأساسية للحدث
-    $updatedData = $request->validated();
-    $updatedEvent = $this->eventRepository->update($event, $updatedData);
-
-    // إضافة الصور الجديدة للحدث
-    foreach ($imageUrls as $url) {
-        $updatedEvent->media()->create([
-            'event_id' => $updatedEvent->id,
-            'url'      => $url,
-        ]);
-    }
-
-    // تحميل البيانات مع الوسائط بعد التحديث
     $updatedEvent->load('media');
     $updatedEvent->setRelation('media', $updatedEvent->media->map(fn($m) => [
-        'id'  => $m->id,
+        'id' => $m->id,
         'url' => $m->url,
     ]));
 
-    return response()->json(['data' => $updatedEvent], 200);
+    return $updatedEvent;
 }
-
 
 public function deleteEvent($id)
     {

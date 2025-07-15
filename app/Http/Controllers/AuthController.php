@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\str;
+use Illuminate\Support\Str;
 
 use App\Http\Requests\Auth\{
     ChangePasswordRequest,
@@ -28,7 +28,9 @@ use App\Services\AuthService;
 use App\Services\GoogleAuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 use Throwable;
+
 class AuthController extends Controller
 {
     protected AuthService $authService;
@@ -41,7 +43,7 @@ class AuthController extends Controller
         $this->authService = $authService;
         $this->googleAuthService = $googleAuthService;
     }
-    // handle requests and standardize JSON responses
+
     private function handle(callable $action, int $defaultCode = 200): \Illuminate\Http\JsonResponse
     {
         try {
@@ -58,65 +60,47 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        return $this->handle(fn() => $this->authService->register(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->register($request->validated()));
     }
 
     public function verifyEmail(VerifyCodeRequest $request)
     {
-        return $this->handle(fn() => $this->authService->verifyEmail(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->verifyEmail($request->validated()));
     }
 
     public function verifyCode(VerifyCodeRequest $request)
     {
-        return $this->handle(fn() => $this->authService->verifyCode(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->verifyCode($request->validated()));
     }
 
     public function resendVerificationCode(SendCodeRequest $request)
     {
-        return $this->handle(fn() => $this->authService->resendVerificationCode(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->resendVerificationCode($request->validated()));
     }
 
     public function forgetPassword(SendCodeRequest $request)
     {
-        return $this->handle(fn() => $this->authService->forgetPassword(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->forgetPassword($request->validated()));
     }
 
     public function resetPassword(ResetPasswordRequest $request)
     {
-        return $this->handle(fn() => $this->authService->resetPassword(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->resetPassword($request->validated()));
     }
 
     public function changePassword(ChangePasswordRequest $request)
     {
-        return $this->handle(fn() => $this->authService->changePassword(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->changePassword($request->validated()));
     }
 
     public function login(LoginRequest $request)
     {
-        return $this->handle(fn() => $this->authService->login(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->login($request->validated()));
     }
 
     public function loginWithGoogle(LoginWithGoogleRequest $request)
     {
-        return $this->handle(fn() => $this->googleAuthService->authenticate(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->googleAuthService->authenticate($request->validated()));
     }
 
     public function logout()
@@ -126,86 +110,80 @@ class AuthController extends Controller
 
     public function deleteAccount(DeleteAccountRequest $request)
     {
-        return $this->handle(fn() => $this->authService->deleteAccount(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->deleteAccount($request->validated()));
     }
-     public function setPreference(CreatePrefereneRequest $request)
+
+    public function setPreference(CreatePrefereneRequest $request)
     {
-         return $this->handle(fn() => $this->authService->setPreference(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->setPreference($request->validated()));
     }
-     public function updatePreference(UpdatePrefereneRequest $request)
+
+    public function updatePreference(UpdatePrefereneRequest $request)
     {
-         return $this->handle(fn() => $this->authService->updatePreference(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->updatePreference($request->validated()));
     }
+
     public function setProfile(CreateProfileRequest $request)
     {
-        $data= $request->validated();
-        $data['photo']=str::random(32).".".$request->image->getClientOriginalExtension();
-        Storage::disk('public')->put($data['photo'],file_get_contents($request->image));
-         return $this->handle(fn() => $this->authService->setProfile(
-           $data
-        ));
+        return $this->handle(function () use ($request) {
+            $data = $request->validated();
+            if ($request->hasFile('image')) {
+                $data['photo'] = $request->file('image')->store('profile_photos', 'public');
+            } elseif (isset($data['photo']) && is_array($data['photo'])) {
+                $data['photo'] = $data['photo']['uuid'] ?? null;
+            }
+            $request->merge(['photo' => $data['photo'] ?? null]);
+            return $this->authService->setProfile($request);
+        });
     }
+
     public function updateProfile(UpdateProfileRequest $request)
     {
-        $data= $request->validated();
-        $data['photo']=str::random(32).".".$request->image->getClientOriginalExtension();
-        Storage::disk('public')->put($data['photo'],file_get_contents($request->image));
-        return $this->handle(fn() => $this->authService->updateProfile(
-            $data
-        ));
+        return $this->handle(function () use ($request) {
+            $data = $request->validated();
+            if ($request->hasFile('image')) {
+                $data['photo'] = $request->file('image')->store('profile_photos', 'public');
+            } elseif (isset($data['photo']) && is_array($data['photo'])) {
+                $data['photo'] = $data['photo']['uuid'] ?? null;
+            }
+            $request->merge(['photo' => $data['photo'] ?? null]);
+            return $this->authService->updateProfile($request);
+        });
     }
-     public function getProfile()
+
+    public function getProfile()
     {
-        $profile=null;
         $user = Auth::user();
         if (!$user) {
-            $message='User not found.';
-            $code=404;
+            return response()->json(['message' => 'User not found.', 'code' => 404], 404);
         }
-        else{
-            $message= 'user founded';
-            $code=200;
-            $profile=$user->profile;
-        }
-        return [
-            'message'=>$message,
-            'code'=>$code,
-            'profile'=>new ProfileResource($profile),
-        ];
+
+        return response()->json([
+            'message' => 'User found',
+            'profile' => new ProfileResource($user->profile),
+        ], 200);
     }
-     public function setAdminProfile(CreateAdminProfileRequest $request)
+
+    public function setAdminProfile(CreateAdminProfileRequest $request)
     {
-        return $this->handle(fn() => $this->authService->setAdminProfile(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->setAdminProfile($request->validated()));
     }
-     public function updateAdminProfile(UpdateAdminProfileRequest $request)
+
+    public function updateAdminProfile(UpdateAdminProfileRequest $request)
     {
-        return $this->handle(fn() => $this->authService->updateAdminProfile(
-            $request->validated()
-        ));
+        return $this->handle(fn() => $this->authService->updateAdminProfile($request->validated()));
     }
+
     public function getAdminProfile()
     {
         $user = Auth::user();
         if (!$user) {
-            $message= 'User not found.';
-            $code=404;
+            return response()->json(['message' => 'User not found.', 'code' => 404], 404);
         }
-        else{
-            $message= 'user founded';
-            $code=200;
-        }
-        return [
-            'message'=>$message,
-            'code'=>$code,
-            'profile'=>new AdminProfileResource($user->adminProfile),
-        ];
+
+        return response()->json([
+            'message' => 'User found',
+            'profile' => new AdminProfileResource($user->adminProfile),
+        ], 200);
     }
 }

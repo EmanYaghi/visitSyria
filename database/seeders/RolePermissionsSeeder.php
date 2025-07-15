@@ -27,31 +27,25 @@ class RolePermissionsSeeder extends Seeder
         $adminRole->syncPermissions(['indexTrip', 'createTrip', 'updateTrip', 'deleteTrip']);
         $clientRole->syncPermissions(['indexTrip', 'createTrip']);
 
-        $adminUser = User::factory()
-            ->hasProfile()
-            ->create([
-                'email' => 'admin@example.com',
-                'password' => Hash::make('password'),
-                'is_verified' => 1,
-            ]);
+        $adminUser = User::factory()->create([
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'is_verified' => 1,
+        ]);
         $adminUser->assignRole($adminRole);
 
-        $clientUser = User::factory()
-            ->hasProfile()
-            ->create([
-                'email' => 'client@example.com',
-                'password' => Hash::make('password'),
-                'is_verified' => 1,
-            ]);
+        $clientUser = User::factory()->create([
+            'email' => 'client@example.com',
+            'password' => Hash::make('password'),
+            'is_verified' => 1,
+        ]);
         $clientUser->assignRole($clientRole);
 
-        $superAdminUser = User::factory()
-            ->hasProfile()
-            ->create([
-                'email' => 'superadmin@example.com',
-                'password' => Hash::make('password'),
-                'is_verified' => 1,
-            ]);
+        $superAdminUser = User::factory()->create([
+            'email' => 'superadmin@example.com',
+            'password' => Hash::make('password'),
+            'is_verified' => 1,
+        ]);
         $superAdminUser->assignRole($superAdminRole);
     }
 }
