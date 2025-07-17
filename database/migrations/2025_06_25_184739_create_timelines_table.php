@@ -12,11 +12,7 @@ class CreateTimelinesTable extends Migration
             $table->id();
             $table->foreignId('trip_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('flight_id')->nullable()->constrained()->nullOnDelete();
-            $table->unsignedSmallInteger('day_number')->nullable();
-            $table->time('time')->nullable();
-            $table->string('title')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedSmallInteger('sort_order')->default(0);
+            $table->unsignedSmallInteger('day_number')->default(1);
             $table->timestamps();
         });
     }

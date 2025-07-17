@@ -20,6 +20,7 @@ class UpdateProfileRequest extends FormRequest
             'country'=>'sometimes|string|max:255',
             'phone'=>'sometimes|string',
             'country_code'=>'required|string',
+            'photo'=>'sometimes|image|mimes:jpeg,png,jpg|max:2048',
             'lang'=>'sometimes|string',
             'theme_mode'=>'sometimes|string',
             'allow_notification'=>'sometimes|string|max:255',

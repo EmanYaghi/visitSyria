@@ -231,74 +231,66 @@ class AuthService
         return ['message' => 'Email or password is wrong', 'code' => 400];
     }
 
-    public function updatePreference($request)
+     public function updatePreference( $request)
     {
         $user = Auth::user();
-        $user->preference->update($request->all());
-        return ['message' => 'Preferences updated', 'code' => 200];
+        $user->preference->update($request);
+        $message= 'preferences updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code];
     }
-
-    public function setPreference($request)
+     public function setPreference( $request)
     {
         $user = JWTAuth::parseToken()->authenticate();
-
-        Preference::create(array_merge(
-            ['user_id' => $user->id],
-            $request->all()
-        ));
-
-        return ['message' => 'Preferences created', 'code' => 201];
+        Preference::create([
+            'user_id'=>$user->id,
+            ...$request
+        ]);
+        $message= 'preferences created';
+        $code=201;
+        return ['message'=>$message,'code'=>$code];
     }
+    public function setProfile( $request)
+    {
 
-    public function setProfile($request)
+        $user = Auth::user();
+        Profile::create([
+            'user_id'=>$user->id,
+            ...$request
+        ]);
+        $message= 'profile created';
+        $code=201;
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>$user->profile
+        ];
+    }
+    public function updateProfile( $request)
     {
         $user = Auth::user();
-        $data = $request->all();
-
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('profile_photos', 'public');
-        } elseif (is_array($request->photo)) {
-            $data['photo'] = $request->photo['uuid'] ?? null;
-        }
-
-        $data['user_id'] = $user->id;
-        $profile = Profile::create($data);
-
-        return ['message' => 'Profile created', 'code' => 201, 'profile' => $profile];
+        $user->profile->update($request);
+        $message= 'profile updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code,'profile'=>$user->profile];
     }
-
-    public function updateProfile($request)
-{
-    $user = Auth::user();
-    $data = $request->all();
-
-    if ($request->hasFile('photo')) {
-        $data['photo'] = $request->file('photo')->store('profile_photos', 'public');
-    } elseif (is_array($request->photo)) {
-        $data['photo'] = $request->photo['uuid'] ?? null;
-    }
-
-    $user->profile->update($data);
-
-    return ['message' => 'Profile updated', 'code' => 200, 'profile' => $user->profile];
-}
-
-
-    public function setAdminProfile($request)
+     public function setAdminProfile( $request)
     {
         $user = Auth::user();
-        AdminProfile::create(array_merge(
-            ['user_id' => $user->id],
-            $request->all()
-        ));
-
-        return ['message' => 'Profile created', 'code' => 201];
+        AdminProfile::create([
+            'user_id'=>$user->id,
+            ...$request
+        ]);
+        $message= 'profile created';
+        $code=201;
+        return ['message'=>$message,'code'=>$code];
     }
-
-    public function updateAdminProfile($request)
+      public function updateAdminProfile( $request)
     {
         $user = Auth::user();
         $user->adminProfile->update($request);
-        return ['message' => 'Profile updated', 'code' => 200];
+        $message= 'profile updated';
+        $code=200;
+        return ['message'=>$message,'code'=>$code];
     }
 }

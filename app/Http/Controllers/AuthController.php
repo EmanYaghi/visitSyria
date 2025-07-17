@@ -115,77 +115,83 @@ class AuthController extends Controller
         return $this->handle(fn() => $this->authService->deleteAccount($request->validated()));
     }
 
-    public function setPreference(CreatePrefereneRequest $request)
+     public function setPreference(CreatePrefereneRequest $request)
     {
-        return $this->handle(fn() => $this->authService->setPreference($request->validated()));
+         return $this->handle(fn() => $this->authService->setPreference(
+            $request->validated()
+        ));
     }
-
-    public function updatePreference(UpdatePrefereneRequest $request)
+     public function updatePreference(UpdatePrefereneRequest $request)
     {
-        return $this->handle(fn() => $this->authService->updatePreference($request->validated()));
+         return $this->handle(fn() => $this->authService->updatePreference(
+            $request->validated()
+        ));
     }
-
     public function setProfile(CreateProfileRequest $request)
     {
-        return $this->handle(function () use ($request) {
-            $data = $request->validated();
-            if ($request->hasFile('image')) {
-                $data['photo'] = $request->file('image')->store('profile_photos', 'public');
-            } elseif (isset($data['photo']) && is_array($data['photo'])) {
-                $data['photo'] = $data['photo']['uuid'] ?? null;
-            }
-            $request->merge(['photo' => $data['photo'] ?? null]);
-            return $this->authService->setProfile($request);
-        });
+        $data= $request->validated();
+        $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
+        Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        return $this->handle(fn() => $this->authService->setProfile(
+           $data
+        ));
     }
-
     public function updateProfile(UpdateProfileRequest $request)
     {
-        return $this->handle(function () use ($request) {
-            $data = $request->validated();
-            if ($request->hasFile('image')) {
-                $data['photo'] = $request->file('image')->store('profile_photos', 'public');
-            } elseif (isset($data['photo']) && is_array($data['photo'])) {
-                $data['photo'] = $data['photo']['uuid'] ?? null;
-            }
-            $request->merge(['photo' => $data['photo'] ?? null]);
-            return $this->authService->updateProfile($request);
-        });
+        $data= $request->validated();
+        $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
+        Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        return $this->handle(fn() => $this->authService->updateProfile(
+            $data
+        ));
     }
-
-    public function getProfile()
+     public function getProfile()
     {
+        $profile=null;
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'User not found.', 'code' => 404], 404);
+            $message='User not found.';
+            $code=404;
         }
-
-        return response()->json([
-            'message' => 'User found',
-            'profile' => new ProfileResource($user->profile),
-        ], 200);
+        else{
+            $message= 'user founded';
+            $code=200;
+            $profile=$user->profile;
+        }
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>new ProfileResource($profile),
+        ];
     }
-
-    public function setAdminProfile(CreateAdminProfileRequest $request)
+     public function setAdminProfile(CreateAdminProfileRequest $request)
     {
-        return $this->handle(fn() => $this->authService->setAdminProfile($request->validated()));
+        return $this->handle(fn() => $this->authService->setAdminProfile(
+            $request->validated()
+        ));
     }
-
-    public function updateAdminProfile(UpdateAdminProfileRequest $request)
+     public function updateAdminProfile(UpdateAdminProfileRequest $request)
     {
-        return $this->handle(fn() => $this->authService->updateAdminProfile($request->validated()));
+        return $this->handle(fn() => $this->authService->updateAdminProfile(
+            $request->validated()
+        ));
     }
-
     public function getAdminProfile()
     {
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['message' => 'User not found.', 'code' => 404], 404);
+            $message= 'User not found.';
+            $code=404;
         }
-
-        return response()->json([
-            'message' => 'User found',
-            'profile' => new AdminProfileResource($user->adminProfile),
-        ], 200);
+        else{
+            $message= 'user founded';
+            $code=200;
+        }
+        return [
+            'message'=>$message,
+            'code'=>$code,
+            'profile'=>new AdminProfileResource($user->adminProfile),
+        ];
     }
+
 }

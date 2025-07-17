@@ -49,7 +49,9 @@ Route::group([
         Route::post('updateEvent/{id}', [EventController::class,'updateُ']);
 
         Route::resource('trips', TripController::class);
-        Route::post('trips/company/{id}', [TripController::class,'companyTrips']);
+        Route::get('trips/company/{id}', [TripController::class,'companyTrips']);
+        Route::get('trips/offers', [TripController::class,'offers']);
+
     });
 
 

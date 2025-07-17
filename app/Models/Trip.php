@@ -9,9 +9,10 @@ class Trip extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'name', 'description', 'season', 'start_date', 
-        'duration', 'tickets', 'price', 'discount', 'new_price'
+        'user_id', 'name', 'description', 'season', 'start_date','reserved_tickets',
+        'duration', 'tickets', 'price', 'discount', 'new_price','status','improvements'
     ];
+    public static array $status=['لم تبدأ بعد','منتهية','جارية حاليا','تم الالغاء'];
 
     public function user()
     {
@@ -27,12 +28,12 @@ class Trip extends Model
     {
         return $this->hasMany(Save::class);
     }
-    
+
     public function tags()
     {
         return $this->hasMany(Tag::class);
     }
-    
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);
@@ -44,6 +45,10 @@ class Trip extends Model
    public function timelines()
     {
         return $this->hasOne(Timeline::class);
+    }
+    public function media()
+    {
+        return $this->hasMany(Media::class);
     }
 }
 

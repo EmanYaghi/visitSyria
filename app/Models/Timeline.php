@@ -8,7 +8,7 @@ class Timeline extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['trip_id', 'flight_id', 'day_number', 'time', 'title', 'description', 'sort_order'];
+    protected $fillable = ['trip_id', 'flight_id', 'day_number'];
 
     public function trip()
     {
@@ -17,5 +17,9 @@ class Timeline extends Model
     public function flight()
     {
         return $this->belongsTo(Flight::class);
+    }
+    public function sections()
+    {
+        return $this->hasMany(Section::class);
     }
 }

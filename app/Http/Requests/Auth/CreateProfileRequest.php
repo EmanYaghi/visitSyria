@@ -20,7 +20,7 @@ class CreateProfileRequest extends FormRequest
             'country'=>'required|string|max:255',
             'phone'=>'nullable|string',
             'country_code'=>'nullable|string',
-            'photo'=>'nullable'
+            'photo'=>'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 }
