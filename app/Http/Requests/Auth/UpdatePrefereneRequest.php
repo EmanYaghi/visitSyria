@@ -13,10 +13,10 @@ class UpdatePrefereneRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'preferred_season'=>'sometimes',
-            'preferred_activities'=>'sometimes',
-            'duration'=>'sometimes',
-            'cities'=>'sometimes'
+            'preferred_season'=>'sometimes|array',
+            'preferred_activities'=>'sometimes|array',
+            'duration'=>'sometimes|array',
+            'cities'=>'sometimes|array'
         ];
     }
 }

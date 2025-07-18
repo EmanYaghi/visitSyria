@@ -46,7 +46,7 @@ Route::group([
 
     Route::middleware('auth:api')->group(function () {
         Route::resource('events', EventController::class);
-        Route::post('updateEvent/{id}', [EventController::class,'updateُ']);
+        Route::post('updateEvent/{id}', [EventController::class,'update']);
 
         Route::resource('trips', TripController::class);
         Route::get('trips/company/{id}', [TripController::class,'companyTrips']);

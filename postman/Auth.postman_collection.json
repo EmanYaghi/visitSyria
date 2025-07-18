@@ -417,7 +417,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NjE2NzgsImV4cCI6MTc1Mjc2NTI3OCwibmJmIjoxNzUyNzYxNjc4LCJqdGkiOiJ0TTJSdHdTSHROdDI5dmhpIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7bSjKe56xKMdEBw25yy65ZhsARX6iYlGa0c5c-GuMbA",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
 							"type": "string"
 						}
 					]
@@ -590,7 +590,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NjE2NzgsImV4cCI6MTc1Mjc2NTI3OCwibmJmIjoxNzUyNzYxNjc4LCJqdGkiOiJ0TTJSdHdTSHROdDI5dmhpIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7bSjKe56xKMdEBw25yy65ZhsARX6iYlGa0c5c-GuMbA",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
 							"type": "string"
 						}
 					]
@@ -624,6 +624,10 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
 				"url": {
 					"raw": "{{URL}}auth/setAdminProfile?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
 					"host": [
@@ -755,7 +759,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "http://127.0.0.1:8000/api/",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
 							"type": "string"
 						}
 					]
@@ -782,7 +786,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NjE2NzgsImV4cCI6MTc1Mjc2NTI3OCwibmJmIjoxNzUyNzYxNjc4LCJqdGkiOiJ0TTJSdHdTSHROdDI5dmhpIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7bSjKe56xKMdEBw25yy65ZhsARX6iYlGa0c5c-GuMbA",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
 							"type": "string"
 						}
 					]
@@ -790,29 +794,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "preferred_season",
-							"value": "[\"winter\",\"summer\"]",
-							"type": "text"
-						},
-						{
-							"key": "preferred_activities",
-							"value": "[\"family trip\"]",
-							"type": "text"
-						},
-						{
-							"key": "duratoin",
-							"value": "[\"one_day\",\"2-3 day\",\"one weak\"]",
-							"type": "text"
-						},
-						{
-							"key": "cities",
-							"value": "",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\r\n    \"preferred_season\": [\"summer\",\"winter\"],\r\n    \"preferred_activities\": [\"mcnjvkd\"],\r\n    \"duration\": [],\r\n    \"cities\":[\"homs\",\"hama\",\"damas\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{URL}}auth/setPreference",
@@ -834,7 +822,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NjE2NzgsImV4cCI6MTc1Mjc2NTI3OCwibmJmIjoxNzUyNzYxNjc4LCJqdGkiOiJ0TTJSdHdTSHROdDI5dmhpIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7bSjKe56xKMdEBw25yy65ZhsARX6iYlGa0c5c-GuMbA",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
 							"type": "string"
 						}
 					]
@@ -842,31 +830,13 @@
 				"method": "POST",
 				"header": [],
 				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "preferred_season",
-							"value": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "preferred_activities",
-							"value": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "duration",
-							"value": "[\"0ne month\"]",
-							"type": "text"
-						},
-						{
-							"key": "cities",
-							"value": "[\"homs \",\"damas\"]",
-							"type": "text"
+					"mode": "raw",
+					"raw": "{\r\n    \"preferred_season\": [\"summer\",\"winter\"],\r\n    \"preferred_activities\": [\"mcnjvkd\"],\r\n    \"duration\": [],\r\n    \"cities\":[\"homs\",\"hama\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
 						}
-					]
+					}
 				},
 				"url": {
 					"raw": "{{URL}}auth/updatePreference",
