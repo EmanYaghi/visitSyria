@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "2e8f3598-c355-4efb-a8be-0abb6e53ac5f",
+		"name": "trips",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38928530"
+	},
+	"item": [
+		{
+			"name": "getAllTrips",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips",
+					"host": [
+						"{{URL}}trips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createTrip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NTY3NzEsImV4cCI6MTc1Mjc2MDM3MSwibmJmIjoxNzUyNzU2NzcxLCJqdGkiOiJ1bm4yUUQ1YmFYYW1zenlUIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.oBaMoKLFbG3_sHxlVbMaqWSUFR6E4cSIeYkdNuwQ_TQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "mnkxck",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "jhgsjd",
+							"type": "text"
+						},
+						{
+							"key": "season",
+							"value": "الخريف",
+							"type": "text"
+						},
+						{
+							"key": "start_date",
+							"value": "2025-07-17 00:10:53",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "1 day",
+							"type": "text"
+						},
+						{
+							"key": "tickets",
+							"value": "77",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "4000",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][day]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][0][time]",
+							"value": "9:00",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][0][title]",
+							"value": "kfdgjjgkd",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][0][description]",
+							"value": "lfkgjldkjgl\n,mfgndggnkfk\ncbmv,bmngf",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][1][time]",
+							"value": "12:30",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][1][title]",
+							"value": "kxvldfkjgl",
+							"type": "text"
+						},
+						{
+							"key": "timeline[0][section][1][description]",
+							"value": "m,cvnbm,cvn",
+							"type": "text"
+						},
+						{
+							"key": "timeline[1][day]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "timeline[1][section][0][time]",
+							"value": "10:00",
+							"type": "text"
+						},
+						{
+							"key": "timeline[1][section][0][title]",
+							"value": "nbbhjg",
+							"type": "text"
+						},
+						{
+							"key": "timeline[1][section][0][description]",
+							"value": "kuuyfyt",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "/C:/Users/aya/Desktop/Trip.png"
+						},
+						{
+							"key": "images[1]",
+							"type": "file",
+							"src": "/C:/Users/aya/Desktop/Community.png"
+						},
+						{
+							"key": "tags[0]",
+							"value": "طرطوس",
+							"type": "text"
+						},
+						{
+							"key": "tags[1]",
+							"value": "اللاذقية",
+							"type": "text"
+						},
+						{
+							"key": "tags[2]",
+							"value": "ترفيهي",
+							"type": "text"
+						},
+						{
+							"key": "improvements[]",
+							"value": "[\"fhrtuty fghfgj\",\"dfgthtm\",dfgrt\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}trips",
+					"host": [
+						"{{URL}}trips"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "updateTrip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "ljui",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "mnbjhgjcgjjhbkj",
+							"type": "text"
+						},
+						{
+							"key": "season",
+							"value": "الشتاء",
+							"type": "text"
+						},
+						{
+							"key": "start_date",
+							"value": "5-12-2025",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "3 ",
+							"type": "text"
+						},
+						{
+							"key": "tickets",
+							"value": "90",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "discount",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "new_price",
+							"value": "2000",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}trips/1",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTrip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips/1",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTripById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips/1",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllTripsByCompany",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips/company/1",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"company",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "tripsOffer",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}trips/offers",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"offers"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key:'Accept',\r",
+					"    value:'application/json'\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

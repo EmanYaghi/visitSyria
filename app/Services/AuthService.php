@@ -234,7 +234,8 @@ class AuthService
      public function updatePreference( $request)
     {
         $user = Auth::user();
-        $user->preference->update($request);
+        $preference=Preference::where('user_id',$user->id);
+        $preference->update($request);
         $message= 'preferences updated';
         $code=200;
         return ['message'=>$message,'code'=>$code];
@@ -252,7 +253,6 @@ class AuthService
     }
     public function setProfile( $request)
     {
-
         $user = Auth::user();
         Profile::create([
             'user_id'=>$user->id,

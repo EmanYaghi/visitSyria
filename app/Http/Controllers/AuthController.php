@@ -158,11 +158,7 @@ class AuthController extends Controller
             $code=200;
             $profile=$user->profile;
         }
-        return [
-            'message'=>$message,
-            'code'=>$code,
-            'profile'=>new ProfileResource($profile),
-        ];
+        return response()->json(['message'=>$message,"me"=>new ProfileResource($profile)],$code);
     }
      public function setAdminProfile(CreateAdminProfileRequest $request)
     {
