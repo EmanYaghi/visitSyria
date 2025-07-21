@@ -21,7 +21,7 @@ class AdminProfile extends Model
         'status',
         'number_of_trips',
         'rating',
-        'photo'
+        'image'
     ];
      public function user()
     {

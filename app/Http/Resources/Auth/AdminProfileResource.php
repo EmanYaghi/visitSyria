@@ -17,7 +17,7 @@ class AdminProfileResource extends JsonResource
             'name_of_owner' => $this->name_of_owner,
             'founding_date' => $this->founding_date,
             'license_number' => $this->license_number,
-            'photo' =>  $this->photo ? asset('storage/' . $this->photo) : null,
+            'image' =>  $this->image ? asset('storage/' . $this->image) : null,
             'phone' => $this->phone,
             'country_code' => $this->country_code,
             'description' => $this->description,

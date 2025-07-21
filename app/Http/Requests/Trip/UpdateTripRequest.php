@@ -9,20 +9,31 @@ class UpdateTripRequest extends FormRequest
 
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
     public function rules(): array
     {
         return [
-            'name'=>'somtimes|string',
-            'description'=>'somtimes|string',
+            'name'=>'sometimes|string',
+            'description'=>'sometimes|string',
             'season'=>'sometimes|in:الصيف,الخريف,الشتاء,الربيع',
-            'start_date'=>'somtimes|date',
-            'duration'=>'somtimes|string',
-            'tickets'=>'somtimes|numaric',
-            'price'=>'somtimes|numaric',
-            'discount'=>'somtimes|numaric',
-            'new_price'=>'somtimes|numaric'
+            'start_date'=>'sometimes|date',
+            'duration'=>'sometimes|string',
+            'tickets'=>'sometimes',
+            'price'=>'sometimes',
+            'new_price'=>'sometimes',
+            'improvements'=>'nullable|array',
+            'improvements.*'=>'string',
+            'images' => 'nullable|array|max:4',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'tags'=>'nullable|array|max:10',
+            'tags.*'=>['nullable'],
+            'timelines' => 'nullable|array',
+            'timelines.*.day' => 'nullable',
+            'timelines.*.sections' => 'nullable|array',
+            'timelines.*.sections.*.time' => 'nullable',
+            'timelines.*.sections.*.title' => 'nullable|string',
+            'timelines.*.sections.*.description' => 'nullable|string',
         ];
     }
 }

@@ -162,14 +162,20 @@ class AuthController extends Controller
     }
      public function setAdminProfile(CreateAdminProfileRequest $request)
     {
+        $data= $request->validated();
+        $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
+        Storage::disk('public')->put($data['image'],file_get_contents($request->image));
         return $this->handle(fn() => $this->authService->setAdminProfile(
-            $request->validated()
+            $data
         ));
     }
      public function updateAdminProfile(UpdateAdminProfileRequest $request)
     {
+       $data= $request->validated();
+        $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
+        Storage::disk('public')->put($data['image'],file_get_contents($request->image));
         return $this->handle(fn() => $this->authService->updateAdminProfile(
-            $request->validated()
+            $data
         ));
     }
     public function getAdminProfile()

@@ -44,11 +44,15 @@ class Trip extends Model
     }
    public function timelines()
     {
-        return $this->hasOne(Timeline::class);
+        return $this->hasMany(Timeline::class);
     }
     public function media()
     {
         return $this->hasMany(Media::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }
 

@@ -13,14 +13,14 @@ class CreateBookingsTable extends Migration
             $table->foreignId('user_id')
                   ->constrained()
                   ->cascadeOnDelete();
-            $table->foreignId('trip_id')
+            $table->foreignId('trip_id')->nullable()
                   ->constrained()
                   ->cascadeOnDelete();
-            $table->foreignId('flight_id')
+            $table->foreignId('flight_id')->nullable()
                   ->nullable()
                   ->constrained()
                   ->nullOnDelete();
-            $table->foreignId('event_id')
+            $table->foreignId('event_id')->nullable()
                   ->nullable()
                   ->constrained()
                   ->nullOnDelete();
@@ -28,7 +28,6 @@ class CreateBookingsTable extends Migration
             $table->unsignedInteger('number_of_adults')->default(1);
             $table->unsignedInteger('number_of_children')->default(0);
             $table->unsignedInteger('number_of_infants')->default(0);
-            $table->enum('status', ['not_started', 'in_progress', 'completed'])->default('not_started');
             $table->decimal('price', 10, 2);
             $table->string('payment_method')->nullable();
             $table->string('qr_code')->nullable();

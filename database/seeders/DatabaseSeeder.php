@@ -9,10 +9,12 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(RolePermissionsSeeder::class);
-        $this->call(CitiesTableSeeder::class);
-        $this->call(MediaTableSeeder::class);
-
+        $this->call([
+            RolePermissionsSeeder::class,
+            CitiesTableSeeder::class,
+            MediaTableSeeder::class,
+            TagNameSeeder::class
+        ]);
         User::factory()->create([
             'email' => 'test@example.com',
         ]);

@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
              $table->string('name_of_company');
             $table->string('name_of_owner');
-            $table->date('founing_date');
+            $table->string('image')->nullable();
+            $table->date('founding_date');
             $table->string('license_number');
             $table->string('phone');
             $table->enum('country_code',City::$country_code);

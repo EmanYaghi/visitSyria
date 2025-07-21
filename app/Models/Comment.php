@@ -9,7 +9,7 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'post_id', 'place_id', 'support_id', 'body'
+        'user_id', 'post_id', 'place_id', 'support_id','trip_id', 'body'
     ];
 
     public function user()
@@ -30,5 +30,9 @@ class Comment extends Model
     public function support()
     {
         return $this->belongsTo(Support::class);
+    }
+    public function trip()
+    {
+        return $this->belongsTo(Trip::class);
     }
 }

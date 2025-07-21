@@ -3,8 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Services\EventService;
-use App\Http\Requests\StoreEventRequest;
-use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\Events\StoreEventRequest;
+use App\Http\Requests\Events\UpdateEventRequest;
 
 class EventController extends Controller
 {
