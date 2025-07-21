@@ -16,7 +16,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fgh@kjhjk.y",
+							"value": "fghd@kjhjk.a",
 							"type": "text"
 						},
 						{
@@ -56,7 +56,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "",
+							"value": "fghd@kjhjk.y",
 							"type": "text"
 						}
 					]
@@ -75,6 +75,18 @@
 		},
 		{
 			"name": "verify email",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -89,12 +101,12 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fgh@kjhjk.y",
+							"value": "fghd@kjhjk.a",
 							"type": "text"
 						},
 						{
 							"key": "code",
-							"value": "4111",
+							"value": "2597",
 							"type": "text"
 						}
 					]
@@ -113,6 +125,19 @@
 		},
 		{
 			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json =JSON.parse(responseBody)\r",
+							"pm.environment.set(\"TOKEN\",json.token)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -132,20 +157,20 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "admin@example.com",
+							"value": "fghd@kjhjk.y",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "password",
+							"value": "1234567890",
 							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{url}}auth/login",
+					"raw": "{{URL}}auth/login",
 					"host": [
-						"{{url}}auth"
+						"{{URL}}auth"
 					],
 					"path": [
 						"login"
@@ -162,7 +187,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNDYxMDAsImV4cCI6MTc1MjE0OTcwMCwibmJmIjoxNzUyMTQ2MTAwLCJqdGkiOiIzbWdicW5SZEZIUE1WWTl4Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.tMqd-3mMm4TONrhOTVnqdpTmCC8UXXlULZldA6lNW4g",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTMxMjI3NTMsImV4cCI6MTc1MzEyNjM1MywibmJmIjoxNzUzMTIyNzUzLCJqdGkiOiJROFFjdEpQbm1pTUhIT2tRIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.IGnK1cht82fGgyGjS3f03SjNhQi4v8-7DDuYpWcgmVM",
 							"type": "string"
 						}
 					]
@@ -202,7 +227,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "{{TOKEN}}",
 							"type": "string"
 						}
 					]
@@ -220,12 +245,12 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "",
+							"value": "fghd@kjhjk.y",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "",
+							"value": "1234567890",
 							"type": "text"
 						}
 					]
@@ -250,7 +275,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTAzMjQ1OTEsImV4cCI6MTc1MDMyODE5MSwibmJmIjoxNzUwMzI0NTkxLCJqdGkiOiIwYm5MRTdpVmEyZmMyUjZ3Iiwic3ViIjoiNCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.tQEawxMixlG2HxDfIyiYJ_7PHJ9ZeDSqureFR9j_Ts0",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxMjI4NjEsImV4cCI6MTc1MzEyNjQ2MSwibmJmIjoxNzUzMTIyODYxLCJqdGkiOiJ2RW0wdEw2bUZ1eTRIYTIxIiwic3ViIjoiOCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Nhnf7sHOfancTUBe0L_uOGRDENOL4CcU_Jv9BEldyoQ",
 							"type": "string"
 						}
 					]
@@ -262,17 +287,17 @@
 					"formdata": [
 						{
 							"key": "old_password",
-							"value": "000000000",
+							"value": "1234567890",
 							"type": "text"
 						},
 						{
 							"key": "new_password",
-							"value": "1234567890",
+							"value": "00000000",
 							"type": "text"
 						},
 						{
-							"key": "new_password_verification",
-							"value": "1234567890",
+							"key": "new_password_confirmation",
+							"value": "00000000",
 							"type": "text"
 						}
 					]
@@ -299,7 +324,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "",
+							"value": "fghd@kjhjk.a",
 							"type": "text"
 						}
 					]
@@ -335,12 +360,12 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "kyhhrfj@gmail.com",
+							"value": "fghd@kjhjk.a",
 							"type": "text"
 						},
 						{
 							"key": "code",
-							"value": "9217",
+							"value": "2885",
 							"type": "text"
 						}
 					]
@@ -377,22 +402,22 @@
 					"formdata": [
 						{
 							"key": "code",
-							"value": "8806",
+							"value": "2885",
 							"type": "text"
 						},
 						{
 							"key": "new_password",
-							"value": "123456789",
+							"value": "1234567890",
 							"type": "text"
 						},
 						{
 							"key": "new_password_confirmation",
-							"value": "123456789",
+							"value": "1234567890",
 							"type": "text"
 						},
 						{
 							"key": "email",
-							"value": "kyhhrfj@gmail.com",
+							"value": "fghd@kjhjk.a",
 							"type": "text"
 						}
 					]
@@ -417,7 +442,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
 							"type": "string"
 						}
 					]
@@ -489,7 +514,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NjE2NzgsImV4cCI6MTc1Mjc2NTI3OCwibmJmIjoxNzUyNzYxNjc4LCJqdGkiOiJ0TTJSdHdTSHROdDI5dmhpIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.7bSjKe56xKMdEBw25yy65ZhsARX6iYlGa0c5c-GuMbA",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
 							"type": "string"
 						}
 					]
@@ -519,7 +544,7 @@
 						},
 						{
 							"key": "gender",
-							"value": "male",
+							"value": "female",
 							"type": "text"
 						},
 						{
@@ -590,7 +615,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
 							"type": "string"
 						}
 					]
@@ -617,7 +642,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNTc3MjcsImV4cCI6MTc1MjE2MTMyNywibmJmIjoxNzUyMTU3NzI3LCJqdGkiOiJCTU9ya3F0TEhVZWp5THpDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uI41-dsmkxm1KZINMNVMgVs10XMf37izt7pfZBuNHRs",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI4NTg0MDMsImV4cCI6MTc1Mjg2MjAwMywibmJmIjoxNzUyODU4NDAzLCJqdGkiOiJRSjZnNlROOVlEdDJmT3JDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.a1nrDosxRO2a7ktUWb4hQanoPb7v65gn18s-BR2qu0o",
 							"type": "string"
 						}
 					]
@@ -626,57 +651,71 @@
 				"header": [],
 				"body": {
 					"mode": "formdata",
-					"formdata": []
+					"formdata": [
+						{
+							"key": "name_of_company",
+							"value": "alsham",
+							"type": "text"
+						},
+						{
+							"key": "name_of_owner",
+							"value": "aya",
+							"type": "text"
+						},
+						{
+							"key": "founding_date",
+							"value": "2024-12-8",
+							"type": "text"
+						},
+						{
+							"key": "license_number",
+							"value": "757",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "0987654321",
+							"type": "text"
+						},
+						{
+							"key": "country_code",
+							"value": "+963",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "vxcmvn xmcnv elrje glkhjf",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "damascus-alhmidia",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "45",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
+						}
+					]
 				},
 				"url": {
-					"raw": "{{URL}}auth/setAdminProfile?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
+					"raw": "{{URL}}auth/setAdminProfile",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
 						"setAdminProfile"
-					],
-					"query": [
-						{
-							"key": "name_of_company",
-							"value": null
-						},
-						{
-							"key": "name_of_owner",
-							"value": null
-						},
-						{
-							"key": "founding_date",
-							"value": null
-						},
-						{
-							"key": "license_number",
-							"value": null
-						},
-						{
-							"key": "phone",
-							"value": null
-						},
-						{
-							"key": "country_code",
-							"value": null
-						},
-						{
-							"key": "description",
-							"value": null
-						},
-						{
-							"key": "location",
-							"value": null
-						},
-						{
-							"key": "latitude",
-							"value": null
-						},
-						{
-							"key": "longitude",
-							"value": null
-						}
 					]
 				}
 			},
@@ -786,7 +825,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
 							"type": "string"
 						}
 					]
@@ -795,7 +834,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"preferred_season\": [\"summer\",\"winter\"],\r\n    \"preferred_activities\": [\"mcnjvkd\"],\r\n    \"duration\": [],\r\n    \"cities\":[\"homs\",\"hama\",\"damas\"]\r\n}",
+					"raw": "{\r\n    \"preferred_season\": [\"summer\",\"winter\"],\r\n    \"preferred_activities\": [\"mcnjvkd\",\"jfh\"],\r\n    \"duration\": [],\r\n    \"cities\":[\"homs\",\"hama\",\"damas\"]\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -822,7 +861,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3OTU4ODQsImV4cCI6MTc1Mjc5OTQ4NCwibmJmIjoxNzUyNzk1ODg0LCJqdGkiOiJpaTlKOUNnN3NCQzh3ZUVPIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Sj8qlnroAwrdjU7S7lLRpm8pL3Qvzk8LqnPWc15m1TE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
 							"type": "string"
 						}
 					]

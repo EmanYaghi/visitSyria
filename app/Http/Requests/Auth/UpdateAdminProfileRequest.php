@@ -15,14 +15,15 @@ class UpdateAdminProfileRequest extends FormRequest
         return [
             'name_of_company'=>'sometimes|string|max:255',
             'name_of_owner'=>'sometimes|string|max:255',
-            'founing_date'=>'sometimes|date',
+            'founding_date'=>'sometimes|date',
             'license_number'=>'sometimes|string',
             'phone'=>'sometimes|string',
             'country_code'=>'sometimes|string',
             'description'=>'sometimes|string',
             'location'=>'sometimes|numaric',
             'latitude'=>'sometimes|numaric',
-            'longitude'=>'sometimes|string'
+            'longitude'=>'sometimes|string',
+            'image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 }

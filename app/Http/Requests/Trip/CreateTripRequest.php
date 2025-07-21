@@ -23,7 +23,6 @@ class CreateTripRequest extends FormRequest
             'duration'=>'required|string',
             'tickets'=>'required',
             'price'=>'required',
-            'discount'=>'nullable',
             'new_price'=>'nullable',
             'improvements'=>'nullable|array',
             'improvements.*'=>'string',
@@ -31,12 +30,12 @@ class CreateTripRequest extends FormRequest
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
             'tags'=>'nullable|array|max:10',
             'tags.*'=>['nullable'],
-            'timeline' => 'nullable|array',
-            'timeline.*.day' => 'nullable',
-            'timeline.*.section' => 'nullable|array',
-            'timeline.*.section.*.time' => 'nullable',
-            'timeline.*.section.*.title' => 'nullable|string',
-            'timeline.*.section.*.description' => 'nullable|string',
+            'timelines' => 'nullable|array',
+            'timelines.*.day' => 'nullable',
+            'timelines.*.sections' => 'nullable|array',
+            'timelines.*.sections.*.time' => 'nullable',
+            'timelines.*.sections.*.title' => 'nullable|string',
+            'timelines.*.sections.*.description' => 'nullable|string',
 
         ];
     }

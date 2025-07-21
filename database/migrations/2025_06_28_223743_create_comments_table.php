@@ -17,6 +17,10 @@ class CreateCommentsTable extends Migration
                   ->nullable()
                   ->constrained()
                   ->nullOnDelete();
+            $table->foreignId('trip_id')
+                  ->nullable()
+                  ->constrained()
+                  ->nullOnDelete();
             $table->foreignId('place_id')
                   ->nullable()
                   ->constrained()

@@ -16,14 +16,15 @@ class CreateAdminProfileRequest extends FormRequest
         return [
             'name_of_company'=>'required|string|max:255',
             'name_of_owner'=>'required|string|max:255',
-            'founing_date'=>'required|date',
+            'founding_date'=>'required|date',
             'license_number'=>'required|string',
             'phone'=>'required|string',
             'country_code'=>'required',
             'description'=>'required|string',
-            'location'=>'required|numaric',
-            'latitude'=>'required|numaric',
-            'longitude'=>'required|string'
+            'location'=>'required',
+            'latitude'=>'required',
+            'longitude'=>'required|string',
+            'image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 }

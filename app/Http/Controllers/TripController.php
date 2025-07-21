@@ -29,18 +29,20 @@ class TripController extends Controller
     }
     public function store(CreateTripRequest $request)
     {
-        $data=[];
-        try{
-            $data=$this->tripService->store($request->validated());
-            return response()->json(["message"=>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
+        $validatedData = $request->validated();
+        $validatedData['images'] = $request->file('images'); // THIS LINE IS CRITICAL
+
+        $data = [];
+        try {
+            $data = $this->tripService->store($validatedData);
+            return response()->json(["trip"=>$data['trip'],"message" => $data['message']], $data['code']);
+        } catch (Throwable $th) {
+            return response()->json(["message" => $th->getMessage()]);
         }
     }
     public function show($id)
     {
-         $data=[];
+        $data=[];
         try{
             $data=$this->tripService->show($id);
             return response()->json(["trip"=>$data['trip'],"message" =>$data['message']], $data['code']);
@@ -82,11 +84,33 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-     public function offers()
+    public function offers()
     {
         $data=[];
         try{
             $data=$this->tripService->offers();
+            return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function mySavedTrips()
+    {
+        $data=[];
+        try{
+            $data=$this->tripService->mySavedTrips();
+            return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function myReservedTrips()
+    {
+        $data=[];
+        try{
+            $data=$this->tripService->myReservedTrips();
             return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();
