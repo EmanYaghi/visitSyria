@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Trip;
 
+use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -33,6 +34,7 @@ class TripResource extends JsonResource
 
     public function toArray(Request $request): array
     {
+        $companyId=$this->user->id;
         $user=Auth::user();
         return [
             'id' => $this->id,
@@ -48,6 +50,9 @@ class TripResource extends JsonResource
             'new_price' => $this->new_price,
             'improvements' => json_decode($this->improvements, true),
             'status'=>$this->status,
+            'rating'=>Rating::where('trip_id',$this->id)->count()>0 ?
+                Rating::where('trip_id',$this->id)->sum('rating_value')/Rating::where('trip_id',$this->id)->count() :
+                0,
             'tags' => $this->tags->map(function ($tag) {
                 return [
                     'body' => optional($tag->tagName)->body,
@@ -57,6 +62,7 @@ class TripResource extends JsonResource
             'images' => $this->media->map(function ($media) {
                 return asset('storage/' . $media->url);
             }),
+
             'timelines' => $this->timelines->map(function ($timeline) {
                 return [
                     'day_number' => $timeline->day_number,
@@ -65,17 +71,22 @@ class TripResource extends JsonResource
                             'time' => $section->time,
                             'title' => $section->title,
                             'description' => $section->description,
+                            'longitude'=>$section->longitude,
+                            'latitude'=>$section->latitude
                         ];
                     }),
                 ];
             }),
             'company' => [
-                'id'=>$this->user->id,
+                'id'=>$companyId,
                 'name' => $this->user->adminProfile->name_of_company,
                 'image' => $this->user->adminProfile->image,
-                'rating'=>$this->user->adminProfile->rating
+                'rating'=> Rating::whereHas('trip', function($query) use ($companyId) {
+                        $query->where('user_id', $companyId);
+                    })
+                    ->whereNotNull('trip_id')
+                    ->avg('rating_value')
             ],
-
              'is_saved' => $user
                 ? $this->saves()->where('user_id', $user->id)->exists()
                 : false,

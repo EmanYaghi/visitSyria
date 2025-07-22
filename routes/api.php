@@ -4,7 +4,8 @@
     use App\Http\Controllers\WeatherController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\AuthController;
-    use App\Http\Controllers\EventController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\TripController;
 
@@ -69,6 +70,15 @@ use App\Http\Controllers\TripController;
 
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
+
+    Route::group(['middleware' => ['jwt.auth']], function () {
+        Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
+        Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
+        Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
+        Route::get('/my-trips', [BookingController::class, 'myReservedTrips']);
+    });
+
+
 ?>
 
 

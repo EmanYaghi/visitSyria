@@ -35,7 +35,11 @@ class CreateTripRequest extends FormRequest
             'timelines.*.sections' => 'nullable|array',
             'timelines.*.sections.*.time' => 'nullable',
             'timelines.*.sections.*.title' => 'nullable|string',
-            'timelines.*.sections.*.description' => 'nullable|string',
+            'timelines.*.sections.*.latitude' => 'nullable',
+            'timelines.*.sections.*.longitude' => 'nullable',
+            'timelines.*.sections.*.description' => 'nullable|array',
+            'timelines.*.sections.*.description.*' => 'nullable',
+
 
         ];
     }

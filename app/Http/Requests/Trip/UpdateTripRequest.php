@@ -16,7 +16,7 @@ class UpdateTripRequest extends FormRequest
         return [
             'name'=>'sometimes|string',
             'description'=>'sometimes|string',
-            'season'=>'sometimes|in:الصيف,الخريف,الشتاء,الربيع',
+            'season'=>'sometimes',
             'start_date'=>'sometimes|date',
             'duration'=>'sometimes|string',
             'tickets'=>'sometimes',
@@ -33,7 +33,10 @@ class UpdateTripRequest extends FormRequest
             'timelines.*.sections' => 'nullable|array',
             'timelines.*.sections.*.time' => 'nullable',
             'timelines.*.sections.*.title' => 'nullable|string',
-            'timelines.*.sections.*.description' => 'nullable|string',
+            'timelines.*.sections.*.latitude' => 'nullable',
+            'timelines.*.sections.*.longitude' => 'nullable',
+            'timelines.*.sections.*.description' => 'nullable|array',
+            'timelines.*.sections.*.description.*' => 'nullable',
         ];
     }
 }

@@ -20,8 +20,8 @@ class UpdateAdminProfileRequest extends FormRequest
             'phone'=>'sometimes|string',
             'country_code'=>'sometimes|string',
             'description'=>'sometimes|string',
-            'location'=>'sometimes|numaric',
-            'latitude'=>'sometimes|numaric',
+            'location'=>'sometimes',
+            'latitude'=>'sometimes',
             'longitude'=>'sometimes|string',
             'image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ];

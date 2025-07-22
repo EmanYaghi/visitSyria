@@ -106,15 +106,4 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-    public function myReservedTrips()
-    {
-        $data=[];
-        try{
-            $data=$this->tripService->myReservedTrips();
-            return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
-        }
-    }
 }

@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('admin_profiles', function (Blueprint $table) {
@@ -28,7 +25,7 @@ return new class extends Migration
             $table->string('latitude');
             $table->string('longitude');
             $table->integer('number_of_trips')->default(0);
-            $table->float('rating')->nullable();
+            $table->float('rating')->default(0);
             $table->timestamps();
         });
     }

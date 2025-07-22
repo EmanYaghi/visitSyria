@@ -278,7 +278,7 @@ class AuthService
         return [
             'message'=>$message,
             'code'=>$code,
-            'profile'=>$user->profile
+            'profile'=>$user->load('profile')
         ];
     }
     public function updateProfile( $request)
@@ -298,7 +298,7 @@ class AuthService
         ]);
         $message= 'profile created';
         $code=201;
-        return ['message'=>$message,'code'=>$code];
+        return ['adminProfile'=>$user->load('adminProfile'),'message'=>$message,'code'=>$code];
     }
       public function updateAdminProfile( $request)
     {
@@ -306,6 +306,6 @@ class AuthService
         $user->adminProfile->update($request);
         $message= 'profile updated';
         $code=200;
-        return ['message'=>$message,'code'=>$code];
+        return ['adminProfile'=>$user->load('adminProfile'),'message'=>$message,'code'=>$code];
     }
 }
