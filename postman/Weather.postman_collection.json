@@ -10,19 +10,18 @@
 			"name": "get Weather for 7 days",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODIzNDgsIm5iZiI6MTc1MzE4MjM0OCwianRpIjoidDVPQkszS21XdWl2Y0ZIaiIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Pu3YonHff5-iZZF48bIMy38FZeRx8QaHaCMB_GMD8Wo",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/weather",
+					"raw": "http://127.0.0.1:8000/api/weather?city=دمشق",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -34,6 +33,12 @@
 					"path": [
 						"api",
 						"weather"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق"
+						}
 					]
 				}
 			},
@@ -43,14 +48,7 @@
 			"name": "get Today Weather",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1MjU2OTEsImV4cCI6MTc1MjUyOTI5MSwibmJmIjoxNzUyNTI1NjkxLCJqdGkiOiJwWHFYcEtLd1FKV0JxOVM4Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.yFdR5R78gRRRpcXDx7CWsBImi8ed6RUPPkd-GItROz8",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [
