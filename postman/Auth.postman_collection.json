@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "c73fc35d-b23f-479a-93b7-6cdb7aacc4f3",
+		"_postman_id": "060d1a7a-4d48-4f18-b849-9f3cddfc32de",
 		"name": "Auth",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38928530"
+		"_exporter_id": "40522740"
 	},
 	"item": [
 		{
@@ -884,6 +884,48 @@
 					],
 					"path": [
 						"updatePreference"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "loginWithGoogle",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id_token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6IjhlOGZjOGU1NTZmN2E3NmQwOGQzNTgyOWQ2ZjkwYWUyZTEyY2ZkMGQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDU0MTU3NjUwNzgxNDE1ODgzNTMiLCJlbWFpbCI6ImVtYW55YTIwMDRAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ3NGExX2gzd3FxZURhMmQwTndsUW1RIiwibmFtZSI6IkVtYW4gWWFnaGkiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSjUyNGpfZzBQQ1J1WnBNNlVaZk1jLU03SS1yTk5MaXZqcWp3VHdPUFE5dllaMVJrbHE9czk2LWMiLCJnaXZlbl9uYW1lIjoiRW1hbiIsImZhbWlseV9uYW1lIjoiWWFnaGkiLCJpYXQiOjE3NTIxMDAzMDUsImV4cCI6MTc1MjEwMzkwNX0.GqIlA03i13a6gRywQwsd3HEBKNh4IcMPnJpCXYxki8pX3GAMRgA-jPIYy4ZI5jIZVrtAgSdq8EHOa_OQ3CBeYjZRnMS3JMurS8_cJ2tQo94YoID660_BiZFt-0N13Vek0t0xnBrPyIFrrvK2TCGii0QBvhQcdRcaJH9ZPpuqFSECr_R_K5Ys19acdLpCLnJHhXA_OmZhX-d_7KB1DiVBbefgAB2sS-u58GeNA0QYXamSEPpmgjcxzrCBegzWKrXvRlPpuT378IPVq2Y02yPl2WNu4v4eMz5JzrFBzbxTHQTJt6LInh0LxolnbAVP6KjIU3gfgm8HKt6uFagwWWUy0w\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/auth/loginWithGoogle",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"loginWithGoogle"
 					]
 				}
 			},

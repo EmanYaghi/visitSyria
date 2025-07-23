@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e7ce561b-caad-4a4e-bdf9-7764d2caddb6",
+		"_postman_id": "34310d73-7ae5-4c34-bb5d-6936740101c1",
 		"name": "Weather",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "40522740"
@@ -9,8 +9,33 @@
 		{
 			"name": "get Weather for 7 days",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODIzNDgsIm5iZiI6MTc1MzE4MjM0OCwianRpIjoidDVPQkszS21XdWl2Y0ZIaiIsInN1YiI6IjIiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Pu3YonHff5-iZZF48bIMy38FZeRx8QaHaCMB_GMD8Wo",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/weather",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"weather"
+					]
+				}
 			},
 			"response": []
 		},
