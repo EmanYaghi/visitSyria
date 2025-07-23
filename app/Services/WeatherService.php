@@ -1,13 +1,13 @@
 <?php
-
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use App\Support\WeatherConditionClassifier;
+use Illuminate\Http\Request;
 
 class WeatherService
 {
-    protected string $apiKey;
+      protected string $apiKey;
     protected int $days = 7;
 
     protected array $cities = [
@@ -16,53 +16,55 @@ class WeatherService
         'Raqqa', 'Idlib', 'Quneitra', 'Rif Dimashq'
     ];
 
+
     public function __construct()
     {
         $this->apiKey = env('WEATHER_API_KEY');
     }
 
-    public function getForecasts(): array
+    public function getForecastByCity(string $city): array
     {
-        $allForecasts = [];
+        $response = Http::get("http://api.weatherapi.com/v1/forecast.json", [
+            'key'    => $this->apiKey,
+            'q'      => $city,
+            'days'   => $this->days,
+            'aqi'    => 'no',
+            'alerts' => 'no',
+        ]);
 
-        foreach ($this->cities as $city) {
-            $response = Http::get("http://api.weatherapi.com/v1/forecast.json", [
-                'key'    => $this->apiKey,
-                'q'      => $city,
-                'days'   => $this->days,
-                'aqi'    => 'no',
-                'alerts' => 'no',
-            ]);
+        if (! $response->successful()) {
+            return ['error' => 'Failed to fetch weather data'];
+        }
+        $data = $response->json();
+        $location = $data['location']['name'] ?? $city;
 
-            if (! $response->successful()) {
-                continue;
-            }
-
-            $data = $response->json();
-            $location = $data['location']['name'] ?? $city;
-
-            $forecast = [];
-            foreach ($data['forecast']['forecastday'] as $day) {
-                $text = $day['day']['condition']['text'];
-                $forecast[] = [
-                    'date'          => $day['date'],
-                    'day_name'      => date('l', strtotime($day['date'])),
-                    'temp_c'        => $day['day']['maxtemp_c'],
-                    'condition_type'=> WeatherConditionClassifier::classify($text),
-                ];
-            }
-
-            $allForecasts[] = [
-                'location' => $location,
-                'forecast' => $forecast,
+        $forecast = [];
+        foreach ($data['forecast']['forecastday'] as $day) {
+            $text = $day['day']['condition']['text'];
+            $forecast[] = [
+                'date'          => $day['date'],
+                'day_name'      => date('l', strtotime($day['date'])),
+                'temp_c'        => $day['day']['maxtemp_c'],
+                'condition_type'=> WeatherConditionClassifier::classify($text),
             ];
         }
 
-        return $allForecasts;
+        return [
+            'location' => $location,
+            'forecast' => $forecast,
+        ];
+    }
+    public function handleForecastRequest(Request $request): array
+    {
+        $city = $request->input('city');
+        
+        if (!$city) {
+            return ['error' => 'City is required'];
+        }
+        return $this->getForecastByCity($city);
     }
 
-    // Get today's weather for all cities
-public function getTodayWeather(): array
+    public function getTodayWeather(): array
 {
     $todayWeather = [];
 
@@ -96,4 +98,6 @@ public function getTodayWeather(): array
 
     return $todayWeather;
 }
+
+
 }

@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Services\WeatherService;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 class WeatherController extends Controller
@@ -14,11 +14,12 @@ class WeatherController extends Controller
         $this->weatherService = $weatherService;
     }
 
-    public function getForecast(): JsonResponse
+    public function getForecast(Request $request): JsonResponse
     {
-        $forecasts = $this->weatherService->getForecasts();
-        return response()->json($forecasts);
+        $forecast = $this->weatherService->handleForecastRequest($request);
+        return response()->json($forecast);
     }
+
     public function todayWeather(WeatherService $weatherService)
     {
         $todayWeather = $weatherService->getTodayWeather();
