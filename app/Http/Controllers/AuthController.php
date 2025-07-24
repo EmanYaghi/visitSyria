@@ -129,9 +129,13 @@ class AuthController extends Controller
     }
     public function setProfile(CreateProfileRequest $request)
     {
+        if(Auth::user()->profile)
+            return response()->json(["message"=>" the profile already exists please use update request to modify it"]);
         $data= $request->validated();
-        $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
-        Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        if ($request->hasFile('photo')) {
+            $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
+            Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        }
         return $this->handle(fn() => $this->authService->setProfile(
            $data
         ));
@@ -139,8 +143,10 @@ class AuthController extends Controller
     public function updateProfile(UpdateProfileRequest $request)
     {
         $data= $request->validated();
-        $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
-        Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        if ($request->hasFile('photo')) {
+            $data['photo']=str::random(32).".".$request->photo->getClientOriginalExtension();
+            Storage::disk('public')->put($data['photo'],file_get_contents($request->photo));
+        }
         return $this->handle(fn() => $this->authService->updateProfile(
             $data
         ));
@@ -162,9 +168,14 @@ class AuthController extends Controller
     }
      public function setAdminProfile(CreateAdminProfileRequest $request)
     {
+        if(Auth::user()->adminProfile)
+            return response()->json(["message"=>" the profile already exists please use update request to modify it"]);
+
         $data= $request->validated();
-        $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
-        Storage::disk('public')->put($data['image'],file_get_contents($request->image));
+        if ($request->hasFile('image')) {
+            $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
+            Storage::disk('public')->put($data['image'],file_get_contents($request->image));
+        }
         return $this->handle(fn() => $this->authService->setAdminProfile(
             $data
         ));
@@ -172,8 +183,10 @@ class AuthController extends Controller
      public function updateAdminProfile(UpdateAdminProfileRequest $request)
     {
        $data= $request->validated();
-        $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
-        Storage::disk('public')->put($data['image'],file_get_contents($request->image));
+        if ($request->hasFile('image')) {
+            $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
+            Storage::disk('public')->put($data['image'],file_get_contents($request->image));
+        }
         return $this->handle(fn() => $this->authService->updateAdminProfile(
             $data
         ));

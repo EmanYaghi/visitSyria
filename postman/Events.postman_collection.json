@@ -1,23 +1,16 @@
 {
 	"info": {
-		"_postman_id": "a107ca38-edf6-4f94-a4d0-065df2fc16cd",
+		"_postman_id": "70533f3a-92f5-422f-baaf-06019cc79ebf",
 		"name": "Events",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38928530"
+		"_exporter_id": "40522740"
 	},
 	"item": [
 		{
 			"name": "getAllEvents",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIzODQwMDIsImV4cCI6MTc1MjM4NzYwMiwibmJmIjoxNzUyMzg0MDAyLCJqdGkiOiI5dEp0cDJUM0NHTmRjTnFwIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.8oJnAc6NjHaUJI99gbLOrsNpB6JNi57mwMvR9jIiVlM",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [
@@ -284,14 +277,7 @@
 			"name": "getEventById",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTIxMDUyODEsImV4cCI6MTc1MjEwODg4MSwibmJmIjoxNzUyMTA1MjgxLCJqdGkiOiJxcjMxVTZpd0VEUEh3c2ttIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.xCCS5bMjwMuI_I4KrOY_4JmiFqeskKjztvw_EHodYRE",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [

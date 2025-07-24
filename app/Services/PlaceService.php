@@ -2,7 +2,8 @@
 namespace App\Services;
 
 use App\Repositories\PlaceRepository;
-use Illuminate\Support\Str;
+use App\Models\Media;
+use Illuminate\Support\Facades\Storage;
 
 class PlaceService
 {
@@ -18,41 +19,66 @@ class PlaceService
         return $this->placeRepo->getAll($filters);
     }
 
-     public function store(array $data)
+    public function store(array $data)
     {
-        if ($data['type'] == 'tourist') {
-            $data['phone'] = null;
-            $data['country_code'] = null;
-        } elseif ($data['type'] == 'hotel' || $data['type'] == 'restaurant') {
-            if (empty($data['phone'])) {
-                return response()->json(['error' => 'Phone number is required for hotels and restaurants'], 400);
-            }
-        }
+        $data['classification'] = $this->normalizeClassification($data);
+        $data['phone'] = $this->normalizePhone($data);
         $data['id'] = $this->generatePlaceId();
         return $this->placeRepo->create($data);
     }
-    public function update($id, array $data)
+
+    public function update(int $id, array $data)
     {
-        if ($data['type'] == 'tourist') {
-            $data['phone'] = null;
-            $data['country_code'] = null;
-        } elseif ($data['type'] == 'hotel' || $data['type'] == 'restaurant') {
-            if (empty($data['phone'])) {
-                return response()->json(['error' => 'Phone number is required for hotels and restaurants'], 400);
-            }
+        if (isset($data['type'])) {
+            $data['classification'] = $this->normalizeClassification($data);
+            $data['phone'] = $this->normalizePhone($data);
         }
         return $this->placeRepo->update($id, $data);
     }
-    private function generatePlaceId()
+
+    public function delete($id)
     {
-        $lastPlace = $this->placeRepo->getLastPlace();
-        $lastId = $lastPlace ? (int)substr($lastPlace->id, -6) : 0;
-        return str_pad($lastId + 1, 6, '0', STR_PAD_LEFT);
+        return $this->placeRepo->delete($id);
+    }
+
+    public function storeImages($images, $place)
+    {
+        $imageUrls = [];
+        foreach ($images as $image) {
+            $path = $image->store('places', 'public');
+            Media::create([
+                'place_id' => $place->id,
+                'url' => $path,
+            ]);
+            $imageUrls[] = Storage::disk('public')->url($path);
+        }
+        return $imageUrls;
+    }
+
+
+    protected function normalizeClassification(array $d): ?string
+    {
+        return in_array($d['type'], ['hotel', 'restaurant'])
+            ? null
+            : ($d['classification'] ?? null);
+    }
+
+    protected function normalizePhone(array $d): ?string
+    {
+        return in_array($d['type'], ['hotel', 'restaurant'])
+            ? ($d['phone'] ?? throw new \InvalidArgumentException('Phone required.'))
+            : null;
+    }
+
+    protected function generatePlaceId(): string
+    {
+        $last = $this->placeRepo->getLastPlace();
+        $n = $last ? (int)substr($last->id, -6) : 0;
+        return str_pad($n + 1, 6, '0', STR_PAD_LEFT);
     }
 
     public function getById($id)
     {
-        return $this->placeRepo->findById($id);
+        return $this->placeRepo->findById($id)->load('media');
     }
-
 }

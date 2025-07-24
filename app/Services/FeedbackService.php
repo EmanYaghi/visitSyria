@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\Trip\TripResource;
 use App\Models\Article;
+use App\Models\Comment;
 use App\Models\Event;
 use App\Models\Place;
 use App\Models\Post;
@@ -11,6 +12,7 @@ use App\Models\Rating;
 use App\Models\Save;
 use App\Models\Trip;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Return_;
 
 class FeedbackService
 {
@@ -74,7 +76,7 @@ class FeedbackService
         }
         return ['message'=>$message,'code'=>$code];
     }
-        public function getSaves()
+    public function getSaves()
     {
         $type=request()->query('type');
         $user = Auth::user();
@@ -89,17 +91,17 @@ class FeedbackService
         }
         else if($type=="restaurant"){
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
-            $places=$places->where('type','restaurant');
+            $places = $places->filter(fn($place) => $place->type === 'restaurant');
             $saves = $places;//PlaceResource::collection($places);
         }
         else if($type=="hotel"){
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
-            $places = $places->where('type', 'restaurant');
+            $places = $places->filter(fn($place) => $place->type === 'hotel');
             $saves = $places; //PlaceResource::collection($places);
         }
         else if($type=="tourist"){
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
-            $places=$places->where('type','tourist');
+            $places = $places->filter(fn($place) => $place->type === 'tourist');
             $saves = $places;//PlaceResource::collection($places);
         }
         else if($type=="article"){
@@ -112,78 +114,102 @@ class FeedbackService
         }
         return ['saves'=>$saves];
     }
-
-    public function setRating($id,$request)
+   public function setRating( $request,$id)
     {
-        $message="set rating successfully";
-        $code=201;
         $user = Auth::user();
-        $type=request()->query('type');
-        if($type=="trip"){
-            if($rate=Rating::where('user_id',$user->id)->where('trip_id',$id)->first())
-                $rate->update(['rating_value',$request['rating_value']]);
-            else
-                $user->ratings()->create(["trip_id"=>$id,"rating_value"=>$request['rating_value']]);
+        $type = request()->query('type');
+        $ratingValue = $request['rating_value'];
+        if($ratingValue>=3)
+            $classification="positive";
+        else
+            $classification="negative";
+        $message = "set rating successfully";
+        $code = 201;
+        $allowedTypes = [
+            'trip'  => 'trip_id',
+            'place' => 'place_id',
+        ];
+        if (!isset($allowedTypes[$type])) {
+            return [
+                "message" => "the type is not correct",
+                "code"    => 400
+            ];
         }
-        else if($type=="place"){
-            if($rate=Rating::where('user_id',$user->id)->where('place_id',$id)->first())
-                $rate->update(['rating_value',$request['rating_value']]);
-            else
-                $user->ratings()->create(["place_id"=>$id,"rating_value"=>$request['rating_value']]);
+        $column = $allowedTypes[$type];
+        $rate = Rating::where('user_id', $user->id)->where($column, $id)->first();
+        if ($rate) {
+            $rate->update(['rating_value'=>$ratingValue,'classification'=>$classification]);
+            $rate->save();
+        } else {
+            $user->ratings()->create([$column=> $id,'rating_value' => $ratingValue,'classification'=>$classification]);
         }
-        else{
-            $message="the type is not correct";
-            $code=400;
-        }
-        return ["message"=>$message,"code"=>$code];
+
+        return ["message" => $message,"code"=> $code];
     }
+
     public function deleteRating($id)
     {
+        $user = Auth::user();
+        $type = request()->query('type');
+
         $message="delet rating successfully";
         $code=200;
         $user = Auth::user();
         $type=request()->query('type');
-        if($type=="trip"){
-            $user->ratings()->where('trip_id',$id)->delete();
+         $allowedTypes = [
+            'trip'  => 'trip_id',
+            'place' => 'place_id',
+        ];
+        if (!isset($allowedTypes[$type])) {
+            return [
+                "message" => "the type is not correct",
+                "code"    => 400
+            ];
         }
-        else if($type=="place"){
-            $user->ratings()->where('place_id',$id)->delete();
-        }
-        else{
-            $message="the type is not correct";
-            $code=400;
-        }
-        return ["message"=>$message,"code"=>$code];
-    }
-    public function setComment($id,$request)
-    {
-        $user = Auth::user();
-        $type=request()->query('type');
-        if($type=="trip"){
-            $trips = $user->saves()->whereNotNull('trip_id')->with('trip')->get()->pluck('trip');
-        }
-        else if($type=="post"){
-            $posts = $user->saves()->whereNotNull('post_id')->with('post')->get()->pluck('post');
-        }
-        else if($type=="place"){
-            $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
+        $column = $allowedTypes[$type];
+        $rate = Rating::where('user_id', $user->id)->where($column, $id)->first();
+        if ($rate) {
+            $rate->delete();
         }
         return ["message"=>$message,"code"=>$code];
     }
-    public function deleteComment($id,$request)
+    public function setComment($request,$id)
     {
         $user = Auth::user();
-        $type=request()->query('type');
-        if($type=="trip"){
-            $trips = $user->saves()->whereNotNull('trip_id')->with('trip')->get()->pluck('trip');
+        $type = request()->query('type');
+        $message = "set comment successfully";
+        $code = 201;
+        $allowedTypes = [
+            'trip'  => 'trip_id',
+            'place' => 'place_id',
+            'post'=>'post_id'
+        ];
+        if (!isset($allowedTypes[$type])) {
+            return [
+                "message" => "the type is not correct",
+                "code"    => 400
+            ];
         }
-        else if($type=="post"){
-            $posts = $user->saves()->whereNotNull('post_id')->with('post')->get()->pluck('post');
-        }
-        else if($type=="place"){
-            $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
+        $column = $allowedTypes[$type];
+        $comment=$user->comments()->create([$column=> $id,'body' => $request['body']]);
+        return ["comment"=>$comment,"message"=>$message,"code"=>$code];
+    }
+    public function deleteComment($id)
+    {
+        $comment=Comment::find($id);
+        if(!$comment){
+            $message = "comment not found";
+            $code = 404;
+        }else{
+            $comment->delete();
+            $message = "delete comment successfully";
+            $code = 200;
         }
         return ["message"=>$message,"code"=>$code];
+    }
+    public function getFeedback($id)
+    {
+
     }
 
 }

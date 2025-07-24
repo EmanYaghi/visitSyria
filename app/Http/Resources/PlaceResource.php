@@ -7,6 +7,7 @@ class PlaceResource extends JsonResource
 {
     public function toArray($request)
     {
+        $avg = $this->ratings->avg('rating');
         return [
             'id' => $this->resource->id,
             'city_id' => $this->resource->city_id,
@@ -19,8 +20,9 @@ class PlaceResource extends JsonResource
             'place' => $this->resource->place,
             'longitude' => $this->resource->longitude,
             'latitude' => $this->resource->latitude,
-            'rating' => $this->resource->rating,
+            'rating' => $avg ? round($avg, 2) : 0,
             'classification' => $this->resource->classification,
+            'images' => $this->media->map(fn($media) => asset('storage/' . $media->url)),
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

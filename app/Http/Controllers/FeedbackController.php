@@ -12,7 +12,6 @@ class FeedbackController extends Controller
     public function __construct(FeedbackService $feedbackService) {
         $this->feedbackService = $feedbackService;
     }
-
     public function setSave($id)
     {
         $data=[];
@@ -50,7 +49,18 @@ class FeedbackController extends Controller
     {
         $data=[];
         try{
-            $data=$this->feedbackService->setRating($request->validate());
+            $data=$this->feedbackService->setRating($request->validate(['rating_value'=>'required']),$id);
+            return response()->json(["message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function deleteRating($id)
+    {
+        $data=[];
+        try{
+            $data=$this->feedbackService->deleteRating($id);
             return response()->json(["message" =>$data['message']], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();
@@ -61,7 +71,18 @@ class FeedbackController extends Controller
     {
         $data=[];
         try{
-            $data=$this->feedbackService->setComment($request->validate());
+            $data=$this->feedbackService->setComment($request->validate(['body'=>'required|string']),$id);
+            return response()->json(["comment"=>$data['comment'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function deleteComment($id)
+    {
+        $data=[];
+        try{
+            $data=$this->feedbackService->deleteComment($id);
             return response()->json(["message" =>$data['message']], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();
@@ -69,15 +90,4 @@ class FeedbackController extends Controller
         }
     }
 
-     public function getFeedback($id)
-    {
-        $data=[];
-        try{
-            $data=$this->feedbackService->getFeedback();
-            return response()->json(["feedback"=>$data['feedback'],"message" =>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
-        }
-    }
 }

@@ -1,0 +1,353 @@
+{
+	"info": {
+		"_postman_id": "3c62ed46-832f-4b24-a916-5ccf02a1b478",
+		"name": "Places",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40522740"
+	},
+	"item": [
+		{
+			"name": "StorePlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMzMDQwNTAsIm5iZiI6MTc1MzMwNDA1MCwianRpIjoibjBGTThNN0xVTG5jWDZsRCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wLro8b_YE-3ARaYHt3knzej4RemYUylMcqCL9XDVIoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "city_name",
+							"value": "دمشق",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "restaurant",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "ام شريف",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "ام شريف هو مطعم شرقي راقٍ يقدم المأكولات الشرقية الأصيلة والفريدة التي تعيد للأذهان النكهات التقليدية المنسية.\n",
+							"type": "text"
+						},
+						{
+							"key": "number_of_branches",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "933809100",
+							"type": "text"
+						},
+						{
+							"key": "country_code",
+							"value": "+963",
+							"type": "text"
+						},
+						{
+							"key": "place",
+							"value": "Shoukry Al-qouwatly street, Four Seasons Hotel",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "36.3083",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "33.5082",
+							"type": "text"
+						},
+						{
+							"key": "classification",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+						},
+						{
+							"key": "images[1]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMzMDQwNTAsIm5iZiI6MTc1MzMwNDA1MCwianRpIjoibjBGTThNN0xVTG5jWDZsRCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wLro8b_YE-3ARaYHt3knzej4RemYUylMcqCL9XDVIoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "city_name",
+							"value": "دمشق",
+							"type": "text"
+						},
+						{
+							"key": "name",
+							"value": "ام شريفة",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "إم شريف هو مطعم شرقي راقٍ يقدم المأكولات الشرقية الأصيلة والفريدة التي تعيد للأذهان النكهات التقليدية المنسية.\n",
+							"type": "text"
+						},
+						{
+							"key": "number_of_branches",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "933809100",
+							"type": "text"
+						},
+						{
+							"key": "country_code",
+							"value": "+963",
+							"type": "text"
+						},
+						{
+							"key": "place",
+							"value": "Shoukry Al-qouwatly street, Four Seasons Hotel",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "36.3083",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "33.5082",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "/C:/Users/Dell/Pictures/IMG-20240403-WA0033.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/updatePlace/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"updatePlace",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllPlaces",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetCityPlaces",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/city/دمشق/places",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"city",
+						"دمشق",
+						"places"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetPlaceByID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletePlace",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMzMDQwNTAsIm5iZiI6MTc1MzMwNDA1MCwianRpIjoibjBGTThNN0xVTG5jWDZsRCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wLro8b_YE-3ARaYHt3knzej4RemYUylMcqCL9XDVIoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

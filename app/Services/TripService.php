@@ -73,6 +73,8 @@ class TripService
                             "time" => $section['time'] ?? null,
                             "title" => $section['title'] ?? null,
                             "description" => $section['description'] ?? null,
+                            "longitude"=>$section['longitude']??null,
+                            "latitude"=>$section['latitude']??null,
                         ]);
                     }
                 }
@@ -138,6 +140,8 @@ class TripService
                             "time" => $section['time'] ?? null,
                             "title" => $section['title'] ?? null,
                             "description" => $section['description'] ?? null,
+                            "longitude"=>$section['longitude']??null,
+                            "latitude"=>$section['latitude']??null,
                         ]);
                     }
                 }

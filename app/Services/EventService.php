@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Requests\UpdateEventRequest;
+use App\Http\Requests\Events\UpdateEventRequest;
 use App\Repositories\EventRepository;
 use App\Models\Media;
 use Illuminate\Http\Request;

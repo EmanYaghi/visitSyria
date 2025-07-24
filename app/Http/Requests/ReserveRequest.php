@@ -6,23 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ReserveRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
+    public function authorize()
     {
-        return false;
+        return true;
     }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'trip_id' => 'required|exists:trips,id',
+            'number_of_tickets' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'payment_method' => 'required|string',
+            'passengers' => 'required|array|min:1',
+            'passengers.*.first_name' => 'required|string|max:255',
+            'passengers.*.last_name' => 'required|string|max:255',
+            'passengers.*.gender' => 'nullable|in:male,female,other',
+            'passengers.*.birth_date' => 'nullable|date',
+            'passengers.*.nationality' => 'nullable|string|max:255',
+            'passengers.0.email' => 'required|email',
+            'passengers.0.phone' => 'required|string|max:20',
+            'passengers.0.country_code' => 'required|string|max:10',
         ];
     }
 }

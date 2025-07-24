@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
             RolePermissionsSeeder::class,
             CitiesTableSeeder::class,
             MediaTableSeeder::class,
-            TagNameSeeder::class
+            TagNameSeeder::class,
+            PlaceSeeder::class,
+            EventSeeder::class,
+
         ]);
         User::factory()->create([
             'email' => 'test@example.com',

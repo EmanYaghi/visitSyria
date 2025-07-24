@@ -13,7 +13,9 @@ return new class extends Migration
             $table->foreignId('timeline_id')->constrained()->cascadeOnDelete();
             $table->time('time');
             $table->string('title');
-            $table->text('description')->nullable();
+            $table->json('description')->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
             $table->timestamps();
         });
     }

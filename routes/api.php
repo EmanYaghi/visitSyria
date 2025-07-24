@@ -4,8 +4,10 @@
     use App\Http\Controllers\WeatherController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\AuthController;
-    use App\Http\Controllers\EventController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\TripController;
 
     // Route::get('/user', function (Request $request) {
@@ -46,8 +48,14 @@ use App\Http\Controllers\TripController;
     Route::get('/weather/today', [WeatherController::class, 'todayWeather']);
 
     Route::middleware('auth:api')->group(function () {
-        Route::resource('events', EventController::class);
+
+        Route::post('events', [EventController::class,'store']);
         Route::post('updateEvent/{id}', [EventController::class,'update']);
+        Route::delete('events/{id}', [EventController::class,'destroy']);
+
+        Route::post('places', [PlaceController::class,'store']);
+        Route::post('updatePlace/{id}', [PlaceController::class,'update']);
+        Route::delete('places/{id}', [PlaceController::class,'destroy']);
 
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
@@ -67,8 +75,25 @@ use App\Http\Controllers\TripController;
     Route::get('trip/company/{id}', [TripController::class,'companyTrips']);
     Route::get('trip/offers', [TripController::class,'offers']);
 
+
+    Route::get('places', [PlaceController::class,'index']);
+    Route::get('places/{id}', [PlaceController::class,'show']);
+    Route::get('city/{cityName}/places', [PlaceController::class, 'cityPlaces']);
+
+    Route::get('events', [EventController::class,'index']);
+    Route::get('events/{id}', [EventController::class,'show']);
+
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
+
+    Route::group(['middleware' => ['jwt.auth']], function () {
+        Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
+        Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
+        Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
+        Route::get('/my-trips', [BookingController::class, 'myReservedTrips']);
+    });
+
+
 ?>
 
 

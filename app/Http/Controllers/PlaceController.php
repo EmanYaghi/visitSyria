@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\PlaceStoreRequest;
 use App\Http\Requests\PlaceUpdateRequest;
 use App\Http\Resources\PlaceResource;
@@ -20,33 +19,31 @@ class PlaceController extends Controller
 
     public function index(Request $request)
     {
-        // إرجاع قائمة الأماكن بناءً على الفلاتر
-        $places = $this->placeService->getAll($request->only(['type', 'city_id']));
+        $filters = $request->only(['type', 'city_id']);
+        $places = $this->placeService->getAll($filters);
         return PlaceResource::collection($places);
     }
+public function cityPlaces(Request $request, $cityName)
+{
+    $city = City::where('name', $cityName)->first();
+    if (!$city) {
+        return response()->json(['message' => 'City not found'], 404);
+    }
+    $filters = $request->only(['type']);
+    $filters['city_id'] = $city->id;
+    $places = $this->placeService->getAll($filters);
+    return PlaceResource::collection($places);
+}
 
-public function store(PlaceStoreRequest $request)
+    public function store(PlaceStoreRequest $request)
     {
         $data = $request->validated();
-
-        // جلب المدينة بناءً على اسم المدينة
-        $city = City::where('name', $data['city_name'])->first();
-
-        if (!$city) {
-            return response()->json(['error' => 'City not found'], 404);
-        }
-
-        // إضافة city_id إلى البيانات المدخلة
-        $data['city_id'] = $city->id;
-
-        // معالجة الصور
-        if ($request->hasFile('images')) {
-            $data['images'] = $this->handleImages($request->file('images'));
-        }
-
-        // تخزين المكان عبر الخدمة
+        $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
         $place = $this->placeService->store($data);
-        return new PlaceResource($place);
+
+        $this->handleImages($request, $place);
+
+        return response()->json(['place' => new PlaceResource($place)],201);
     }
 
     public function show($id)
@@ -55,25 +52,35 @@ public function store(PlaceStoreRequest $request)
         return new PlaceResource($place);
     }
 
-    public function update(PlaceUpdateRequest $request, $id)
+   public function update(PlaceUpdateRequest $request, $id)
     {
-        $place = $this->placeService->update($id, $request->validated());
-        return new PlaceResource($place);
+        $data = $request->validated();
+        if (isset($data['city_name'])) {
+            $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
+        }
+
+        $place = $this->placeService->update($id, $data);
+
+        $this->handleImages($request, $place);
+
+        return response()->json(['place' => new PlaceResource($place)]);
     }
 
     public function destroy($id)
-    {
-        $this->placeService->delete($id);
-        return response()->json(['message' => 'Deleted successfully.']);
+{
+    if (!auth()->user()->hasRole('super_admin')) {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
+    $this->placeService->delete($id);
+    return response()->json(['message' => 'Deleted successfully.']);
+}
 
-    private function handleImages($images)
+
+    private function handleImages($request, $place)
     {
-        $imagePaths = [];
-        foreach ($images as $image) {
-            $path = $image->store('images', 'public');
-            $imagePaths[] = $path;
+        if ($request->hasFile('images')) {
+            $imageUrls = $this->placeService->storeImages($request->file('images'), $place);
+            return $imageUrls;
         }
-        return $imagePaths;
     }
 }
