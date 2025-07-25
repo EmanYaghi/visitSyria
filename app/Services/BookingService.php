@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\ReservationTripResource;
+use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
 use App\Models\Passenger;
 use App\Models\User;
@@ -14,21 +14,20 @@ use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
-    public function reserve(array $data)
+    public function reserve($data)
     {
         $user = Auth::user();
         $price = $data['price'];
         $numberOfTickets = $data['number_of_tickets'] ?? 1;
         $tripId = $data['trip_id'];
         $passengers = $data['passengers'];
-        // ابدأ معاملة قاعدة البيانات لضمان الذمة
         DB::beginTransaction();
         try {
-            Stripe::setApiKey(config('services.stripe.secret'));
+            Stripe::setApiKey(env('STRIPE_SECRET'));
             $paymentIntent = PaymentIntent::create([
-                'amount' => intval($price * 100), // بالمئة (cents)
+                'amount' => intval($price * 100), //cents
                 'currency' => 'usd',
-                'payment_method' => $data['payment_method'], // ID لطريقة الدفع (مثل Stripe card token)
+                'payment_method' => $data['payment_method'],
                 'confirmation_method' => 'manual',
                 'confirm' => true,
                 'metadata' => [
@@ -66,7 +65,7 @@ class BookingService
                 ->size(300)
                 ->build();
             $path = 'public/qrcodes/booking_'.$booking->id.'.png';
-            \Storage::put($path, $result->getString());
+            Storage::put($path, $result->getString());
             $booking->qr_code = $path;
             $booking->save();
 

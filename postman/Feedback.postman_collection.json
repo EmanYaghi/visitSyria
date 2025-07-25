@@ -1,0 +1,277 @@
+{
+	"info": {
+		"_postman_id": "3165040a-7f2a-4fc7-b98f-9ef434e59f08",
+		"name": "Feedback",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38928530"
+	},
+	"item": [
+		{
+			"name": "SetSave",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}saves/6?type=trip",
+					"host": [
+						"{{URL}}saves"
+					],
+					"path": [
+						"6"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteSave",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}saves/6?type=trip",
+					"host": [
+						"{{URL}}saves"
+					],
+					"path": [
+						"6"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Saves",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}saves?type=trip",
+					"host": [
+						"{{URL}}saves"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setAndUpdateRating",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "rating_value",
+							"value": "4",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}ratings/5?type=trip",
+					"host": [
+						"{{URL}}ratings"
+					],
+					"path": [
+						"5"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteRating",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}ratings/5?type=trip",
+					"host": [
+						"{{URL}}ratings"
+					],
+					"path": [
+						"5"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setComment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "body",
+							"value": "fjgkdfhgcv, lghkjgl",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}comments/3?type=trip",
+					"host": [
+						"{{URL}}comments"
+					],
+					"path": [
+						"3"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteComment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}comments/11",
+					"host": [
+						"{{URL}}comments"
+					],
+					"path": [
+						"11"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key:'Accept',\r",
+					"    value:'application/json'\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

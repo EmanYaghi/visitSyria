@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReserveRequest;
-use App\Http\Requests\PassengerRequest;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Throwable;
@@ -10,7 +9,6 @@ use Throwable;
 class BookingController extends Controller
 {
     protected BookingService $bookingService;
-
     public function __construct(BookingService $bookingService) {
         $this->bookingService = $bookingService;
     }

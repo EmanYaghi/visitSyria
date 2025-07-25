@@ -7,24 +7,23 @@
 	},
 	"item": [
 		{
-			"name": "getAllTrips",
+			"name": "getAllTripsByTag",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips",
+					"raw": "{{URL}}trips?tag=الكل",
 					"host": [
 						"{{URL}}trips"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "الكل"
+						}
 					]
 				}
 			},
@@ -38,7 +37,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI3NTY3NzEsImV4cCI6MTc1Mjc2MDM3MSwibmJmIjoxNzUyNzU2NzcxLCJqdGkiOiJ1bm4yUUQ1YmFYYW1zenlUIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.oBaMoKLFbG3_sHxlVbMaqWSUFR6E4cSIeYkdNuwQ_TQ",
+							"value": "{{TOKEN}}",
 							"type": "string"
 						}
 					]
@@ -91,88 +90,123 @@
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][day]",
+							"key": "timelines[0][day]",
 							"value": "1",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][0][time]",
+							"key": "timelines[0][sections][0][time]",
 							"value": "9:00",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][0][title]",
+							"key": "timelines[0][sections][0][title]",
 							"value": "kfdgjjgkd",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][0][description]",
+							"key": "timelines[0][sections][0][description][0]",
 							"value": "lfkgjldkjgl\n,mfgndggnkfk\ncbmv,bmngf",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][1][time]",
+							"key": "timelines[0][sections][1][time]",
 							"value": "12:30",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][1][title]",
+							"key": "timelines[0][sections][1][title]",
 							"value": "kxvldfkjgl",
 							"type": "text"
 						},
 						{
-							"key": "timeline[0][section][1][description]",
+							"key": "timelines[0][sections][1][description][0]",
 							"value": "m,cvnbm,cvn",
 							"type": "text"
 						},
 						{
-							"key": "timeline[1][day]",
+							"key": "timelines[1][day]",
 							"value": "2",
 							"type": "text"
 						},
 						{
-							"key": "timeline[1][section][0][time]",
+							"key": "timelines[1][sections][0][time]",
 							"value": "10:00",
 							"type": "text"
 						},
 						{
-							"key": "timeline[1][section][0][title]",
+							"key": "timelines[1][sections][0][title]",
 							"value": "nbbhjg",
 							"type": "text"
 						},
 						{
-							"key": "timeline[1][section][0][description]",
+							"key": "timelines[1][sections][0][description][0]",
 							"value": "kuuyfyt",
 							"type": "text"
 						},
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "/C:/Users/aya/Desktop/Trip.png"
+							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
 						},
 						{
 							"key": "images[1]",
 							"type": "file",
-							"src": "/C:/Users/aya/Desktop/Community.png"
+							"src": "postman-cloud:///1efb97c2-2b22-4c00-b984-b9f2ee5009d7"
 						},
 						{
-							"key": "tags[0]",
+							"key": "tags[]",
 							"value": "طرطوس",
 							"type": "text"
 						},
 						{
-							"key": "tags[1]",
+							"key": "tags[]",
 							"value": "اللاذقية",
 							"type": "text"
 						},
 						{
-							"key": "tags[2]",
+							"key": "tags[]",
 							"value": "ترفيهي",
 							"type": "text"
 						},
 						{
 							"key": "improvements[]",
-							"value": "[\"fhrtuty fghfgj\",\"dfgthtm\",dfgrt\"]",
+							"value": "jhgjghjhg",
+							"type": "text"
+						},
+						{
+							"key": "improvements[]",
+							"value": "jhyy",
+							"type": "text"
+						},
+						{
+							"key": "improvements[]",
+							"value": "kii",
+							"type": "text"
+						},
+						{
+							"key": "new_price",
+							"value": "3550",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][description][1]",
+							"value": "dkjg kdgjhfkjg kjfhkfdjh",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][description][2]",
+							"value": "vmnkdfjh kfgjhkkfh lkdjgo",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][longitude]",
+							"value": "45.6",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][latitude]",
+							"value": "100.3",
 							"type": "text"
 						}
 					]
@@ -194,12 +228,12 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"value": "{{TOKEN}}",
 							"type": "string"
 						}
 					]
 				},
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "formdata",
@@ -221,8 +255,9 @@
 						},
 						{
 							"key": "start_date",
-							"value": "5-12-2025",
-							"type": "text"
+							"value": "",
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "duration",
@@ -237,12 +272,8 @@
 						{
 							"key": "price",
 							"value": "",
-							"type": "text"
-						},
-						{
-							"key": "discount",
-							"value": "50",
-							"type": "text"
+							"type": "text",
+							"disabled": true
 						},
 						{
 							"key": "new_price",
@@ -252,12 +283,13 @@
 					]
 				},
 				"url": {
-					"raw": "{{URL}}trips/1",
+					"raw": "{{URL}}trip/update/5",
 					"host": [
-						"{{URL}}trips"
+						"{{URL}}trip"
 					],
 					"path": [
-						"1"
+						"update",
+						"5"
 					]
 				}
 			},
@@ -271,7 +303,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"value": "{{TOKEN}}",
 							"type": "string"
 						}
 					]
@@ -279,12 +311,12 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/1",
+					"raw": "{{URL}}trips/5",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"1"
+						"5"
 					]
 				}
 			},
@@ -294,24 +326,17 @@
 			"name": "getTripById",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/1",
+					"raw": "{{URL}}trips/3",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"1"
+						"3"
 					]
 				}
 			},
@@ -321,21 +346,14 @@
 			"name": "getAllTripsByCompany",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/company/1",
+					"raw": "{{URL}}trip/company/1",
 					"host": [
-						"{{URL}}trips"
+						"{{URL}}trip"
 					],
 					"path": [
 						"company",
@@ -346,38 +364,17 @@
 			"response": []
 		},
 		{
-			"name": "tripsOffer",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
+			"name": "getTripsOffer",
 			"request": {
 				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
-							"type": "string"
-						}
-					]
+					"type": "noauth"
 				},
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "",
-							"value": "",
-							"type": "text",
-							"disabled": true
-						}
-					]
-				},
 				"url": {
-					"raw": "{{URL}}trips/offers",
+					"raw": "{{URL}}trip/offers",
 					"host": [
-						"{{URL}}trips"
+						"{{URL}}trip"
 					],
 					"path": [
 						"offers"

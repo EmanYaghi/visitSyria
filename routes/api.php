@@ -75,10 +75,8 @@ use App\Http\Controllers\TripController;
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
         Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
-        Route::get('/my-trips', [BookingController::class, 'myReservedTrips']);
+        Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
     });
-
-
 ?>
 
 
