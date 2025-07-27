@@ -243,6 +243,252 @@
 			"response": []
 		},
 		{
+			"name": "GetAllRestaurants",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/restaurants",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllRestaurantsByCity",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/restaurants/byCity?city=حلب",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"restaurants",
+						"byCity"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "حلب"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllHotelsByCity",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/hotels/byCity?city=دمشق",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"hotels",
+						"byCity"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllHotels",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/hotels",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"hotels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTouristPlaces",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/tourist",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"tourist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTopRatedTouristPlaces",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/top-rated-tourist",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"top-rated-tourist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Tourist Places By Classification",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/tourist/أثرية",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"tourist",
+						"أثرية"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetCityPlaces",
 			"request": {
 				"auth": {

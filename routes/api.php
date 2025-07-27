@@ -75,10 +75,22 @@ use App\Http\Controllers\TripController;
     Route::get('trip/company/{id}', [TripController::class,'companyTrips']);
     Route::get('trip/offers', [TripController::class,'offers']);
 
+    
+    Route::get('places/restaurants', [PlaceController::class, 'getRestaurants']);
+    Route::get('places/hotels', [PlaceController::class, 'getHotels']);
+    Route::get('places/tourist', [PlaceController::class, 'getTouristPlaces']);
+
+    Route::get('places/city/{cityName}', [PlaceController::class, 'getPlacesByCity']);
+    Route::get('city/{cityName}/places', [PlaceController::class, 'cityPlaces']);
+
+    Route::get('places/top-rated-tourist', [PlaceController::class, 'getTopRatedTouristPlaces']);
+    Route::get('places/tourist/{classification}', [PlaceController::class, 'getTouristPlacesByClassification']);
+    Route::get('places/restaurants/byCity', [PlaceController::class, 'getRestaurantsByCity']);
+    Route::get('places/hotels/byCity', [PlaceController::class, 'getHotelsByCity']);
 
     Route::get('places', [PlaceController::class,'index']);
     Route::get('places/{id}', [PlaceController::class,'show']);
-    Route::get('city/{cityName}/places', [PlaceController::class, 'cityPlaces']);
+
 
     Route::get('events', [EventController::class,'index']);
     Route::get('events/{id}', [EventController::class,'show']);

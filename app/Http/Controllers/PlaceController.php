@@ -66,16 +66,65 @@ public function cityPlaces(Request $request, $cityName)
         return response()->json(['place' => new PlaceResource($place)]);
     }
 
-    public function destroy($id)
-{
-    if (!auth()->user()->hasRole('super_admin')) {
-        return response()->json(['message' => 'Unauthorized'], 403);
+        public function destroy($id)
+    {
+        if (!auth()->user()->hasRole('super_admin')) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        $this->placeService->delete($id);
+        return response()->json(['message' => 'Deleted successfully.']);
     }
-    $this->placeService->delete($id);
-    return response()->json(['message' => 'Deleted successfully.']);
-}
+        
+        public function getRestaurants(Request $request)
+        {
+            $places = $this->placeService->getRestaurants();  
+            return PlaceResource::collection($places);
+        }
 
+        public function getHotels(Request $request)
+        {
+            $places = $this->placeService->getHotels();
+            return PlaceResource::collection($places);
+        }
 
+        public function getTouristPlaces(Request $request)
+        {
+            $places = $this->placeService->getTouristPlaces();
+            return PlaceResource::collection($places);
+        }
+        public function getTopRatedTouristPlaces(Request $request)
+        {
+            $places = $this->placeService->getTopRatedTouristPlaces($request->all());
+            return PlaceResource::collection($places);
+        }
+        public function getTouristPlacesByClassification($classification)
+        {
+            $places = $this->placeService->getTouristPlacesByClassification($classification);
+            return PlaceResource::collection($places);
+        }
+        public function getRestaurantsByCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|exists:cities,name'
+        ]);
+        
+        $cityName = $request->input('city');
+        $restaurants = $this->placeService->getRestaurantsByCityName($cityName);
+        
+        return PlaceResource::collection($restaurants);
+    }
+
+    public function getHotelsByCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|exists:cities,name'
+        ]);
+        
+        $cityName = $request->input('city');
+        $hotels = $this->placeService->getHotelsByCityName($cityName);
+        
+        return PlaceResource::collection($hotels);
+    }
     private function handleImages($request, $place)
     {
         if ($request->hasFile('images')) {

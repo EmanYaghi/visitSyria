@@ -41,6 +41,40 @@ class PlaceService
         return $this->placeRepo->delete($id);
     }
 
+public function getRestaurants($filters = [])
+{
+    $filters['type'] = 'restaurant';
+    return $this->placeRepo->getAll($filters);
+}
+    public function getHotels($filters = [])
+    {
+        $filters['type'] = 'hotel';
+        return $this->placeRepo->getAll($filters);
+    }
+
+    public function getTouristPlaces($filters = [])
+    {
+        $filters['type'] = 'tourist';
+        return $this->placeRepo->getAll($filters);
+    }
+    public function getTopRatedTouristPlaces($filters = [])
+    {
+        $filters['type'] = 'tourist';
+        return $this->placeRepo->getTopRatedPlaces($filters);
+    }
+    public function getTouristPlacesByClassification($classification)
+    {
+        return $this->placeRepo->getTouristPlacesByClassification($classification);
+    }
+    public function getRestaurantsByCityName($cityName)
+    {
+        return $this->placeRepo->getRestaurantsByCityName($cityName);
+    }
+
+    public function getHotelsByCityName($cityName)
+    {
+        return $this->placeRepo->getHotelsByCityName($cityName);
+    }
     public function storeImages($images, $place)
     {
         $imageUrls = [];
