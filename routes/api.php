@@ -4,11 +4,11 @@
     use App\Http\Controllers\WeatherController;
     use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\FeedbackController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\TripController;
+    use App\Http\Controllers\BookingController;
+    use App\Http\Controllers\EventController;
+    use App\Http\Controllers\FeedbackController;
+    use App\Http\Controllers\PlaceController;
+    use App\Http\Controllers\TripController;
 
     // Route::get('/user', function (Request $request) {
     //     return $request->user();
@@ -41,7 +41,6 @@ use App\Http\Controllers\TripController;
         Route::post('setAdminProfile', [AuthController::class,'setAdminProfile'])->middleware('auth:api');
         Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
         Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
-
     });
 
     Route::get('weather', [WeatherController::class, 'getForecast']);
@@ -76,6 +75,7 @@ use App\Http\Controllers\TripController;
     Route::get('trip/offers', [TripController::class,'offers']);
 
     
+
     Route::get('places/restaurants', [PlaceController::class, 'getRestaurants']);
     Route::get('places/hotels', [PlaceController::class, 'getHotels']);
     Route::get('places/tourist', [PlaceController::class, 'getTouristPlaces']);
@@ -87,11 +87,14 @@ use App\Http\Controllers\TripController;
     Route::get('places/tourist/{classification}', [PlaceController::class, 'getTouristPlacesByClassification']);
     Route::get('places/restaurants/byCity', [PlaceController::class, 'getRestaurantsByCity']);
     Route::get('places/hotels/byCity', [PlaceController::class, 'getHotelsByCity']);
+    Route::get('places/tourist/{classification}/city/{cityName}', [PlaceController::class, 'getTouristPlacesByClassificationAndCity']);
+
 
     Route::get('places', [PlaceController::class,'index']);
     Route::get('places/{id}', [PlaceController::class,'show']);
 
 
+    
     Route::get('events', [EventController::class,'index']);
     Route::get('events/{id}', [EventController::class,'show']);
 

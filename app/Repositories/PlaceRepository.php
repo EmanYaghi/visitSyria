@@ -28,6 +28,17 @@ class PlaceRepository
                     ->latest()
                     ->get();
     }
+    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
+        {
+        return Place::withAvg('ratings as ratings_avg', 'rating_value')
+                    ->where('type', 'tourist')
+                    ->where('classification', $classification)
+                    ->where('city_id', $cityId)
+                    ->latest()
+                    ->get();
+
+        }
+
     public function getRestaurantsByCityName($cityName)
     {
         return Place::where('type', 'restaurant')

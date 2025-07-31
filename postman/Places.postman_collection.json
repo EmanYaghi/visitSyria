@@ -489,6 +489,42 @@
 			"response": []
 		},
 		{
+			"name": "Get Tourist Places By ClassificationAndCity",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/places/tourist/أثرية/city/دمشق",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"places",
+						"tourist",
+						"أثرية",
+						"city",
+						"دمشق"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetCityPlaces",
 			"request": {
 				"auth": {

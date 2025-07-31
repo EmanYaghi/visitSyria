@@ -70,6 +70,11 @@ public function getRestaurants($filters = [])
     {
         return $this->placeRepo->getRestaurantsByCityName($cityName);
     }
+    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
+{
+    return $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
+}
+
 
     public function getHotelsByCityName($cityName)
     {

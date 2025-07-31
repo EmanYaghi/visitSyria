@@ -102,6 +102,13 @@ public function cityPlaces(Request $request, $cityName)
             $places = $this->placeService->getTouristPlacesByClassification($classification);
             return PlaceResource::collection($places);
         }
+            public function getTouristPlacesByClassificationAndCity($classification, $cityName)
+    {
+        $city = City::where('name', $cityName)->first();
+        if (!$city) { return response()->json(['message' => 'City not found'], 404); }
+        $places = $this->placeService->getTouristPlacesByClassificationAndCity($classification, $city->id);
+        return PlaceResource::collection($places);
+    }
         public function getRestaurantsByCity(Request $request)
     {
         $request->validate([
