@@ -157,12 +157,12 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.y",
+							"value": "admin@example.com",
 							"type": "text"
 						},
 						{
 							"key": "password",
-							"value": "1234567890",
+							"value": "password",
 							"type": "text"
 						}
 					]
@@ -442,7 +442,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODA2ODcsImV4cCI6MTc1MzE4NDI4NywibmJmIjoxNzUzMTgwNjg3LCJqdGkiOiJhY1hoNWlOY0plQkxIRDQwIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uwihmW1OeMftN9PL5RnrQWtg7Wu7mSRY_2Ymuy1DSPk",
 							"type": "string"
 						}
 					]
@@ -514,7 +514,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQwMTA4MzMsImV4cCI6MTc1NDAxNDQzMywibmJmIjoxNzU0MDEwODMzLCJqdGkiOiJJZzR0cndzNUQ2ZzMwaUgxIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Htqfm94dDHmzB9kYD6YPdZRBOV_uXjC8yeWNt_hKJ6U",
 							"type": "string"
 						}
 					]
@@ -592,6 +592,32 @@
 							"key": "photo",
 							"type": "file",
 							"src": "postman-cloud:///1efb97c2-2b22-4c00-b984-b9f2ee5009d7"
+						},
+						{
+							"key": "preferred_season[0]",
+							"value": " summer",
+							"type": "text"
+						},
+						{
+							"key": "preferred_season[1]",
+							"value": "winter",
+							"type": "text"
+						},
+						{
+							"key": "duration[]",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "cities[]",
+							"value": "homs",
+							"type": "text"
+						},
+						{
+							"key": "preferred_activities[0]",
+							"value": "jkghjhghj",
+							"type": "text"
 						}
 					]
 				},
@@ -615,7 +641,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvcmVzZXRQYXNzd29yZCIsImlhdCI6MTc1MzEyMzI1OSwiZXhwIjoxNzUzMTI2ODU5LCJuYmYiOjE3NTMxMjMyNTksImp0aSI6IkY2S3J2WTFXMlJWbHZLVGkiLCJzdWIiOiI5IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.4qDli_5cXVgvTfeo5LxNmPVz9ZzKJeah_ZMYMunBe3g",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQwMTA1NjksImV4cCI6MTc1NDAxNDE2OSwibmJmIjoxNzU0MDEwNTY5LCJqdGkiOiJ2cGpQdFlUenZIeGJWbHMwIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.em8SztQwU4xlzEvZ38JMMZFY0MMN2QeyRh9SB6L4krY",
 							"type": "string"
 						}
 					]
@@ -642,7 +668,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI4NTg0MDMsImV4cCI6MTc1Mjg2MjAwMywibmJmIjoxNzUyODU4NDAzLCJqdGkiOiJRSjZnNlROOVlEdDJmT3JDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.a1nrDosxRO2a7ktUWb4hQanoPb7v65gn18s-BR2qu0o",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMyMTM0NzIsImV4cCI6MTc1MzIxNzA3MiwibmJmIjoxNzUzMjEzNDcyLCJqdGkiOiJZd21rQUwwd0NianBGYXA2Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ._4tPYSVantaw6J5ibsyJISCIh-JzlTMmchZv1K8YImE",
 							"type": "string"
 						}
 					]
@@ -705,7 +731,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
+							"src": []
 						}
 					]
 				},
@@ -729,62 +755,82 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTIxNTc3MjcsImV4cCI6MTc1MjE2MTMyNywibmJmIjoxNzUyMTU3NzI3LCJqdGkiOiJCTU9ya3F0TEhVZWp5THpDIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uI41-dsmkxm1KZINMNVMgVs10XMf37izt7pfZBuNHRs",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODA2ODcsImV4cCI6MTc1MzE4NDI4NywibmJmIjoxNzUzMTgwNjg3LCJqdGkiOiJhY1hoNWlOY0plQkxIRDQwIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.uwihmW1OeMftN9PL5RnrQWtg7Wu7mSRY_2Ymuy1DSPk",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name_of_company",
+							"value": "lfkgjdl",
+							"type": "text"
+						},
+						{
+							"key": "name_of_owner",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "founding_date",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "license_number",
+							"value": "53578476",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "country_code",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "fkgdlkfhlkjh lxkcjgdlf",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "latitude",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "longitude",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
 				"url": {
-					"raw": "{{URL}}auth/updateAdminProfile?name_of_company&name_of_owner&founding_date&license_number&phone&country_code&description&location&latitude&longitude",
+					"raw": "{{URL}}auth/updateAdminProfile",
 					"host": [
 						"{{URL}}auth"
 					],
 					"path": [
 						"updateAdminProfile"
-					],
-					"query": [
-						{
-							"key": "name_of_company",
-							"value": null
-						},
-						{
-							"key": "name_of_owner",
-							"value": null
-						},
-						{
-							"key": "founding_date",
-							"value": null
-						},
-						{
-							"key": "license_number",
-							"value": null
-						},
-						{
-							"key": "phone",
-							"value": null
-						},
-						{
-							"key": "country_code",
-							"value": null
-						},
-						{
-							"key": "description",
-							"value": null
-						},
-						{
-							"key": "location",
-							"value": null
-						},
-						{
-							"key": "latitude",
-							"value": null
-						},
-						{
-							"key": "longitude",
-							"value": null
-						}
 					]
 				}
 			},
@@ -852,6 +898,7 @@
 				}
 			},
 			"response": []
+<<<<<<< HEAD
 		},
 		{
 			"name": "update preference",
@@ -930,6 +977,8 @@
 				}
 			},
 			"response": []
+=======
+>>>>>>> origin/trip2
 		}
 	],
 	"event": [

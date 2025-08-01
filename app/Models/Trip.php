@@ -10,7 +10,7 @@ class Trip extends Model
 
     protected $fillable = [
         'user_id', 'name', 'description', 'season', 'start_date','reserved_tickets',
-        'duration', 'tickets', 'price', 'discount', 'new_price','status','improvements'
+        'duration', 'tickets', 'price', 'discount', 'new_price','status','improvements','days','hours'
     ];
     public static array $status=['لم تبدأ بعد','منتهية','جارية حاليا','تم الالغاء'];
 

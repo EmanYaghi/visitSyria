@@ -10,28 +10,6 @@ use Illuminate\Support\Facades\Auth;
 
 class TripResource extends JsonResource
 {
-    protected function getFeedback()
-    {
-        $comments = $this->comments()->latest()->get();
-        $feedbackList = [];
-        foreach ($comments as $comment) {
-            $rating = $this->ratings()
-                ->where('user_id', $comment->user_id)
-                ->latest()
-                ->first();
-            $feedbackList[] = [
-                'id'=>$comment->user->id,
-                'user_name' => $comment->user->profile->first_name ." ".$comment->user->profile->last_name ,
-                'photo'=>$comment->user->profile->photo,
-                'comment_body' => $comment->body,
-                'rating_value' => $rating ? $rating->rating_value : null,
-                'created_at' => $comment->created_at->diffForHumans(),
-            ];
-        }
-        return $feedbackList;
-    }
-
-
     public function toArray(Request $request): array
     {
         $companyId=$this->user->id;
@@ -43,21 +21,15 @@ class TripResource extends JsonResource
             'season' => $this->season,
             'start_date' => $this->start_date,
             'duration' => $this->duration,
-            'tickets' => $this->tickets,
             'remaining_tickets'=>($this->tickets)-($this->reserved_tickets),
             'price' => $this->price,
             'discount' => $this->discount,
             'new_price' => $this->new_price,
             'improvements' => json_decode($this->improvements, true),
             'status'=>$this->status,
-            'rating'=>Rating::where('trip_id',$this->id)->count()>0 ?
-                Rating::where('trip_id',$this->id)->sum('rating_value')/Rating::where('trip_id',$this->id)->count() :
-                0,
             'tags' => $this->tags->map(function ($tag) {
-                return [
-                    'body' => optional($tag->tagName)->body,
-                ];
-            }),
+                    return optional($tag->tagName)->body;
+                })->filter()->values()->all(),
 
             'images' => $this->media->map(function ($media) {
                 return asset('storage/' . $media->url);
@@ -90,12 +62,6 @@ class TripResource extends JsonResource
              'is_saved' => $user
                 ? $this->saves()->where('user_id', $user->id)->exists()
                 : false,
-
-            'feedback' => $this->getFeedback(),
         ];
-
-
-
-
     }
 }

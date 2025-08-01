@@ -121,12 +121,6 @@ class AuthController extends Controller
             $request->validated()
         ));
     }
-     public function updatePreference(UpdatePrefereneRequest $request)
-    {
-         return $this->handle(fn() => $this->authService->updatePreference(
-            $request->validated()
-        ));
-    }
     public function setProfile(CreateProfileRequest $request)
     {
         if(Auth::user()->profile)

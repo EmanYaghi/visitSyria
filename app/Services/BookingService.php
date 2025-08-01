@@ -5,31 +5,198 @@ namespace App\Services;
 use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
 use App\Models\Passenger;
+use App\Models\Payment;
 use App\Models\User;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Endroid\QrCode\Builder\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Stripe\Charge;
+use Stripe\Refund;
 
 class BookingService
 {
 
-    public function reserve($data)
+        public function handlePayment($request)
     {
         $user = Auth::user();
-        $price = $data['price'];
-        $numberOfTickets = $data['number_of_tickets'] ?? 1;
-        $tripId = $data['trip_id'];
-        $passengers = $data['passengers'];
+        $booking = Booking::findOrFail($request->booking_id);
 
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        // 🧍‍♂️ Create or fetch Stripe customer
+        if (!$user->stripe_customer_id) {
+            $customer = Customer::create([
+                'email' => $user->email,
+                'name' => $request->name,
+            ]);
+            $user->stripe_customer_id = $customer->id;
+            $user->save();
+        }
+
+        // 💳 Create PaymentMethod
+        $paymentMethod = PaymentMethod::create([
+            'type' => 'card',
+            'card' => [
+                'number' => $request->number,
+                'exp_month' => $request->exp_month,
+                'exp_year' => $request->exp_year,
+                'cvc' => $request->cvc,
+            ],
+        ]);
+
+        if ($request->save_card) {
+            $paymentMethod->attach(['customer' => $user->stripe_customer_id]);
+        }
+
+        // 💰 Convert SYP to USD manually (مثلاً: 1 USD = 13500 SYP)
+        $amountInUSD = ceil($booking->price / 13500 * 100); // Stripe uses cents
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $amountInUSD,
+            'currency' => 'usd',
+            'customer' => $user->stripe_customer_id,
+            'payment_method' => $paymentMethod->id,
+            'off_session' => !$request->save_card ? false : true,
+            'confirm' => true,
+        ]);
+
+        $booking->update(['is_paid' => true]);
+
+        Payment::create([
+            'user_id' => $user->id,
+            'booking_id' => $booking->id,
+            'transaction_id' => $paymentIntent->id,
+            'status' => $paymentIntent->status,
+            'currency' => 'usd',
+        ]);
+
+        return ['message' => 'تمت العملية بنجاح', 'code' => 201];
+    }
+
+    public function refund($paymentIntentId)
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+
+        $refund = Refund::create([
+            'payment_intent' => $paymentIntentId,
+        ]);
+
+        return ['message' => 'تم استرجاع المبلغ', 'refund' => $refund, 'code' => 200];
+    }
+
+
+
+
+    public function saveCard(Request $request)
+{
+    $user = auth()->user();
+
+    if (!$user->stripe_customer_id) {
+        $customer = \Stripe\Customer::create([
+            'email' => $user->email,
+            'name' => $user->name,
+        ]);
+        $user->update(['stripe_customer_id' => $customer->id]);
+    }
+
+    $paymentMethod = $request->input('payment_method');
+
+    \Stripe\PaymentMethod::attach($paymentMethod, [
+        'customer' => $user->stripe_customer_id,
+    ]);
+
+    \Stripe\Customer::update($user->stripe_customer_id, [
+        'invoice_settings' => ['default_payment_method' => $paymentMethod],
+    ]);
+
+    return response()->json(['message' => 'تم حفظ البطاقة بنجاح']);
+}
+
+
+\Stripe\PaymentIntent::create([
+    'amount' => $amount * 100,
+    'currency' => 'usd',
+    'customer' => $user->stripe_customer_id,
+    'payment_method' => $user->default_payment_method_id,
+    'off_session' => true,
+    'confirm' => true,
+]);
+
+
+
+\Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+
+$customer = \Stripe\Customer::create([
+    'email' => $user->email,
+    'name' => $user->name,
+]);
+
+
+$setupIntent = \Stripe\SetupIntent::create([
+    'customer' => $customer->id,
+]);
+
+
+\Stripe\PaymentIntent::create([
+    'amount' => 5000, // بالسنت، يعني $50
+    'currency' => 'usd',
+    'customer' => $customer->id,
+    'payment_method' => $saved_payment_method_id,
+    'off_session' => true,
+    'confirm' => true,
+]);
+
+
+$methods = \Stripe\PaymentMethod::all([
+    'customer' => $customer->id,
+    'type' => 'card',
+]);
+
+$defaultCard = $methods->data[0];
+
+
+$card = new CreditCard();
+$card->user_id = $user->id;
+$card->card_holder = $defaultCard->billing_details->name;
+$card->card_number = '**** **** **** ' . $defaultCard->card->last4;
+$card->expiry_date = $defaultCard->card->exp_month . '/' . $defaultCard->card->exp_year;
+$card->stripe_payment_method_id = $defaultCard->id;
+$card->save();
+
+
+
+    public function pay($id,$request)
+    {
+        Payment::create([
+            'user_id' => auth()->id(),
+            'booking_id' => $request->booking_id,
+            'transaction_id' => $charge->id,
+            'status' => $charge->status === 'succeeded' ? 'completed' : 'failed',
+            'currency' => 'usd',
+        ]);
+        $user = Auth::user();
+        $price = $request['price'];
+        $numberOfTickets = $request['number_of_tickets'] ?? 1;
+        $tripId = $request['trip_id'];
+        $passengers = $request['passengers'];
         DB::beginTransaction();
         try {
+
             Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $charge = Charge::create([
+                'amount' => Booking::find($$request->booking_id)->price * 100,
+                'currency' => 'usd',
+                'description' => 'حجز رحلة',
+                'source' => $request->stripeToken,
+            ]);
+
             $paymentIntent = PaymentIntent::create([
                 'amount' => intval($price * 100), //cents
                 'currency' => 'usd',
-                'payment_method' => $data['payment_method'],
+                'payment_method' => $request['payment_method'],
                 'confirmation_method' => 'manual',
                 'confirm' => true,
                 'metadata' => [
@@ -71,9 +238,7 @@ class BookingService
             Storage::put($path, $result->getString());
             $booking->qr_code = $path;
             $booking->save();
-
             DB::commit();
-
             return [
                 'message' => 'Booking and payment successful',
                 'code' => 201,
@@ -89,24 +254,27 @@ class BookingService
             ];
         }
     }
+
+
     public function cancelReservation($id)
     {
+        $type=request()->query('type');
+        $type+="_id";
         $booking = Booking::find($id);
-
-        if (!$booking) {
+        if (!$booking||$booking->$type==null) {
             return ['message' => 'Booking not found.', 'code' => 404];
         }
-
+            Refund::create([
+            'payment_intent' => $request->payment_intent_id,
+        ]);
         $booking->delete();
-
         return ['message' => 'Reservation cancelled.', 'code' => 200];
     }
 
-    public function myReservedTrips()
+    public function myReserved()
     {
         $user = Auth::user();
         $trips = $user->bookings()->whereNotNull('trip_id')->with('trip')->get()->pluck('trip');
-
         if ($trips->isNotEmpty()) {
             return [
                 'trips'   => ReservationTripResource::collection($trips),
@@ -114,7 +282,6 @@ class BookingService
                 'code'    => 200,
             ];
         }
-
         return [
             'trips'   => null,
             'message' => 'No trips reserved.',

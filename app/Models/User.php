@@ -114,4 +114,8 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
         return $this->hasMany(Notification::class);
     }
 
+    public function creditCard()
+    {
+        return $this->hasOne(CreditCard::class);
+    }
 }

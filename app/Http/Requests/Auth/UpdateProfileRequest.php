@@ -24,6 +24,10 @@ class UpdateProfileRequest extends FormRequest
             'lang'=>'sometimes|string',
             'theme_mode'=>'sometimes|string',
             'allow_notification'=>'sometimes|string|max:255',
+            'preferred_season'=>'sometimes|array',
+            'preferred_activities'=>'sometimes|array',
+            'duration'=>'sometimes|array',
+            'cities'=>'sometimes|array'
         ];
     }
 }
