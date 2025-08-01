@@ -9,7 +9,7 @@ class CreditCard extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'card_holder', 'card_number', 'cvc', 'expiry_date'];
+    protected $fillable = ['user_id','stripe_payment_method_id', 'card_holder', 'card_number', 'cvc', 'expiry_date'];
 
     public function user()
     {

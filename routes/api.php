@@ -36,7 +36,6 @@ use App\Http\Controllers\TripController;
         Route::post('updateProfile', [AuthController::class,'updateProfile'])->middleware('auth:api');
         Route::get('profile', [AuthController::class,'getProfile'])->middleware('auth:api');
         Route::post('setPreference', [AuthController::class,'setPreference'])->middleware('auth:api');
-        Route::post('updatePreference', [AuthController::class,'updatePreference'])->middleware('auth:api');
         Route::post('setAdminProfile', [AuthController::class,'setAdminProfile'])->middleware('auth:api');
         Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
         Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
@@ -53,6 +52,11 @@ use App\Http\Controllers\TripController;
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
+        Route::post('trips/reserve', [TripController::class, 'reserve']);
+
+        Route::post('bookings/{booking}/pay', [BookingController::class, 'pay']);
+        Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
+        Route::get('myReserved', [BookingController::class, 'myReservedTrips']);
 
         Route::post('saves/{id}',[FeedbackController::class,'setSave']);
         Route::post('comments/{id}',[FeedbackController::class,'setComment']);
@@ -67,16 +71,11 @@ use App\Http\Controllers\TripController;
     Route::get('trips/{id}', [TripController::class,'show']);
     Route::get('trip/company/{id}', [TripController::class,'companyTrips']);
     Route::get('trip/offers', [TripController::class,'offers']);
+    Route::get('trips/similar/{id}',[TripController::class,'similarTrips']);
 
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 
-    Route::group(['middleware' => ['jwt.auth']], function () {
-        Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
-        Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
-        Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
-        Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
-    });
 ?>
 
 

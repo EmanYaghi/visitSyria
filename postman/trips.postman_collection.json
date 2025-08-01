@@ -10,7 +10,14 @@
 			"name": "getAllTripsByTag",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM5OTgyMzksImV4cCI6MTc1NDAwMTgzOSwibmJmIjoxNzUzOTk4MjM5LCJqdGkiOiJrOVdXU00yY3ZuZ1JmdHYzIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.m7xQqUTT7skdlJ_EgQtdHpuKqul8dpvr5rR3clB--gE",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -72,11 +79,6 @@
 						{
 							"key": "start_date",
 							"value": "2025-07-17 00:10:53",
-							"type": "text"
-						},
-						{
-							"key": "duration",
-							"value": "1 day",
 							"type": "text"
 						},
 						{
@@ -208,6 +210,17 @@
 							"key": "timelines[1][sections][0][latitude]",
 							"value": "100.3",
 							"type": "text"
+						},
+						{
+							"key": "days",
+							"value": "5",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "hours",
+							"value": "4",
+							"type": "text"
 						}
 					]
 				},
@@ -260,11 +273,6 @@
 							"disabled": true
 						},
 						{
-							"key": "duration",
-							"value": "3 ",
-							"type": "text"
-						},
-						{
 							"key": "tickets",
 							"value": "90",
 							"type": "text"
@@ -278,6 +286,16 @@
 						{
 							"key": "new_price",
 							"value": "2000",
+							"type": "text"
+						},
+						{
+							"key": "days",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "hours",
+							"value": "2",
 							"type": "text"
 						}
 					]
@@ -311,6 +329,33 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
+					"raw": "{{URL}}trips/4",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTripById",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM5OTgyMzksImV4cCI6MTc1NDAwMTgzOSwibmJmIjoxNzUzOTk4MjM5LCJqdGkiOiJrOVdXU00yY3ZuZ1JmdHYzIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.m7xQqUTT7skdlJ_EgQtdHpuKqul8dpvr5rR3clB--gE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
 					"raw": "{{URL}}trips/5",
 					"host": [
 						"{{URL}}trips"
@@ -323,41 +368,34 @@
 			"response": []
 		},
 		{
-			"name": "getTripById",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{URL}}trips/3",
-					"host": [
-						"{{URL}}trips"
-					],
-					"path": [
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "getAllTripsByCompany",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trip/company/1",
+					"raw": "{{URL}}trip/company/2?tag=الكل",
 					"host": [
 						"{{URL}}trip"
 					],
 					"path": [
 						"company",
-						"1"
+						"2"
+					],
+					"query": [
+						{
+							"key": "tag",
+							"value": "الكل"
+						}
 					]
 				}
 			},
@@ -378,6 +416,60 @@
 					],
 					"path": [
 						"offers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reserveTrip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM1MzMwMTgsImV4cCI6MTc1MzUzNjYxOCwibmJmIjoxNzUzNTMzMDE4LCJqdGkiOiJYenJrYm9SemdqdWZseW1BIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.VMzJDOR2z6Q1rqiDPGESQ2SXEbBtiOL3NxqidtMdp1w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"trip_id\": 2,\r\n    \"number_of_tickets\": 3,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}trips/reserve",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"reserve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "similarTrips",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips/similar/1",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"similar",
+						"1"
 					]
 				}
 			},

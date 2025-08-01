@@ -25,12 +25,13 @@ class CreateBookingsTable extends Migration
                   ->constrained()
                   ->nullOnDelete();
             $table->unsignedInteger('number_of_tickets')->default(1);
-            $table->unsignedInteger('number_of_adults')->default(1);
+            $table->unsignedInteger('number_of_adults')->default(0);
             $table->unsignedInteger('number_of_children')->default(0);
             $table->unsignedInteger('number_of_infants')->default(0);
             $table->decimal('price', 10, 2);
             $table->string('payment_method')->nullable();
             $table->string('qr_code')->nullable();
+            $table->boolean('is_paid')->default(false);
             $table->timestamps();
         });
     }

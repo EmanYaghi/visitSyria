@@ -34,7 +34,7 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-  
+
     'weatherapi' => [
         'key' => env('WEATHER_API_KEY'),
         'base_url' => 'https://api.weatherapi.com/v1',
@@ -44,7 +44,10 @@ return [
     'client_id' => env('GOOGLE_CLIENT_ID'),
     'client_secret' => env('GOOGLE_CLIENT_SECRET'),
     'redirect' => env('GOOGLE_REDIRECT_URI'),
-],
+    ],
 
-
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+        'public' => env('STRIPE_PUBLIC'),
+    ],
 ];

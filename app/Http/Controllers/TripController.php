@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Trip\CreateTripRequest;
+use App\Http\Requests\Trip\ReserveTripRequest;
 use App\Http\Requests\Trip\UpdateTripRequest;
 use App\Services\TripService;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class TripController extends Controller
     }
     public function index()
     {
-         $data=[];
+        $data=[];
         try{
             $data=$this->tripService->index();
             return response()->json(["message"=>$data['message'],"trips"=>$data['trips']],$data['code']);
@@ -106,4 +107,31 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
+    public function similarTrips($id)
+    {
+        $data=[];
+        try{
+            $data=$this->tripService->similarTrips($id);
+            return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function reserve(ReserveTripRequest $request)
+    {
+        $data = [];
+        try {
+            $data = $this->tripService->reserve($request->validated());
+            return response()->json([
+                "message" => $data['message'],
+                "booking" => $data['booking'] ?? null,
+            ], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+
 }

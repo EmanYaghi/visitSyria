@@ -1,22 +1,20 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Trip;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReserveRequest extends FormRequest
+class ReserveTripRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
-    public function rules()
+    public function rules(): array
     {
         return [
             'trip_id' => 'required|exists:trips,id',
             'number_of_tickets' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'payment_method' => 'required|string',
             'passengers' => 'required|array|min:1',
             'passengers.*.first_name' => 'required|string|max:255',
             'passengers.*.last_name' => 'required|string|max:255',

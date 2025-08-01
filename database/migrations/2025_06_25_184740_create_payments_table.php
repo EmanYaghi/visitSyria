@@ -15,7 +15,7 @@ class CreatePaymentsTable extends Migration
             $table->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();
             $table->string('transaction_id')->nullable();
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
-            $table->string('currency', 3)->default('USD');
+            $table->string('currency')->default('USD');
             $table->timestamps();
         });
     }
