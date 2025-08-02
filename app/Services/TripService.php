@@ -268,7 +268,7 @@ class TripService
             ->whereColumn('trips.tickets', '>', 'trips.reserved_tickets')
             ->groupBy('trips.id')
             ->orderByDesc('common_tags_count')
-            ->limit(10)
+            ->limit(20)
             ->get();
 
         if ($similarTripsData->isEmpty()) {
