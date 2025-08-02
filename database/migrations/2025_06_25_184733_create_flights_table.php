@@ -22,6 +22,7 @@ class CreateFlightsTable extends Migration
             $table->unsignedInteger('duration')->default(1); // in hours
             $table->unsignedInteger('number_of_stopovers')->default(0);
             $table->unsignedInteger('number_of_tickets')->default(1);
+            $table->unsignedInteger('reserved_tickets')->default(0);
             $table->decimal('price', 10, 2);
             $table->timestamps();
         });

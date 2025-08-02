@@ -19,6 +19,7 @@ public function up()
         $table->integer('duration_days')->nullable();
         $table->integer('duration_hours')->nullable();
         $table->integer('tickets')->default(0);
+        $table->unsignedInteger('reserved_tickets')->default(0);
         $table->decimal('price', 8, 2);
         $table->enum('event_type', ['limited', 'unlimited'])->default('limited');
         $table->enum('price_type', ['free', 'paid'])->default('free');

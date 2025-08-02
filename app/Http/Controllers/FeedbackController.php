@@ -90,4 +90,16 @@ class FeedbackController extends Controller
         }
     }
 
+     public function mySavedTrips()
+    {
+        $data=[];
+        try{
+            $data=$this->feedbackService->mySavedTrips();
+            return response()->json(["trips"=>$data['trips'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+
 }

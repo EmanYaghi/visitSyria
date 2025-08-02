@@ -239,7 +239,6 @@ class TripService
         }
         return ['trips'=>$trips,'message'=>$message,'code'=>$code];
     }
-
     public function similarTrips($id)
     {
         $currentTrip = Trip::with('tags')->find($id);
@@ -291,35 +290,6 @@ class TripService
             'trips' => AllTripsResource::collection($similarTrips),
             'message' => 'These are the similar trips',
             'code' => 200
-        ];
-    }
-
-    public function reserve($request)
-    {
-        $user = Auth::user();
-        $trip=Trip::find($request['trip_id']);
-        if(!$trip)
-            return['message'=>"this trip not found",'code'=>404];
-        if($trip->discount!=0)
-            $price=$trip->new_price;
-        else
-            $price=$trip->price;
-        if($request['number_of_tickets']!=count($request['passengers']))
-            return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];
-        $remainingTickets=$trip->tickets-$trip->reserved_tickets;
-        if($request['number_of_tickets']>$remainingTickets)
-            return['message'=>"the number of tickets not available",'code'=>400];
-        $booking=$user->bookings()->create([
-            'price'=>$price*$request['number_of_tickets'],
-            ...$request
-        ]);
-        foreach($request['passengers'] as $passenger){
-            $booking->passengers()->create($passenger);
-        }
-        return [
-            'message' => 'please pay to confirm bookings',
-            'code' => 201,
-            'booking' => $booking
         ];
     }
 }

@@ -28,7 +28,7 @@ class CreateBookingsTable extends Migration
             $table->unsignedInteger('number_of_adults')->default(0);
             $table->unsignedInteger('number_of_children')->default(0);
             $table->unsignedInteger('number_of_infants')->default(0);
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 10, 2)->nullable();
             $table->string('payment_method')->nullable();
             $table->string('qr_code')->nullable();
             $table->boolean('is_paid')->default(false);

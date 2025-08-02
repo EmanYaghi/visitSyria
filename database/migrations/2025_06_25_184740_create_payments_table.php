@@ -10,12 +10,13 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('booking_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('credit_card_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('transaction_id')->nullable();
-            $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
-            $table->string('currency')->default('USD');
+
+             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('booking_id');
+            $table->string('payment_intent_id')->nullable();
+            $table->integer('amount');            // amount in cents
+            $table->string('status')->default('pending'); // pending, succeeded, failed, refunded
+            
             $table->timestamps();
         });
     }

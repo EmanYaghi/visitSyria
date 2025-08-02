@@ -42,8 +42,9 @@ class DatabaseSeeder extends Seeder
                         'time'=>'9:00',
                         'title'=>"bsjdh",
                         'description'=>["ksjdcj hdhfgc kvh udycf","hcj jdhcg kfh","jcd chg jvgu"],
-                        'latitude'=>54.8,
-                        'longitude'=>83.8
+                        'latitude'=>49.4146100,
+                        'longitude'=>8.6814950
+
                     ]);
                 }
             }
