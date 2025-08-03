@@ -70,10 +70,22 @@ public function getRestaurants($filters = [])
     {
         return $this->placeRepo->getRestaurantsByCityName($cityName);
     }
-    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
+public function getTouristPlacesByClassificationAndCity($classification, $cityId)
 {
-    return $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
+    $places = $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
+
+    $topRatedIds = $this->placeRepo
+        ->getTopRatedPlaces(['type' => 'tourist', 'city_id' => $cityId])
+        ->pluck('id')
+        ->toArray();
+
+    foreach ($places as $place) {
+        $place->rank = ($index = array_search((int)$place->id, $topRatedIds)) !== false ? $index + 1 : null;
+    }
+
+    return $places;
 }
+
 
 
     public function getHotelsByCityName($cityName)

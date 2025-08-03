@@ -7,7 +7,9 @@
     use App\Http\Controllers\BookingController;
     use App\Http\Controllers\EventController;
     use App\Http\Controllers\FeedbackController;
-    use App\Http\Controllers\PlaceController;
+
+use App\Http\Controllers\FlightController;
+use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\TripController;
@@ -110,6 +112,13 @@ use App\Http\Controllers\WebhookController;
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 
+    
+    Route::get('/flights/from-syria', [FlightController::class, 'fromSyria']);
+    Route::get('/flights/to-syria',   [FlightController::class, 'toSyria']);
+    Route::get('/flights/syria-all',  [FlightController::class, 'syriaAll']);
+
+
+
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
@@ -131,3 +140,4 @@ use App\Http\Controllers\WebhookController;
 ?>
 
 
+?>
