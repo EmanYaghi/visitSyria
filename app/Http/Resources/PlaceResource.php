@@ -23,6 +23,7 @@ class PlaceResource extends JsonResource
             'rating' => $this->ratings_avg ? round($this->ratings_avg, 2) : 0,
             'classification' => $this->resource->classification,
             'images' => $this->media->map(fn($media) => asset('storage/' . $media->url)),
+            'rank' => $this->rank ?? null,
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

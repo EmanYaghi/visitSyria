@@ -12,15 +12,29 @@ class PlaceRepository
                     ->latest()
                     ->get();
     }
-    public function getTopRatedPlaces($filters = [])
-    {
-        return Place::with(['ratings'])
-            ->withAvg('ratings as ratings_avg', 'rating_value') 
-            ->when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
-            ->orderBy('ratings_avg', 'desc')
-            ->limit(10)
-            ->get();
-    }
+
+public function getTouristPlacesByClassificationAndCity($classification, $cityId)
+{
+    return Place::withAvg('ratings as ratings_avg', 'rating_value')
+                ->where([
+                    ['type', 'tourist'],
+                    ['classification', $classification],
+                    ['city_id', $cityId],
+                ])
+                ->latest()
+                ->get();
+}
+
+public function getTopRatedPlaces(array $filters = [])
+{
+    return Place::withAvg('ratings as ratings_avg', 'rating_value')
+                ->when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
+                ->when(isset($filters['city_id']), fn($q) => $q->where('city_id', $filters['city_id']))
+                ->orderByDesc('ratings_avg')
+                ->limit(10)
+                ->get();
+}
+
     public function getTouristPlacesByClassification($classification)
     {
         return Place::where('type', 'tourist')
@@ -28,16 +42,6 @@ class PlaceRepository
                     ->latest()
                     ->get();
     }
-    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
-        {
-        return Place::withAvg('ratings as ratings_avg', 'rating_value')
-                    ->where('type', 'tourist')
-                    ->where('classification', $classification)
-                    ->where('city_id', $cityId)
-                    ->latest()
-                    ->get();
-
-        }
 
     public function getRestaurantsByCityName($cityName)
     {
