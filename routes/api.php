@@ -8,7 +8,10 @@
     use App\Http\Controllers\EventController;
     use App\Http\Controllers\FeedbackController;
     use App\Http\Controllers\PlaceController;
-    use App\Http\Controllers\TripController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\RouteController;
+use App\Http\Controllers\TripController;
+use App\Http\Controllers\WebhookController;
 
     // Route::get('/user', function (Request $request) {
     //     return $request->user();
@@ -58,7 +61,8 @@
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
-        Route::post('trips/reserve', [TripController::class, 'reserve']);
+
+        Route::post('reserve', [BookingController::class, 'reserve']);
 
         Route::post('bookings/{booking}/pay', [BookingController::class, 'pay']);
         Route::delete('bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
@@ -113,6 +117,17 @@
 
         Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
     });
+
+    Route::middleware('auth:api')->group(function () {
+        Route::post('stripe/setup-intent', [PaymentController::class, 'setupIntent']);
+        Route::post('stripe/store-card',    [PaymentController::class, 'storeCard']);
+        Route::post('stripe/pay',           [PaymentController::class, 'pay']);
+        Route::post('stripe/refund/{id}',   [PaymentController::class, 'refund']);
+    });
+
+    // Public endpoint for Stripe webhooks
+    Route::post('stripe/webhook', WebhookController::class);
+
 ?>
 
 

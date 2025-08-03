@@ -16,34 +16,18 @@ class BookingController extends Controller
     {
         $this->bookingService = $bookingService;
     }
-
-     public function pay(Request $request)
+    public function reserve(ReserveRequest $request)
     {
-        return $this->stripeService->handlePayment($request);
-    }
-
-    public function cancel(Request $request)
-    {
-        return $this->stripeService->refund($request->payment_intent_id);
-    }
-
-    public function pay($bookingId,PaymentRequest $request)
-    {
-        if(request()->query(''))
-            $data=$request->validated();
-        else
-            $data=[];
-        return response()->json($this->bookingService->pay($bookingId,$data));
-    }
-
-    public function myReserved()
-    {
-        return response()->json($this->bookingService->myReserved());
-    }
-
-    public function cancelReservation($bookingId)
-    {
-        $data = $this->bookingService->cancelReservation($bookingId);
-        return response()->json(['message' => $data['message']], $data['code']);
+        $data = [];
+        try {
+            $data = $this->bookingService->reserve($request->validated());
+            return response()->json([
+                "message" => $data['message'],
+                "booking" => $data['booking'] ?? null,
+            ], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
     }
 }

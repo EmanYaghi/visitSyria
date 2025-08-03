@@ -15,12 +15,14 @@ class CreatePassengersTable extends Migration
                   ->cascadeOnDelete();
             $table->string('first_name');
             $table->string('last_name');
-            $table->enum('gender', ['male','female','other'])->nullable();
-            $table->date('birth_date')->nullable();
-            $table->string('nationality')->nullable();
+            $table->enum('gender', ['male','female','other']);
+            $table->date('birth_date');
+            $table->string('nationality');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('country_code')->nullable();
+            $table->string('passport_number')->nullable();
+            $table->date('passport_expiry_date')->nullable();
             $table->timestamps();
         });
     }

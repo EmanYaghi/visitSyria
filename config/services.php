@@ -50,4 +50,11 @@ return [
         'secret' => env('STRIPE_SECRET'),
         'public' => env('STRIPE_PUBLIC'),
     ],
+
+    'amadeus' => [
+    'client_id'     => env('AMADEUS_API_KEY'),
+    'client_secret' => env('AMADEUS_API_SECRET'),
+    'base_url'      => env('AMADEUS_API_BASE_URL', 'https://test.api.amadeus.com'),
+    ],
+
 ];

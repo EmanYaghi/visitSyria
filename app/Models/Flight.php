@@ -10,8 +10,8 @@ class Flight extends Model
 
     protected $fillable = [
         'direction', 'airline', 'type', 'departure_airport', 'destination_airport',
-        'departure_date', 'departure_time', 'return_date', 'return_time', 'duration', 
-        'number_of_stopovers', 'number_of_tickets', 'price'
+        'departure_date', 'departure_time', 'return_date', 'return_time', 'duration',
+        'number_of_stopovers', 'number_of_tickets','reserved_tickets', 'price'
     ];
         public function user()
     {

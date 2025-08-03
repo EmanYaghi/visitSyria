@@ -19,6 +19,7 @@ class Event extends Model
         'duration_days',
         'duration_hours',
         'tickets',
+        'reserved_tickets',
         'price',
         'event_type',
         'price_type',

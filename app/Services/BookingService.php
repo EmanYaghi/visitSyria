@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
+use App\Models\Flight;
 use App\Models\Passenger;
 use App\Models\Payment;
 use App\Models\User;
@@ -286,6 +287,77 @@ $card->save();
             'trips'   => null,
             'message' => 'No trips reserved.',
             'code'    => 404,
+        ];
+    }
+
+    public function reserve($request)
+    {
+        $user = Auth::user();
+        $type=$request['type'];
+        if($type=='trip')
+        {
+            $trip=Trip::find($request['id']);
+            if($trip->start_date<=now())
+                return['message'=>"the trip has ended",'code'=>400];
+            if($request['number_of_tickets']!=count($request['passengers']))
+                return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];
+            $remainingTickets=$trip->tickets-$trip->reserved_tickets;
+            if($request['number_of_tickets']>$remainingTickets)
+                return['message'=>"the number of tickets not available",'code'=>400];
+        }
+        else if($type=='event')
+        {
+            $event=Event::find($request['id']);
+
+            if($event->date<=now())
+                return['message'=>"the event has ended",'code'=>400];
+            if($request['number_of_tickets']!=count($request['passengers']))
+                return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];
+            if($event->event_type=="limited"){
+                $remainingTickets=$event->tickets-$event->reserved_tickets;
+                if($request['number_of_tickets']>$remainingTickets)
+                    return['message'=>"the number of tickets not available",'code'=>400];
+            }
+            if($event->price_type=="free"){
+                $request['price']=0;
+                $request['is_paid']=true;
+            }
+        }
+        else if($type=='flight')
+        {
+            $flight=Flight::find($request['id']);
+            if(($flight->departure_date." ".$flight->departure_time)<=now())
+                return['message'=>"the flight has ended",'code'=>400];
+            if($request['number_of_tickets']!=count($request['passengers']))
+                return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];
+            $remainingTickets=$flight->number_of_tickets-$flight->reserved_tickets;
+            if(($request['number_of_adults']+$request['number_of_children']+$request['number_of_infants'])>$remainingTickets)
+                return['message'=>"the number of tickets not available",'code'=>400];
+            $adults=0;
+            $children=0;
+            $infants=0;
+            foreach($request['passengers'] as $passenger){
+                $age=$passenger['birth_date']->diffInYears(now());
+                if($age<2)
+                    $infants++;
+                else if($age>2&&$age<18)
+                    $children++;
+                else
+                    $adults++;
+            }
+            if($adults!=$request['adults']||$children!=$request['children']||$infants!=$request['infants'])
+                return['message'=>"the number of tickets not available",'code'=>400];
+        }
+        $booking=$user->bookings()->create([
+            $type.'_id'=>$request['id'],
+            ...$request
+        ]);
+        foreach($request['passengers'] as $passenger)
+            $booking->passengers()->create($passenger);
+        return [
+            'message' => 'please pay to confirm bookings',
+            'code' => 201,
+            'booking' => $booking??null
         ];
     }
 }
