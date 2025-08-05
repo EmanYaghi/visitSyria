@@ -25,6 +25,7 @@ class Place extends Model
     {
         return str_pad($value, 6, '0', STR_PAD_LEFT);
     }
+    
     public function city()
     {
         return $this->belongsTo(City::class);

@@ -105,7 +105,6 @@ use App\Http\Controllers\WebhookController;
     Route::get('places', [PlaceController::class,'index']);
     Route::get('places/{id}', [PlaceController::class,'show']);
 
-
     
     Route::get('events', [EventController::class,'index']);
     Route::get('events/{id}', [EventController::class,'show']);
@@ -113,10 +112,8 @@ use App\Http\Controllers\WebhookController;
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 
-    
-    Route::get('/flights/from-syria', [FlightController::class, 'fromSyria']);
-    Route::get('/flights/to-syria',   [FlightController::class, 'toSyria']);
-    Route::get('/flights/syria-all',  [FlightController::class, 'syriaAll']);
+
+    Route::get('flights/search', [FlightController::class, 'search']);
 
 
 

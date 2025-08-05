@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PlaceStoreRequest;
 use App\Http\Requests\PlaceUpdateRequest;
 use App\Http\Resources\PlaceResource;
+use App\Http\Resources\ShowPlaceResource;
 use App\Models\City;
+use App\Models\Place;
 use App\Services\PlaceService;
 use Illuminate\Http\Request;
 
@@ -46,11 +48,18 @@ public function cityPlaces(Request $request, $cityName)
         return response()->json(['place' => new PlaceResource($place)],201);
     }
 
-    public function show($id)
-    {
-        $place = $this->placeService->getById($id);
-        return new PlaceResource($place);
-    }
+public function show($id)
+{
+    $place = Place::with([
+        'media',
+        'ratings',
+        'comments' => function ($query) {
+            $query->latest()->take(3)->with('user');
+        }
+    ])->findOrFail($id);
+
+    return new ShowPlaceResource($place);
+}
 
    public function update(PlaceUpdateRequest $request, $id)
     {

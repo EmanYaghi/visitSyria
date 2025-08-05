@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             TagNameSeeder::class,
             PlaceSeeder::class,
             EventSeeder::class,
-            RatingSeeder::class,
+            FeedbackSeeder::class,
 
         ]);
         Trip::factory()->count(10)->create()->each(function ($trip) {

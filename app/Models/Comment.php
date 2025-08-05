@@ -12,6 +12,7 @@ class Comment extends Model
         'user_id', 'post_id', 'place_id', 'support_id','trip_id', 'body'
     ];
 
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -35,4 +36,5 @@ class Comment extends Model
     {
         return $this->belongsTo(Trip::class);
     }
+
 }
