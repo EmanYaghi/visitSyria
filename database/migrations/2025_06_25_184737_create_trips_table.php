@@ -16,9 +16,7 @@ class CreateTripsTable extends Migration
             $table->text('description')->nullable();
             $table->enum('season',['الصيف','الخريف','الشتاء','الربيع'])->nullable();
             $table->date('start_date');
-            $table->integer('days')->default(0);
-            $table->integer('hours')->default(0);
-            $table->string('duration');
+            $table->integer('days')->default(1);
             $table->json('improvements')->nullable();
             $table->unsignedInteger('tickets')->default(1);
             $table->unsignedInteger('reserved_tickets')->default(0);

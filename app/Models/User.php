@@ -118,4 +118,10 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return $this->hasOne(CreditCard::class);
     }
+
+     public function fcnTokens()
+    {
+        return $this->hasMany(FcmToken::class);
+    }
+
 }

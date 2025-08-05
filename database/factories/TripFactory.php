@@ -16,8 +16,6 @@ class TripFactory extends Factory
             'season' => $this->faker->randomElement(['الصيف', 'الخريف', 'الشتاء', 'الربيع']),
             'start_date' => $this->faker->dateTimeBetween('2024-01-01', '2026-12-31')->format('Y-m-d'),
             'days'=>$this->faker->numberBetween(0, 10),
-            'hours'=>$this->faker->numberBetween(0, 10),
-            'duration' => '3days 9hours',
             'improvements' => json_encode($this->faker->words(3)),
             'tickets' => $this->faker->numberBetween(10, 100),
             'reserved_tickets' => $this->faker->numberBetween(0, 10),

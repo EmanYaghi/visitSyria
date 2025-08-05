@@ -53,12 +53,7 @@ class TripService
         if (isset($request['improvements']) && is_array($request['improvements'])) {
             $request['improvements'] = json_encode($request['improvements']);
         }
-        $duration=$request['days'].'day';
-        if($duration=="")
-        {
-            return ['trip'=>null,'message'=>'the days field or hours field is required','code'=>400];
-        }
-        $trip =Auth::user()->trips()->create(['duration'=>$duration,...$request]);
+        $trip =Auth::user()->trips()->create($request);
         if($request['discount']!=null)
             $trip->update(['new_price'=>$request['price']-$request['price']*$request['discount']/100]);
         if (isset($request['tags'])) {

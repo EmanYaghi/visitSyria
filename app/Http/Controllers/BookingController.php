@@ -1,9 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PaymentRequest;
 use App\Http\Requests\ReserveRequest;
-use App\Http\Requests\PassengerRequest;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Throwable;
@@ -23,6 +21,33 @@ class BookingController extends Controller
             return response()->json([
                 "message" => $data['message'],
                 "booking" => $data['booking'] ?? null,
+            ], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function cancel($id)
+    {
+        $data = [];
+        try {
+            $data = $this->bookingService->cancel($id);
+            return response()->json([
+                "message" => $data['message'],
+            ], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function myReservations()
+    {
+        $data = [];
+        try {
+            $data = $this->bookingService->myReservations();
+            return response()->json([
+                "message" => $data['message'],
+                "bookings" => $data['booking'] ?? null,
             ], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();

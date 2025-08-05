@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Http\Resources\Trip\AllTripsResource;
+use App\Http\Resources\Event\ResesrvationEventResource;
+use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
 use App\Models\Event;
-use App\Models\Flight;
 use App\Models\Trip;
 use Illuminate\Support\Facades\Auth;
 
 class BookingService
 {
-        public function reserve($request)
+    public function reserve($request)
     {
         $user = Auth::user();
         $type=$request['type'];
@@ -75,7 +75,7 @@ class BookingService
         ];
     }
 
-    public function cancelReservation($id)
+    public function cancel($id)
     {
         $booking = Booking::find($id);
         if (!$booking) {
@@ -87,24 +87,22 @@ class BookingService
         return ['message' => 'booking cancelled.', 'code' => 200];
     }
 
-    public function myReservations($type)
+    public function myReservations()
     {
         $user = Auth::user();
+        $type=request()->query('type');
         $bookings = $user->bookings()->whereNotNull($type.'_id')->with($type)->get()->pluck($type);
-
         if ($bookings->isEmpty()) {
              return [
                 'bookings'   => null,
-                'message' => 'No trips reserved.',
+                'message' => 'No '.$type.' reserved.',
                 'code'    => 404,
             ];
         }
         if($type=='trip')
-            $b= AllTripsResource::collection($bookings);
+            $b= ReservationTripResource::collection($bookings);
         else if($type=='event')
-            $b= AllEventsResource::collection($bookings);
-        else if($type=='flight')
-            $b=AllFlightsResource::collection($bookings);
+            $b= ResesrvationEventResource::collection($bookings);
          return [
             'bookings'   => $b,
             'message' => 'All reserved '.$type.' retrieved.',
