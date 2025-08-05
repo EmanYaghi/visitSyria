@@ -14,8 +14,10 @@ class TripFactory extends Factory
             'name' => $this->faker->sentence(3),
             'description' => $this->faker->paragraph(),
             'season' => $this->faker->randomElement(['الصيف', 'الخريف', 'الشتاء', 'الربيع']),
-            'start_date' => $this->faker->date(),
-            'duration' => $this->faker->numberBetween(1, 10) . ' أيام',
+            'start_date' => $this->faker->dateTimeBetween('2024-01-01', '2026-12-31')->format('Y-m-d'),
+            'days'=>$this->faker->numberBetween(0, 10),
+            'hours'=>$this->faker->numberBetween(0, 10),
+            'duration' => '3days 9hours',
             'improvements' => json_encode($this->faker->words(3)),
             'tickets' => $this->faker->numberBetween(10, 100),
             'reserved_tickets' => $this->faker->numberBetween(0, 10),
@@ -24,7 +26,17 @@ class TripFactory extends Factory
             'new_price' => function (array $attributes) {
                 return $attributes['price'] - ($attributes['price'] * $attributes['discount'] / 100);
             },
-            'status' => $this->faker->randomElement(Trip::$status ?? ['لم تبدأ بعد', 'جارية', 'منتهية']),
+            'status' =>  function (array $attributes) {
+                $startDate = $attributes['start_date'];
+                $currentDate = now();
+                if ($startDate > $currentDate) {
+                    return 'لم تبدأ بعد';
+                } else if ($startDate==$currentDate) {
+                    return 'جارية';
+                } else {
+                    return 'منتهية';
+                }
+            },
 
         ];
     }

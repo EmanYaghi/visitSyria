@@ -10,6 +10,7 @@ use Throwable;
 class BookingController extends Controller
 {
     protected BookingService $bookingService;
+    
     public function __construct(BookingService $bookingService)
     {
         $this->bookingService = $bookingService;

@@ -39,8 +39,8 @@ class PaymentController extends Controller
     public function pay(Request $request)
     {
         $request->validate([
-            'type'           => 'required|in:tour,event,flight',
-            'reservation_id' => 'required|integer',
+            'type'           => 'required|in:trip,event,flight',
+            'booking_id' => 'required|integer',
             'amount'         => 'required|integer',
             'payment_method_id' => 'sometimes|string'
         ]);
@@ -48,7 +48,7 @@ class PaymentController extends Controller
             $request->user(),
             $request->amount,
             $request->type,
-            $request->reservation_id,
+            $request->booking_id,
             $request->payment_method_id ?? null
         );
         return response()->json(['client_secret' => $secret]);

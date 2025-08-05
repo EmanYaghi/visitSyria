@@ -8,8 +8,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Mail\PasswordReset;
 use App\Mail\VerifyEmail;
 use App\Models\AdminProfile;
+use App\Models\FcmToken;
 use App\Models\Preference;
 use App\Models\Profile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -55,6 +57,17 @@ class AuthService
                 $code=403;
             }
             else{
+                if (!empty($request['fcm_token'])) {
+                    FcmToken::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'token' => $request['fcm_token']
+                        ],
+                        [
+                            'user_id' => $user->id
+                        ]
+                    );
+                }
                 $user->email_verified_at = now();
                 $user->is_verified=true;
                 $user->verification_code = null;
@@ -91,6 +104,18 @@ class AuthService
                 $code=403;
             }
             else{
+                if (!empty($request['fcm_token'])) {
+                    FcmToken::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'token' => $request['fcm_token']
+                        ],
+                        [
+                            'user_id' => $user->id
+                        ]
+                    );
+                }
+                $token=JWTAuth::fromUser($user);
                 $message= 'Code verified successfully!';
                 $code=200;
             }
@@ -148,6 +173,17 @@ class AuthService
                     $message='The password reset code has expired.';
                     $code=400;
                 }else{
+                    if (!empty($request['fcm_token'])) {
+                        FcmToken::updateOrCreate(
+                            [
+                                'user_id' => $user->id,
+                                'token' => $request['fcm_token']
+                            ],
+                            [
+                                'user_id' => $user->id
+                            ]
+                        );
+                    }
                     $user->password = Hash::make($request['new_password']);
                     $token=JWTAuth::fromUser($user);
                     $user->verification_code = null;
@@ -194,14 +230,24 @@ class AuthService
         $user=User::where('email',$request['email'])->first();
         if($user )
         {
-            if (! $token = JWTAuth::attempt($request)) {
+            if (! $token = JWTAuth::attempt(['email'=>$request['email'],'password'=>$request['password']])) {
                 $message='user email & password does not match with our record.';
                 $code=401;
             }else if(!$user->is_verified){
                 $message='email not verified.please verify your email first';
                 $code=403;
             }else{
-                $token=JWTAuth::fromUser($user);
+                if (!empty($request['fcm_token'])) {
+                    FcmToken::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'token' => $request['fcm_token']
+                        ],
+                        [
+                            'user_id' => $user->id
+                        ]
+                    );
+                }
                 $message='user logged in successfully';
                 $code=200;
             }
@@ -212,12 +258,16 @@ class AuthService
         return['user'=>$user,'message'=>$message,'token'=>$token,'code'=>$code];
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
+        $request->validate(['fcm_token'=>'required']);
         $user=Auth::user();
         if($user)
         {
-            Auth::logout();
+            if ($request->has('fcm_token')) {
+                FcmToken::where('token', $request->fcm_token)->delete();
+            }
+            JWTAuth::invalidate(JWTAuth::getToken());
             $message='user logged out successfuly';
             $code=200;
         }else{

@@ -17,6 +17,7 @@ class LoginRequest extends FormRequest
         return [
             'email'=>'required|string|email|max:255',
             'password'=>'required|string',
+            'fcm_token'=>'required'
         ];
     }
 }
