@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Http\Resources\Auth\AdminProfileResource;
+use App\Http\Resources\Auth\ProfileResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -318,7 +320,7 @@ class AuthService
         return [
             'message'=>$message,
             'code'=>$code,
-            'profile'=>$user->load('profile')
+            'profile'=>new ProfileResource($user->load('profile'))
         ];
     }
     public function updateProfile( $request)
@@ -331,7 +333,7 @@ class AuthService
             Preference::create(['user_id'=>$user->id,...$request]);
         $message= 'profile updated';
         $code=200;
-        return ['message'=>$message,'code'=>$code,'profile'=>$user->profile];
+        return ['message'=>$message,'code'=>$code,'profile'=>new ProfileResource($user->profile)];
     }
      public function setAdminProfile( $request)
     {
@@ -342,7 +344,7 @@ class AuthService
         ]);
         $message= 'profile created';
         $code=201;
-        return ['adminProfile'=>$user->load('adminProfile'),'message'=>$message,'code'=>$code];
+        return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
     }
       public function updateAdminProfile( $request)
     {
@@ -350,6 +352,6 @@ class AuthService
         $user->adminProfile->update($request);
         $message= 'profile updated';
         $code=200;
-        return ['adminProfile'=>$user->load('adminProfile'),'message'=>$message,'code'=>$code];
+        return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
     }
 }
