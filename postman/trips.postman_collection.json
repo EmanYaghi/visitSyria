@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM5OTgyMzksImV4cCI6MTc1NDAwMTgzOSwibmJmIjoxNzUzOTk4MjM5LCJqdGkiOiJrOVdXU00yY3ZuZ1JmdHYzIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.m7xQqUTT7skdlJ_EgQtdHpuKqul8dpvr5rR3clB--gE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODY5MTIsImV4cCI6MTc1NDM5MDUxMiwibmJmIjoxNzU0Mzg2OTEyLCJqdGkiOiJBT3dsTFRXWVNvUVlvN1J5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Xt9Q45gGtbzond-sewePiaMf-kLT8stBfBpE0edaOKM",
 							"type": "string"
 						}
 					]
@@ -92,61 +92,6 @@
 							"type": "text"
 						},
 						{
-							"key": "timelines[0][day]",
-							"value": "1",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][0][time]",
-							"value": "9:00",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][0][title]",
-							"value": "kfdgjjgkd",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][0][description][0]",
-							"value": "lfkgjldkjgl\n,mfgndggnkfk\ncbmv,bmngf",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][1][time]",
-							"value": "12:30",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][1][title]",
-							"value": "kxvldfkjgl",
-							"type": "text"
-						},
-						{
-							"key": "timelines[0][sections][1][description][0]",
-							"value": "m,cvnbm,cvn",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][day]",
-							"value": "2",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][time]",
-							"value": "10:00",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][title]",
-							"value": "nbbhjg",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][description][0]",
-							"value": "kuuyfyt",
-							"type": "text"
-						},
-						{
 							"key": "images[0]",
 							"type": "file",
 							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
@@ -187,39 +132,143 @@
 							"type": "text"
 						},
 						{
-							"key": "new_price",
-							"value": "3550",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][description][1]",
-							"value": "dkjg kdgjhfkjg kjfhkfdjh",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][description][2]",
-							"value": "vmnkdfjh kfgjhkkfh lkdjgo",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][longitude]",
-							"value": "45.6",
-							"type": "text"
-						},
-						{
-							"key": "timelines[1][sections][0][latitude]",
-							"value": "100.3",
+							"key": "discount",
+							"value": "25",
 							"type": "text"
 						},
 						{
 							"key": "days",
-							"value": "5",
-							"type": "text",
-							"disabled": true
+							"value": "2",
+							"type": "text"
 						},
 						{
-							"key": "hours",
-							"value": "4",
+							"key": "timelines[0][day]",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][time]",
+							"value": "9:00",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][title]",
+							"value": "nbkjfdhg",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][description][0]",
+							"value": "mnkdjf fkljdhgkd lfdkhj",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][description][1]",
+							"value": "mfngk fklhj klljk",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][latitude]",
+							"value": "49.41461",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][0][longitude]",
+							"value": "8.681495",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][1][time]",
+							"value": "12:30",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][1][title]",
+							"value": "afsdas",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][1][description][0]",
+							"value": "vjdfhjgh fjkghkg eruity xghfc",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][1][latitude]",
+							"value": "49.41943",
+							"type": "text"
+						},
+						{
+							"key": "timelines[0][sections][1][longitude]",
+							"value": "8.686507",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][day]",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][time]",
+							"value": "8:00",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][title]",
+							"value": "mxvnkfd",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][description][0]",
+							"value": "gdsfgh lj",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][description][1]",
+							"value": "hgdh kjho ",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][latitude]",
+							"value": "49.420318",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][0][longitude]",
+							"value": "8.687872",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][time]",
+							"value": "13:30",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][title]",
+							"value": "fdterwr lkjhlkfj",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][description][0]",
+							"value": "jfhgkjhf jkrghh xkjhdu",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][description][1]",
+							"value": "hgjdhfg lhkjp",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][description][2]",
+							"value": "kjfhgkj ,mvnbk",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][latitude]",
+							"value": "49.422345",
+							"type": "text"
+						},
+						{
+							"key": "timelines[1][sections][1][longitude]",
+							"value": "8.692345",
 							"type": "text"
 						}
 					]
@@ -262,52 +311,26 @@
 							"type": "text"
 						},
 						{
-							"key": "season",
-							"value": "الشتاء",
-							"type": "text"
+							"key": "images[0]",
+							"type": "file",
+							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
 						},
 						{
-							"key": "start_date",
-							"value": "",
-							"type": "text",
+							"key": "images[1]",
+							"type": "file",
+							"src": "postman-cloud:///1efb97c2-2b22-4c00-b984-b9f2ee5009d7",
 							"disabled": true
-						},
-						{
-							"key": "tickets",
-							"value": "90",
-							"type": "text"
-						},
-						{
-							"key": "price",
-							"value": "",
-							"type": "text",
-							"disabled": true
-						},
-						{
-							"key": "new_price",
-							"value": "2000",
-							"type": "text"
-						},
-						{
-							"key": "days",
-							"value": "3",
-							"type": "text"
-						},
-						{
-							"key": "hours",
-							"value": "2",
-							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}trip/update/5",
+					"raw": "{{URL}}trip/update/17",
 					"host": [
 						"{{URL}}trip"
 					],
 					"path": [
 						"update",
-						"5"
+						"17"
 					]
 				}
 			},
@@ -321,7 +344,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{TOKEN}}",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODgwMjYsImV4cCI6MTc1NDM5MTYyNiwibmJmIjoxNzU0Mzg4MDI2LCJqdGkiOiJlN1l2WGYyZGNYNkVpRGpoIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.TnDtVHOFPI77EsLSjv6p4RMRqcX54Z5vWaQtrKv8AQA",
 							"type": "string"
 						}
 					]
@@ -329,12 +352,12 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/4",
+					"raw": "{{URL}}trips/7",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"4"
+						"7"
 					]
 				}
 			},
@@ -348,7 +371,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM5OTgyMzksImV4cCI6MTc1NDAwMTgzOSwibmJmIjoxNzUzOTk4MjM5LCJqdGkiOiJrOVdXU00yY3ZuZ1JmdHYzIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.m7xQqUTT7skdlJ_EgQtdHpuKqul8dpvr5rR3clB--gE",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQxNTg2MTYsImV4cCI6MTc1NDE2MjIxNiwibmJmIjoxNzU0MTU4NjE2LCJqdGkiOiJPam5rYzBEbUtxUUplSDFOIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Gha-UZ9cXXGTxB8ZuNq0Xd-khETifWg6A4Ltpyvg9Sc",
 							"type": "string"
 						}
 					]
@@ -356,12 +379,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/5",
+					"raw": "{{URL}}trips/17",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"5"
+						"17"
 					]
 				}
 			},
@@ -375,7 +398,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODY5MTIsImV4cCI6MTc1NDM5MDUxMiwibmJmIjoxNzU0Mzg2OTEyLCJqdGkiOiJBT3dsTFRXWVNvUVlvN1J5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Xt9Q45gGtbzond-sewePiaMf-kLT8stBfBpE0edaOKM",
 							"type": "string"
 						}
 					]
@@ -383,13 +406,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trip/company/2?tag=الكل",
+					"raw": "{{URL}}trip/company/1?tag=الكل",
 					"host": [
 						"{{URL}}trip"
 					],
 					"path": [
 						"company",
-						"2"
+						"1"
 					],
 					"query": [
 						{
@@ -405,7 +428,14 @@
 			"name": "getTripsOffer",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODY5MTIsImV4cCI6MTc1NDM5MDUxMiwibmJmIjoxNzU0Mzg2OTEyLCJqdGkiOiJBT3dsTFRXWVNvUVlvN1J5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Xt9Q45gGtbzond-sewePiaMf-kLT8stBfBpE0edaOKM",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [],
@@ -422,54 +452,56 @@
 			"response": []
 		},
 		{
-			"name": "reserveTrip",
+			"name": "similarTrips",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM1MzMwMTgsImV4cCI6MTc1MzUzNjYxOCwibmJmIjoxNzUzNTMzMDE4LCJqdGkiOiJYenJrYm9SemdqdWZseW1BIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.VMzJDOR2z6Q1rqiDPGESQ2SXEbBtiOL3NxqidtMdp1w",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODY5MTIsImV4cCI6MTc1NDM5MDUxMiwibmJmIjoxNzU0Mzg2OTEyLCJqdGkiOiJBT3dsTFRXWVNvUVlvN1J5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Xt9Q45gGtbzond-sewePiaMf-kLT8stBfBpE0edaOKM",
 							"type": "string"
 						}
 					]
 				},
-				"method": "POST",
+				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"trip_id\": 2,\r\n    \"number_of_tickets\": 3,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        }\r\n    ]\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "{{URL}}trips/reserve",
+					"raw": "{{URL}}trips/similar/9",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"reserve"
+						"similar",
+						"9"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "similarTrips",
+			"name": "cancel trip",
 			"request": {
-				"method": "GET",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODg3MTMsImV4cCI6MTc1NDM5MjMxMywibmJmIjoxNzU0Mzg4NzEzLCJqdGkiOiJUYk9BNGlST2RxYzhXN3R5Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.KkLureJ0ccylMpaRxx8i-OM0SyqnytEKIScIMcotW2c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/similar/1",
+					"raw": "{{URL}}trips/cancel/17",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"similar",
-						"1"
+						"cancel",
+						"17"
 					]
 				}
 			},

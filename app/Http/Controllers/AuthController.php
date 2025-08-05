@@ -105,9 +105,9 @@ class AuthController extends Controller
         return $this->handle(fn() => $this->googleAuthService->authenticate($request->validated()));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        return $this->handle(fn() => $this->authService->logout());
+        return $this->handle(fn() => $this->authService->logout($request));
     }
 
     public function deleteAccount(DeleteAccountRequest $request)

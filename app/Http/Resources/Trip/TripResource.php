@@ -23,7 +23,6 @@ class TripResource extends JsonResource
         $company = optional($trip->user);
         $adminProfile = optional($company->adminProfile);
 
-        // استدعاء RouteService
         $rs = app(RouteService::class);
 
         return [
@@ -33,6 +32,9 @@ class TripResource extends JsonResource
             'season'            => $this->season,
             'start_date'        => $this->start_date,
             'duration'          => $this->duration,
+            'days'              =>$this->days,
+            'hours'             =>$this->hours,
+            'tickets'=>$this->tickets,
             'remaining_tickets' => ($this->tickets ?? 0) - ($this->reserved_tickets ?? 0),
             'price'             => $this->price,
             'discount'          => $this->discount,
@@ -48,8 +50,7 @@ class TripResource extends JsonResource
                 return asset('storage/' . $media->url);
             }),
 
-            // تمرير الـ RouteService للـ method
-"trip_path" => $this->getRoute($trip),
+            "trip_path" => $this->getRoute($trip),
 
             'timelines' => $this->timelines->map(function ($timeline) {
                 return [

@@ -16,7 +16,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.a",
+							"value": "lkjkh@gmail.com",
 							"type": "text"
 						},
 						{
@@ -56,7 +56,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.y",
+							"value": "khkjgj@gmail.com",
 							"type": "text"
 						}
 					]
@@ -101,12 +101,17 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.a",
+							"value": "fghd@kjhjk.abc",
 							"type": "text"
 						},
 						{
 							"key": "code",
-							"value": "2597",
+							"value": "7088",
+							"type": "text"
+						},
+						{
+							"key": "fcm_token",
+							"value": "e9uH2U8MQp8:APA91bkpuz2X1Ad6tVlJgYkxyL0xCjKf7QyBzPnq3GAcKj1U2Dp3Qb9S6uE4nPz3LK4hXjZkV5Z9I7qfG5UpB1vQyC5UxBo6n6_gK7zLk5MbF7XkYjK4Xo\n",
 							"type": "text"
 						}
 					]
@@ -164,6 +169,11 @@
 							"key": "password",
 							"value": "password",
 							"type": "text"
+						},
+						{
+							"key": "fcm_token",
+							"value": "e9uH2U8MlQpn8:APA91lkpuz2X1A6tVlJgYkxyL0xCjKf7QyBzPnq3GAcKj1U2Dp3Qb9S6uE4nPz3LK4hXjZkV5Z9I7qfG5UpB1vQyC5UxBo6n6_gK7zLk5MbF7XkYjK4Xo\n",
+							"type": "text"
 						}
 					]
 				},
@@ -187,7 +197,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTMxMjI3NTMsImV4cCI6MTc1MzEyNjM1MywibmJmIjoxNzUzMTIyNzUzLCJqdGkiOiJROFFjdEpQbm1pTUhIT2tRIiwic3ViIjoiOSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.IGnK1cht82fGgyGjS3f03SjNhQi4v8-7DDuYpWcgmVM",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTQzMjg3ODIsImV4cCI6MTc1NDMzMjM4MiwibmJmIjoxNzU0MzI4NzgyLCJqdGkiOiJzTWZNTllTOWtsdTF3RTJhIiwic3ViIjoiOCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.IHCzuCC9VQcWBX6bUd4aA9txGdHTK1ku3nkUWNf-A4A",
 							"type": "string"
 						}
 					]
@@ -200,6 +210,16 @@
 						"type": "text"
 					}
 				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fcm_token",
+							"value": "e9uH2U8MQp8:APA91bkouz2X1A6tVlJgYkxyL0xCjKf7QyBzPnq3GAcKj1U2Dp3Qb9S6uE4nPz3LK4hXjZkV5Z9I7qfG5UpB1vQyC5UxBo6n6_gK7zLk5MbF7XkYjK4Xo",
+							"type": "text"
+						}
+					]
+				},
 				"url": {
 					"raw": "http://127.0.0.1:8000/api/auth/logout",
 					"protocol": "http",
@@ -227,7 +247,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{TOKEN}}",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5RW1haWwiLCJpYXQiOjE3NTQzMjc5ODYsImV4cCI6MTc1NDMzMTU4NiwibmJmIjoxNzU0MzI3OTg2LCJqdGkiOiJBOXRNdklzWWJ5VmVGMjBJIiwic3ViIjoiNyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.jB8ZFm3rVx5WU1Pckno6FzSvMEPOphqw1E-fpUkmXaA",
 							"type": "string"
 						}
 					]
@@ -245,7 +265,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.y",
+							"value": "fghd@kjhjk.ab",
 							"type": "text"
 						},
 						{
@@ -275,7 +295,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxMjI4NjEsImV4cCI6MTc1MzEyNjQ2MSwibmJmIjoxNzUzMTIyODYxLCJqdGkiOiJ2RW0wdEw2bUZ1eTRIYTIxIiwic3ViIjoiOCIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Nhnf7sHOfancTUBe0L_uOGRDENOL4CcU_Jv9BEldyoQ",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzMjg4MjcsImV4cCI6MTc1NDMzMjQyNywibmJmIjoxNzU0MzI4ODI3LCJqdGkiOiJOV29GSmpwSGk1UTNSamdyIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.D1U4ypeJkXBqmD7mG-AGkyat3mD6QTtiLMVgDoOxDVk",
 							"type": "string"
 						}
 					]
@@ -287,7 +307,7 @@
 					"formdata": [
 						{
 							"key": "old_password",
-							"value": "1234567890",
+							"value": "password",
 							"type": "text"
 						},
 						{
@@ -324,7 +344,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.a",
+							"value": "hgfhg@gmail.com",
 							"type": "text"
 						}
 					]
@@ -360,12 +380,17 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.a",
+							"value": "fghd@kjhjk.abc",
 							"type": "text"
 						},
 						{
 							"key": "code",
-							"value": "2885",
+							"value": "6077",
+							"type": "text"
+						},
+						{
+							"key": "fcm_token",
+							"value": "jkjdhfgmnv",
 							"type": "text"
 						}
 					]
@@ -390,7 +415,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvdmVyaWZ5Q29kZSIsImlhdCI6MTc1NDMyOTEzNSwiZXhwIjoxNzU0MzMyNzM1LCJuYmYiOjE3NTQzMjkxMzUsImp0aSI6IkZ1MHF3TzZtbHNvZWdYeGciLCJzdWIiOiI4IiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.oV69rl7_1mK1e0Ik5PMamhm5FPmnd0fU8Q2z3zsQue8",
 							"type": "string"
 						}
 					]
@@ -402,7 +427,7 @@
 					"formdata": [
 						{
 							"key": "code",
-							"value": "2885",
+							"value": "6077",
 							"type": "text"
 						},
 						{
@@ -417,7 +442,7 @@
 						},
 						{
 							"key": "email",
-							"value": "fghd@kjhjk.a",
+							"value": "fghd@kjhjk.abc",
 							"type": "text"
 						}
 					]

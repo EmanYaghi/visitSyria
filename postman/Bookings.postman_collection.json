@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "463d8660-0be8-4ff2-ab27-1d3ecfd03b67",
+		"name": "Bookings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38928530"
+	},
+	"item": [
+		{
+			"name": "cancelReservation",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}",
+					"host": [
+						"{{URL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MyReservation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}reservations?type=trip",
+					"host": [
+						"{{URL}}reservations"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Reservation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM1MzMwMTgsImV4cCI6MTc1MzUzNjYxOCwibmJmIjoxNzUzNTMzMDE4LCJqdGkiOiJYenJrYm9SemdqdWZseW1BIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.VMzJDOR2z6Q1rqiDPGESQ2SXEbBtiOL3NxqidtMdp1w",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"card_holder\":\"stave jobs\",\r\n    \"card_number\":\"4242 4242 4242 4242\",\r\n    \"cvc\":\"\",\r\n    \"expiry_date\":\"2025-09-26\",\r\n    \"save_credit_card\":true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}bookings/1/pay",
+					"host": [
+						"{{URL}}bookings"
+					],
+					"path": [
+						"1",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "reserveTrip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQyNTU5NjMsImV4cCI6MTc1NDI1OTU2MywibmJmIjoxNzU0MjU1OTYzLCJqdGkiOiJxWUo0eXVSWjlsMWg4bXRoIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eCMKE-WR2Kascgqgias5l6dytSYdZWcDblKptDiciVI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"trip\",\r\n    \"id\": 5,\r\n    \"number_of_tickets\": 3,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}reserve",
+					"host": [
+						"{{URL}}reserve"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key:'Accept',\r",
+					"    value:'application/json'\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

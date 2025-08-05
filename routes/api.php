@@ -63,6 +63,7 @@ use App\Http\Controllers\WebhookController;
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
+        Route::post('trips/cancel/{id}',[TripController::class,'cancel']);
 
         Route::post('reserve', [BookingController::class, 'reserve']);
 

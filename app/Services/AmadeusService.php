@@ -64,5 +64,4 @@ protected function getAccessToken() {
             }
         }
         return $results;
-    }
-}
+    }}

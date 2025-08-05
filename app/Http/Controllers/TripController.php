@@ -106,4 +106,16 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
+    public function cancel( $id)
+    {
+         $data=[];
+        try{
+            $data=$this->tripService->cancel($id);
+            return response()->json(["message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

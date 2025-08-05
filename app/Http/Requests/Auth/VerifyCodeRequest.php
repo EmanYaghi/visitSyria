@@ -15,6 +15,7 @@ class VerifyCodeRequest extends FormRequest
         return [
             'email' => 'required|string|email',
             'code' => 'required',
+            'fcm_token'=>'required'
         ];
     }
 }

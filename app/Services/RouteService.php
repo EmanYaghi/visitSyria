@@ -26,6 +26,7 @@ class RouteService
         }
 
         try {
+
             $resp = Http::withHeaders([
                 'Accept' => 'application/json, application/geo+json, application/gpx+xml',
                 'Content-Type' => 'application/json; charset=utf-8',
@@ -36,6 +37,7 @@ class RouteService
             ]);
 
             if ($resp->failed()) {
+
                 $body = $resp->json('error') ?? $resp->body();
                 Log::error('ORS API failed', [
                     'code' => $resp->status(),
@@ -67,6 +69,7 @@ class RouteService
                 'routePointCount' => count($route),
             ];
         } catch (\Throwable $e) {
+
             Log::error('RouteService Exception: ' . $e->getMessage());
             return [];
         }

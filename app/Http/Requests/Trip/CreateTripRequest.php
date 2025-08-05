@@ -14,17 +14,15 @@ class CreateTripRequest extends FormRequest
     }
     public function rules(): array
     {
-
         return [
             'name'=>'required|string',
             'description'=>'required|string',
             'season'=>'required|in:الصيف,الخريف,الشتاء,الربيع',
             'start_date'=>'required|date',
-            'days'=>'nullable|numeric',
-            'hours'=>'nullable|numeric',
+            'days'=>'required|integer',
             'tickets'=>'required',
             'price'=>'required',
-            'new_price'=>'nullable',
+            'discount'=>'nullable',
             'improvements'=>'nullable|array',
             'improvements.*'=>'string',
             'images' => 'nullable|array|max:4',
@@ -40,8 +38,6 @@ class CreateTripRequest extends FormRequest
             'timelines.*.sections.*.longitude' => 'nullable',
             'timelines.*.sections.*.description' => 'nullable|array',
             'timelines.*.sections.*.description.*' => 'nullable',
-
-
         ];
     }
 }

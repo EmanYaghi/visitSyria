@@ -32,11 +32,9 @@ trait TripPath
                 }
             }
         }
-
-        if (empty($coordinates)) {
+        if (empty($coordinates)||count($coordinates)<2) {
             return [];
         }
-
         return $this->rs->getDrivingRoute($coordinates);
     }
 }
