@@ -98,9 +98,10 @@
     Route::get('places/tourist/{classification}/city/{cityName}', [PlaceController::class, 'getTouristPlacesByClassificationAndCity']);
 
     Route::get('places', [PlaceController::class,'index']);
+    Route::get('places/{id}/similar', [PlaceController::class, 'similarPlaces']);
     Route::get('places/{id}', [PlaceController::class,'show']);
 
-    Route::get('events', [EventController::class,'index']);
+        Route::get('events', [EventController::class,'index']);
     Route::get('events/{id}', [EventController::class,'show']);
 
     Route::get('cities', [CityController::class, 'index']);

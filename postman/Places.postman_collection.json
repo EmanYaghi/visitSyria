@@ -98,18 +98,9 @@
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places",
-					"protocol": "http",
+					"raw": "{{URL}}places",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"places"
+						"{{URL}}places"
 					]
 				}
 			},
@@ -192,18 +183,11 @@
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/updatePlace/1",
-					"protocol": "http",
+					"raw": "{{URL}}updatePlace/1",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}updatePlace"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"updatePlace",
 						"1"
 					]
 				}
@@ -214,7 +198,14 @@
 			"name": "GetAllPlaces",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -225,18 +216,9 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places",
-					"protocol": "http",
+					"raw": "{{URL}}places",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"places"
+						"{{URL}}places"
 					]
 				}
 			},
@@ -246,7 +228,14 @@
 			"name": "GetAllRestaurants",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -257,18 +246,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/restaurants",
-					"protocol": "http",
+					"raw": "{{URL}}places/restaurants",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"restaurants"
 					]
 				}
@@ -279,7 +261,14 @@
 			"name": "GetAllRestaurantsByCity",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -290,18 +279,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/restaurants/byCity?city=حلب",
-					"protocol": "http",
+					"raw": "{{URL}}places/restaurants/byCity?city=حلب",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"restaurants",
 						"byCity"
 					],
@@ -330,18 +312,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/hotels/byCity?city=دمشق",
-					"protocol": "http",
+					"raw": "{{URL}}places/hotels/byCity?city=دمشق",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"hotels",
 						"byCity"
 					],
@@ -359,7 +334,14 @@
 			"name": "GetAllHotels",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -370,18 +352,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/hotels",
-					"protocol": "http",
+					"raw": "{{URL}}places/hotels",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"hotels"
 					]
 				}
@@ -403,18 +378,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/tourist",
-					"protocol": "http",
+					"raw": "{{URL}}places/tourist",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"tourist"
 					]
 				}
@@ -436,18 +404,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/top-rated-tourist",
-					"protocol": "http",
+					"raw": "{{URL}}places/top-rated-tourist",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"top-rated-tourist"
 					]
 				}
@@ -458,7 +419,14 @@
 			"name": "Get Tourist Places By Classification",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -469,18 +437,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/tourist/أثرية",
-					"protocol": "http",
+					"raw": "{{URL}}places/tourist/أثرية",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"tourist",
 						"أثرية"
 					]
@@ -492,7 +453,14 @@
 			"name": "Get Tourist Places By ClassificationAndCity",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -503,18 +471,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/tourist/أثرية/city/دمشق",
-					"protocol": "http",
+					"raw": "{{URL}}places/tourist/أثرية/city/دمشق",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"tourist",
 						"أثرية",
 						"city",
@@ -528,7 +489,14 @@
 			"name": "GetCityPlaces",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -539,18 +507,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/city/دمشق/places",
-					"protocol": "http",
+					"raw": "{{URL}}city/دمشق/places",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}city"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"city",
 						"دمشق",
 						"places"
 					]
@@ -562,7 +523,14 @@
 			"name": "GetPlaceByID",
 			"request": {
 				"auth": {
-					"type": "noauth"
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
 				},
 				"method": "GET",
 				"header": [
@@ -573,19 +541,46 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/1",
-					"protocol": "http",
+					"raw": "{{URL}}places/11",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
-						"1"
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetSimilarPlaces",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/1/similar",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"1",
+						"similar"
 					]
 				}
 			},
@@ -613,18 +608,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/places/1",
-					"protocol": "http",
+					"raw": "{{URL}}places/1",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}places"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"places",
 						"1"
 					]
 				}

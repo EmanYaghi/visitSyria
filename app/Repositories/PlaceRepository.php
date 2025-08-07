@@ -5,6 +5,29 @@ use App\Models\Place;
 
 class PlaceRepository
 {
+    
+public function findByIdWithRelations($id)
+{
+    return Place::with([
+        'media',
+        'ratings',
+        'latestComments.user.profile',
+        'latestComments.user.ratings' => function($query) use ($id) {
+            $query->where('place_id', $id);
+        }
+    ])->findOrFail($id);
+}
+public function findByTypeExceptId(string $type, int $excludeId)
+{
+    return Place::where('type', $type)
+                ->where('id', '!=', $excludeId)
+                ->latest()
+                ->get();
+}
+    public function calculateAvgRating($place)
+    {
+        return $place->ratings->avg('rating_value') ?? 0;
+    }
     public function getAll($filters = [])
     {
         return Place::when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
@@ -65,10 +88,12 @@ public function getTopRatedPlaces(array $filters = [])
             ->get();
     }
 
-    public function findById($id)
-    {
-        return Place::findOrFail($id);
-    }
+public function findById($id)
+{
+    return Place::with([
+        'media',
+    ])->findOrFail($id);
+}
 
     public function create(array $data)
     {

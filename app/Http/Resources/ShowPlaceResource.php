@@ -7,21 +7,12 @@ class ShowPlaceResource extends JsonResource
 {
     public function toArray($request)
     {
-        $avg = $this->ratings->avg('rating_value') ?: 0;
-        $recent = $this->comments->map(function ($comment) {
-            return [
-                'id'           => $comment->id,
-                'user_id'      => $comment->user_id,
-                'user_name'    => $comment->user->name,
-                'body'         => $comment->body,
-                'created_at'   => $comment->created_at->toDateTimeString(),
-                'rating_value' => optional(
-                    $this->ratings->firstWhere('user_id', $comment->user_id)
-                )->rating_value ?: 0,
-            ];
-        })->values();
+        $token  = $request->bearerToken();
+        $userId = $request->user()?->id;
 
-        return [
+        $avgRating = $this->ratings()->avg('rating_value') ?: 0;
+        $data = [
+            'token'             => $token ?: null,
             'id'                  => $this->id,
             'city_id'             => $this->city_id,
             'type'                => $this->type,
@@ -33,13 +24,36 @@ class ShowPlaceResource extends JsonResource
             'place'               => $this->place,
             'longitude'           => $this->longitude,
             'latitude'            => $this->latitude,
-            'rating'              => round($avg, 2),
-            'classification'      => $this->classification,
-            'images'              => $this->media->map(fn($m) => asset('storage/'.$m->url)),
-            'recent_comments'     => $recent,
-            'rank'                => $this->rank,
+            'rating'              => round($avgRating, 2),
+            'classification' => $this->classification,
+            'images' => $this->media->map(fn($media) => asset('storage/' . $media->url)),
+                        'is_commented'      => $userId !== null
+                ? (bool) $this->comments()->where('user_id', $userId)->exists()
+                : 'guest',
+            'is_rated'          => $userId !== null
+                ? (bool) $this->ratings()->where('user_id', $userId)->exists()
+                : 'guest',
+            'is_saved'    => $userId !== null
+            ? (bool) $this->saves()->where('user_id', $userId)->exists()
+            : 'guest',
+
+            'recent_comments' => $this->latestcomments->map(function ($comment) {
+                $profile = $comment->user?->profile;
+                $userRating = $comment->user->ratings()->where('place_id', $this->id)->first();
+                return [
+                    'id' => $comment->id,
+                    'user_id' => $comment->user_id,
+                    'user_name' => $profile ? $profile->first_name . ' ' . $profile->last_name : null,
+                    'body' => $comment->body,
+                    'created_at' => $comment->created_at->toDateString(),
+                    'rating_value' => $userRating ? $userRating->rating_value : 0,
+                ];
+            }),
+
             'created_at'          => $this->created_at->toDateTimeString(),
             'updated_at'          => $this->updated_at->toDateTimeString(),
         ];
+
+        return $data;
     }
 }

@@ -25,7 +25,13 @@ class Place extends Model
     {
         return str_pad($value, 6, '0', STR_PAD_LEFT);
     }
-    
+    public function latestComments()
+    {
+        return $this->hasMany(Comment::class)
+                    ->latest()
+                    ->take(3);
+    }
+
     public function city()
     {
         return $this->belongsTo(City::class);

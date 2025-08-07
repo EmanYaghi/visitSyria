@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\City;
 use App\Models\Media;
 use App\Models\Place;
 
@@ -25,6 +26,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '36.2020',
                 'rating' => 4.7,
                 'classification' => null,
+                'image' => 'restaurant1.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -41,6 +43,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '33.5120',
                 'rating' => 4.9,
                 'classification' => null,
+                'image' => 'restaurant2.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -57,6 +60,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '35.5200',
                 'rating' => 4.5,
                 'classification' => null,
+                'image' => 'restaurant3.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -73,6 +77,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '34.7320',
                 'rating' => 4.3,
                 'classification' => null,
+                'image' => 'restaurant4.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -89,6 +94,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '34.8900',
                 'rating' => 4.6,
                 'classification' => null,
+                'image' => 'restaurant5.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -106,6 +112,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '33.5180',
                 'rating' => 4.8,
                 'classification' => null,
+                'image' => 'hotel1.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -122,6 +129,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '36.2120',
                 'rating' => 4.6,
                 'classification' => null,
+                'image' => 'hotel2.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -138,6 +146,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '35.5300',
                 'rating' => 4.4,
                 'classification' => null,
+                'image' => 'hotel3.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -154,6 +163,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '34.7420',
                 'rating' => 4.2,
                 'classification' => null,
+                'image' => 'hotel4.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -170,6 +180,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '36.5000',
                 'rating' => 4.0,
                 'classification' => null,
+                'image' => 'hotel5.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -187,6 +198,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '33.5120',
                 'rating' => 5.0,
                 'classification' => 'أثرية',
+                'image' => 'tourist1.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -203,6 +215,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '36.1990',
                 'rating' => 4.9,
                 'classification' => 'أثرية',
+                'image' => 'tourist2.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -219,6 +232,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '35.1360',
                 'rating' => 4.7,
                 'classification' => 'طبيعية',
+                'image' => 'tourist3.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -235,6 +249,7 @@ class PlaceSeeder extends Seeder
                 'latitude' => '34.5560',
                 'rating' => 4.8,
                 'classification' => 'أثرية',
+                'image' => 'tourist4.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -251,28 +266,21 @@ class PlaceSeeder extends Seeder
                 'latitude' => '35.1500',
                 'rating' => 4.5,
                 'classification' => 'أثرية',
+                'image' => 'tourist5.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
         ];
 
         foreach ($places as $placeData) {
+            $image = $placeData['image'];
+            unset($placeData['image']);
+
             $place = Place::create($placeData);
-            
-                    $mediaUrls = [];
-            if ($placeData['type'] == 'restaurant') {
-                $mediaUrls = ['places/restaurant1.jpg'];
-            } elseif ($placeData['type'] == 'hotel') {
-                $mediaUrls = ['places/hotel1.jpg'];
-            } elseif ($placeData['type'] == 'tourist') {
-                $mediaUrls = ['places/tourist1.jpg'];
-            }
-            foreach ($mediaUrls as $url) {
-                Media::create([
-                    'place_id' => $place->id,
-                    'url' => $url,
-                ]);
-            }
+            Media::create([
+                'place_id' => $place->id,
+                'url' => 'places/' . $image,
+            ]);
         }
     }
 }
