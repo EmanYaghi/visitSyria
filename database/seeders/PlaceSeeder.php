@@ -3,11 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\City;
 use App\Models\Media;
 use App\Models\Place;
-
 class PlaceSeeder extends Seeder
 {
     public function run()
@@ -279,7 +277,7 @@ class PlaceSeeder extends Seeder
             $place = Place::create($placeData);
             Media::create([
                 'place_id' => $place->id,
-                'url' => 'places/' . $image,
+                'url' => 'Places/' . $image,
             ]);
         }
     }

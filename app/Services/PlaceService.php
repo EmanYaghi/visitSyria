@@ -57,7 +57,7 @@ public function getRestaurants($filters = [])
         $filters['type'] = 'tourist';
         return $this->placeRepo->getAll($filters);
     }
-    public function getTopRatedTouristPlaces(array $filters = [])
+public function getTopRatedTouristPlaces(array $filters = [])
 {
     $filters['type'] = 'tourist';
     $places = $this->placeRepo->getTopRatedPlaces($filters);
@@ -67,6 +67,7 @@ public function getRestaurants($filters = [])
 
     return $places;
 }
+
 
     public function getTouristPlacesByClassification($classification)
     {
@@ -139,14 +140,8 @@ public function getTouristPlacesByClassificationAndCity($classification, $cityId
 
 public function getPlaceDetails($id)
 {
-    $place = $this->placeRepo->findByIdWithRelations($id);
-    $place->load(['media', 'ratings', 'latestComments.user.profile']);
-    $place->avg_rating = $place->ratings->avg('rating_value') ?: 0;
-    $place->similarPlaces = $this->getSimilarPlaces($id, $place->type);
-
-    return $place;
+    return $this->placeRepo->getByIdWithDetails($id);
 }
-
 
 public function getSimilarPlaces(int $id, string $type)
 {

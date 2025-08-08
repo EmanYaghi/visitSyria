@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PlaceStoreRequest;
 use App\Http\Requests\PlaceUpdateRequest;
 use App\Http\Resources\PlaceResource;
-use App\Http\Resources\ShowPlaceResource;
 use App\Models\City;
 use App\Models\Place;
 use App\Services\PlaceService;
@@ -42,6 +41,26 @@ class PlaceController extends Controller
         $similar = $this->placeService->getSimilarPlaces($id, $place->type);
         return PlaceResource::collection($similar);
     }
+    
+public function show($id)
+{
+    $place = $this->placeService->getPlaceDetails($id);
+    if (!$place) {
+        return response()->json(['message' => 'Place not found'], 404);
+    }
+    if ($place->type === 'tourist') {
+        $topPlaces = $this->placeService->getTopRatedTouristPlaces();
+
+        foreach ($topPlaces as $index => $topPlace) {
+            if ($topPlace->id === $place->id) {
+                $place->rank = $index + 1;
+                break;
+            }
+        }
+    }
+    return new PlaceResource($place);
+}
+
     public function store(PlaceStoreRequest $request)
     {
         $data = $request->validated();
@@ -52,34 +71,6 @@ class PlaceController extends Controller
 
         return response()->json(['place' => new PlaceResource($place)],201);
     }
-
-public function show($id)
-{
-    $place = $this->placeService->getPlaceDetails($id);
-    
-    if (!$place) {
-        return response()->json(['message' => 'Place not found'], 404);
-    }
-    
-    $similar = collect($this->placeService->getSimilarPlaces($id, $place->type))
-        ->map(function ($p) {
-            $firstMedia = $p->media()->first();
-            $imageUrl  = $firstMedia
-                ? asset('storage/' . ltrim($firstMedia->url, '/'))
-                : null;
-            return [
-                'name'      => $p->name,
-                'rating'    => round($p->avg_rating, 2),
-                'rank'      => $p->rank,
-                'image_url' => $imageUrl,
-            ];
-        })
-        ->values();
-    return (new ShowPlaceResource($place))
-        ->additional(['similar_places' => $similar]);
-}
-
-
 
    public function update(PlaceUpdateRequest $request, $id)
     {

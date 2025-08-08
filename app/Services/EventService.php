@@ -50,6 +50,13 @@ class EventService
             'id'  => $m->id,
             'url' => $m->url,
         ]));
+        $user = auth('api')->user();
+    if ($user) {
+        $event->is_saved = $event->saves()->where('user_id', $user->id)->exists();
+    } else {
+        $event->is_saved = 'guest';
+    }
+
         return $event;
     }
 
