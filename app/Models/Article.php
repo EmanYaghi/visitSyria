@@ -18,4 +18,16 @@ class Article extends Model
     {
         return $this->hasMany(Tag::class);
     }
+        public function media()
+    {
+        return $this->hasOne(Media::class);
+    }
+    public function getImageUrlAttribute()
+    {
+        if (!$this->relationLoaded('media')) {
+            $this->load('media');
+        }
+
+        return $this->media?->url ?? null;
+    }
 }

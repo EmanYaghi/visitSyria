@@ -15,6 +15,7 @@ class CreateMediaTable extends Migration
             $table->foreignId('place_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('city_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('event_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('article_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('trip_id')->nullable()->constrained()->nullOnDelete();
             $table->string('url');
             $table->timestamps();

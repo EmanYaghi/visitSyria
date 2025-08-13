@@ -9,7 +9,7 @@ class Media extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'post_id', 'place_id', 'city_id', 'event_id','trip_id', 'url'
+        'user_id', 'post_id', 'place_id', 'city_id', 'event_id','trip_id','article_id', 'url'
     ];
 
     public function user()
@@ -26,7 +26,10 @@ class Media extends Model
     {
         return $this->belongsTo(Place::class);
     }
-
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
     public function city()
     {
         return $this->belongsTo(City::class);

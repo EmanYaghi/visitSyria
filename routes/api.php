@@ -1,6 +1,7 @@
 <?php
 
-    use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ArticleController;
+use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\CityController;
     use App\Http\Controllers\WeatherController;
     use App\Http\Controllers\AuthController;
@@ -58,6 +59,12 @@
         Route::post('updatePlace/{id}', [PlaceController::class,'update']);
         Route::delete('places/{id}', [PlaceController::class,'destroy']);
 
+
+        Route::post('articles', [ArticleController::class, 'store']);
+        Route::post('articles/{article}', [ArticleController::class, 'update']);
+        Route::delete('articles/{article}', [ArticleController::class, 'destroy']);
+
+
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
@@ -110,7 +117,13 @@
     Route::get('flights/search', [FlightController::class, 'search']);
     Route::get('/locations/search', [FlightController::class, 'searchLocation']);
 
-    
+
+    Route::get('articles', [ArticleController::class, 'index']);
+    Route::get('articles/{article}', [ArticleController::class, 'show']);
+    Route::get('articles/{article}/similar', [ArticleController::class, 'similar']);
+
+
+
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
