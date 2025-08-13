@@ -62,4 +62,15 @@ class ArticleService
 
         return $this->repo->similarByTags($article->id, $tagIds, $limit);
     }
+    public function getArticlesByTag(string $tagName)
+{
+    $collection = $this->repo->getByTagName($tagName);
+
+    if ($collection->isEmpty()) {
+        return [];
+    }
+
+    return $collection;
+}
+
 }

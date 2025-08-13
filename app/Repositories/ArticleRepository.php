@@ -44,14 +44,14 @@ class ArticleRepository
         $model->delete();
     }
 
-public function similarByTags(int $articleId, array $tagIds, int $limit = 6): \Illuminate\Database\Eloquent\Collection
+public function similarByTags(int $articleId, array $tagIds, int $limit = 6)
 {
     if (empty($tagIds)) {
         return $this->model->newCollection();
     }
 
-    $ids = \Illuminate\Support\Facades\DB::table('tags')
-        ->select('article_id', \Illuminate\Support\Facades\DB::raw('COUNT(*) as shared'))
+    $ids = DB::table('tags')
+        ->select('article_id', DB::raw('COUNT(*) as shared'))
         ->whereIn('tag_name_id', $tagIds)
         ->where('article_id', '!=', $articleId)
         ->groupBy('article_id')
@@ -77,6 +77,16 @@ public function similarByTags(int $articleId, array $tagIds, int $limit = 6): \I
     }
 
     return $this->model->newCollection($ordered);
+}
+public function getByTagName(string $tagName)
+{
+    return $this->model
+        ->whereHas('tags.tagName', function ($query) use ($tagName) {
+            $query->where('body', $tagName);
+        })
+        ->with(['media', 'tags.tagName'])
+        ->orderBy('created_at', 'desc')
+        ->get();
 }
 
 }

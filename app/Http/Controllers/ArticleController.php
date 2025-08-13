@@ -245,4 +245,24 @@ public function similar(Request $request, $id)
     return ArticleResource::collection($similar);
 }
 
+public function getByTag(Request $request, string $tag)
+{
+    $articles = $this->articleService->getArticlesByTag($tag);
+
+    if (is_array($articles) && empty($articles)) {
+        return response()->json([], 200);
+    }
+
+    $user = $request->user('api');
+
+    if ($user && $articles instanceof \Illuminate\Database\Eloquent\Collection) {
+        $articles->load(['saves' => function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('article_id');
+        }]);
+    }
+
+    return ArticleResource::collection($articles);
+}
+
+
 }

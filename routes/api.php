@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\CityController;
@@ -64,6 +65,11 @@ use Illuminate\Support\Facades\Route;
         Route::post('articles/{article}', [ArticleController::class, 'update']);
         Route::delete('articles/{article}', [ArticleController::class, 'destroy']);
 
+        Route::post('settings', [SettingController::class, 'store']);
+        Route::post('settings/{setting}', [SettingController::class, 'update']);
+        Route::delete('settings/{setting}', [SettingController::class, 'destroy']);
+
+
 
         Route::post('trips', [TripController::class,'store']);
         Route::delete('trips/{id}', [TripController::class,'destroy']);
@@ -121,6 +127,12 @@ use Illuminate\Support\Facades\Route;
     Route::get('articles', [ArticleController::class, 'index']);
     Route::get('articles/{article}', [ArticleController::class, 'show']);
     Route::get('articles/{article}/similar', [ArticleController::class, 'similar']);
+    Route::get('articles/by-tag/{tag}', [ArticleController::class, 'getByTag']);
+
+    Route::get('settings', [SettingController::class, 'index']);
+    Route::get('settings/{setting}', [SettingController::class, 'show']);    
+    Route::get('settings/type/{type}', [SettingController::class, 'getByType']);
+    Route::get('settings/category/{category}', [SettingController::class, 'getByCategory']);
 
 
 

@@ -4,6 +4,8 @@ namespace App\Services;
 use App\Repositories\PlaceRepository;
 use App\Models\Media;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class PlaceService
 {
@@ -41,11 +43,12 @@ class PlaceService
         return $this->placeRepo->delete($id);
     }
 
-public function getRestaurants($filters = [])
-{
-    $filters['type'] = 'restaurant';
-    return $this->placeRepo->getAll($filters);
-}
+    public function getRestaurants($filters = [])
+    {
+        $filters['type'] = 'restaurant';
+        return $this->placeRepo->getAll($filters);
+    }
+
     public function getHotels($filters = [])
     {
         $filters['type'] = 'hotel';
@@ -57,46 +60,45 @@ public function getRestaurants($filters = [])
         $filters['type'] = 'tourist';
         return $this->placeRepo->getAll($filters);
     }
-public function getTopRatedTouristPlaces(array $filters = [])
-{
-    $filters['type'] = 'tourist';
-    $places = $this->placeRepo->getTopRatedPlaces($filters);
-    foreach ($places as $index => $place) {
-        $place->rank = $index + 1;
+
+    public function getTopRatedTouristPlaces(array $filters = [])
+    {
+        $filters['type'] = 'tourist';
+        $places = $this->placeRepo->getTopRatedPlaces($filters);
+        foreach ($places as $index => $place) {
+            $place->rank = $index + 1;
+        }
+        return $places;
     }
-
-    return $places;
-}
-
 
     public function getTouristPlacesByClassification($classification)
     {
         return $this->placeRepo->getTouristPlacesByClassification($classification);
     }
+
     public function getRestaurantsByCityName($cityName)
     {
         return $this->placeRepo->getRestaurantsByCityName($cityName);
     }
-public function getTouristPlacesByClassificationAndCity($classification, $cityId)
-{
-    $places = $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
 
-    $topRatedIds = $this->placeRepo
-        ->getTopRatedPlaces(['type' => 'tourist', 'city_id' => $cityId])
-        ->pluck('id')
-        ->toArray();
-
-    foreach ($places as $place) {
-        $place->rank = ($index = array_search((int)$place->id, $topRatedIds)) !== false ? $index + 1 : null;
+    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
+    {
+        $places = $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
+        $topRatedIds = $this->placeRepo
+            ->getTopRatedPlaces(['type' => 'tourist', 'city_id' => $cityId])
+            ->pluck('id')
+            ->toArray();
+        foreach ($places as $place) {
+            $place->rank = ($index = array_search((int)$place->getKey(), $topRatedIds)) !== false ? $index + 1 : null;
+        }
+        return $places;
     }
-
-    return $places;
-}
 
     public function getHotelsByCityName($cityName)
     {
         return $this->placeRepo->getHotelsByCityName($cityName);
     }
+
     public function storeImages($images, $place)
     {
         $imageUrls = [];
@@ -110,7 +112,6 @@ public function getTouristPlacesByClassificationAndCity($classification, $cityId
         }
         return $imageUrls;
     }
-
 
     protected function normalizeClassification(array $d): ?string
     {
@@ -138,22 +139,52 @@ public function getTouristPlacesByClassificationAndCity($classification, $cityId
         return $this->placeRepo->findById($id)->load('media');
     }
 
-public function getPlaceDetails($id)
-{
-    return $this->placeRepo->getByIdWithDetails($id);
-}
+    public function getPlaceDetails($id)
+    {
+        return $this->placeRepo->getByIdWithDetails($id);
+    }
 
-public function getSimilarPlaces(int $id, string $type)
-{
-    $places = $this->placeRepo->findByTypeExceptId($type, $id);
+    public function getSimilarPlaces(int $id, string $type)
+    {
+        $places = $this->placeRepo->findByTypeExceptId($type, $id);
+        $topRated = $this->getTopRatedTouristPlaces([]);
+        $rankMap = $topRated->pluck('rank', 'id')->toArray();
+        return $places->map(function ($place) use ($rankMap) {
+            $place->avg_rating = $place->ratings()->avg('rating_value') ?: 0;
+            $place->rank = $rankMap[(int)$place->getKey()] ?? null;
+            return $place;
+        });
+    }
 
-    $topRated = $this->getTopRatedTouristPlaces([]);
-    $rankMap = $topRated->pluck('rank', 'id')->toArray();
-    return $places->map(function ($place) use ($rankMap) {
-        $place->avg_rating = $place->ratings()->avg('rating_value') ?: 0;
-        $place->rank = $rankMap[$place->id] ?? null;
-        return $place;
-    });
-}
+    public function getTopRatedTouristIds(int $limit = 10, int $ttlSeconds = 300): array
+    {
+        return Cache::remember("top_tourist_place_ids_{$limit}", $ttlSeconds, function () use ($limit) {
+            $places = $this->placeRepo->getTopRatedPlaces(['type' => 'tourist']);
+            return $places->take($limit)->pluck('id')->map(fn($id) => (int)$id)->toArray();
+        });
+    }
 
+    public function annotateWithGlobalTouristRank($places, int $limit = 10): void
+    {
+        if (! $places instanceof Collection) return;
+        $topIds = $this->getTopRatedTouristIds($limit);
+        $rankMap = [];
+        foreach ($topIds as $i => $id) {
+            $rankMap[(int)$id] = $i + 1;
+        }
+        foreach ($places as $place) {
+            $place->rank = $rankMap[(int)$place->getKey()] ?? null;
+        }
+    }
+
+    public function annotateSingleWithGlobalTouristRank($place, int $limit = 10): void
+    {
+        if (! $place) return;
+        $topIds = $this->getTopRatedTouristIds($limit);
+        $rankMap = [];
+        foreach ($topIds as $i => $id) {
+            $rankMap[(int)$id] = $i + 1;
+        }
+        $place->rank = $rankMap[(int)$place->getKey()] ?? null;
+    }
 }

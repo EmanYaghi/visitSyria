@@ -2,6 +2,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class PlaceResource extends JsonResource
 {
@@ -9,17 +10,32 @@ class PlaceResource extends JsonResource
     {
         $avgRating = $this->ratings()->avg('rating_value') ?: 0;
         $userId = auth('api')->check() ? auth('api')->id() : null;
-                if ($userId) {
+        if ($userId) {
             $userRatingModel = $this->ratings()->where('user_id', $userId)->first();
             $userRating = $userRatingModel?->rating_value ?? null;
-
             $userCommentModel = $this->comments()->where('user_id', $userId)->first();
             $userComment = $userCommentModel?->body ?? null;
         } else {
             $userRating = 'guest';
             $userComment = 'guest';
         }
-
+        if ($userId === null) {
+            $isSaved = null;
+        } else {
+            if ($this->relationLoaded('saves')) {
+                $isSaved = $this->saves->isNotEmpty();
+            } else {
+                $isSaved = (bool) $this->saves()->where('user_id', $userId)->whereNotNull('place_id')->exists();
+            }
+        }
+        $images = $this->media->map(function($media) {
+            $raw = $media->url ?? null;
+            if (! $raw) return null;
+            if (filter_var($raw, FILTER_VALIDATE_URL)) {
+                return $raw;
+            }
+            return Storage::disk('public')->url(ltrim($raw, '/'));
+        })->filter()->values()->all();
         return [
             'id' => $this->resource->id,
             'city_id' => $this->resource->city_id,
@@ -34,18 +50,16 @@ class PlaceResource extends JsonResource
             'latitude' => $this->resource->latitude,
             'rating' => round($avgRating, 2),
             'classification' => $this->resource->classification,
-            'images' => $this->media->map(fn($media) => asset('storage/' . $media->url)),
+            'images' => $images,
             'rank' => $this->rank ?? null,
-
+            'is_saved' => $isSaved,
             'user_rating' => $userRating,
             'user_comment' => $userComment,
-
             'recent_comments' => $this->latestComments->map(function ($comment) {
                 $profile = $comment->user?->profile;
                 $userRating = $comment->user->ratings()
                     ->where('place_id', $this->id)
                     ->first();
-
                 return [
                     'id' => $comment->id,
                     'user_id' => $comment->user_id,
@@ -56,8 +70,7 @@ class PlaceResource extends JsonResource
                     'created_at' => $comment->created_at->toDateString(),
                     'rating_value' => $userRating?->rating_value ?? 0,
                 ];
-            }),
-
+            })->values(),
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

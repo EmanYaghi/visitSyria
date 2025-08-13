@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
             FeedbackSeeder::class,
             ArticlesSeeder::class,
+            SettingSeeder::class,
 
         ]);
         Trip::factory()->count(10)->create()->each(function ($trip) {

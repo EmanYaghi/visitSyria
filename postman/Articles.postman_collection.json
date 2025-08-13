@@ -37,6 +37,33 @@
 			"response": []
 		},
 		{
+			"name": "Get Articles by tag",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}articles/by-tag/طبيعية",
+					"host": [
+						"{{URL}}articles"
+					],
+					"path": [
+						"by-tag",
+						"طبيعية"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Article By Id",
 			"request": {
 				"auth": {

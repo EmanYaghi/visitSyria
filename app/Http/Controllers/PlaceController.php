@@ -22,8 +22,16 @@ class PlaceController extends Controller
     {
         $filters = $request->only(['type', 'city_id']);
         $places = $this->placeService->getAll($filters);
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
+
     public function cityPlaces(Request $request, $cityName)
     {
         $city = City::where('name', $cityName)->first();
@@ -33,60 +41,90 @@ class PlaceController extends Controller
         $filters = $request->only(['type']);
         $filters['city_id'] = $city->id;
         $places = $this->placeService->getAll($filters);
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
+
     public function similarPlaces($id)
     {
         $place = Place::findOrFail($id);
         $similar = $this->placeService->getSimilarPlaces($id, $place->type);
+        $this->placeService->annotateWithGlobalTouristRank($similar);
+        $user = auth('api')->user();
+        if ($user && $similar instanceof \Illuminate\Database\Eloquent\Collection) {
+            $similar->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
         return PlaceResource::collection($similar);
     }
-    
-public function show($id)
-{
-    $place = $this->placeService->getPlaceDetails($id);
-    if (!$place) {
-        return response()->json(['message' => 'Place not found'], 404);
-    }
-    if ($place->type === 'tourist') {
-        $topPlaces = $this->placeService->getTopRatedTouristPlaces();
 
-        foreach ($topPlaces as $index => $topPlace) {
-            if ($topPlace->id === $place->id) {
-                $place->rank = $index + 1;
-                break;
+    public function show(Request $request, $id)
+    {
+        $place = $this->placeService->getPlaceDetails($id);
+        if (!$place) {
+            return response()->json(['message' => 'Place not found'], 404);
+        }
+        $this->placeService->annotateSingleWithGlobalTouristRank($place);
+        if ($place->type === 'tourist') {
+            $topPlaces = $this->placeService->getTopRatedTouristPlaces();
+            foreach ($topPlaces as $index => $topPlace) {
+                if ($topPlace->id === $place->id) {
+                    $place->rank = $index + 1;
+                    break;
+                }
             }
         }
+        $user = $request->user('api');
+        if ($user) {
+            $place->loadMissing(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        return new PlaceResource($place);
     }
-    return new PlaceResource($place);
-}
 
     public function store(PlaceStoreRequest $request)
     {
         $data = $request->validated();
         $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
         $place = $this->placeService->store($data);
-
         $this->handleImages($request, $place);
-
+        $user = $request->user('api');
+        if ($user) {
+            $place->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateSingleWithGlobalTouristRank($place);
         return response()->json(['place' => new PlaceResource($place)],201);
     }
 
-   public function update(PlaceUpdateRequest $request, $id)
+    public function update(PlaceUpdateRequest $request, $id)
     {
         $data = $request->validated();
         if (isset($data['city_name'])) {
             $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
         }
-
         $place = $this->placeService->update($id, $data);
-
         $this->handleImages($request, $place);
-
+        $user = $request->user('api');
+        if ($user) {
+            $place->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateSingleWithGlobalTouristRank($place);
         return response()->json(['place' => new PlaceResource($place)]);
     }
 
-        public function destroy($id)
+    public function destroy($id)
     {
         if (!auth()->user()->hasRole('super_admin')) {
             return response()->json(['message' => 'Unauthorized'], 403);
@@ -94,50 +132,100 @@ public function show($id)
         $this->placeService->delete($id);
         return response()->json(['message' => 'Deleted successfully.']);
     }
-        
-        public function getRestaurants(Request $request)
-        {
-            $places = $this->placeService->getRestaurants();  
-            return PlaceResource::collection($places);
-        }
 
-        public function getHotels(Request $request)
-        {
-            $places = $this->placeService->getHotels();
-            return PlaceResource::collection($places);
+    public function getRestaurants(Request $request)
+    {
+        $places = $this->placeService->getRestaurants();
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
         }
+        $this->placeService->annotateWithGlobalTouristRank($places);
+        return PlaceResource::collection($places);
+    }
 
-        public function getTouristPlaces(Request $request)
-        {
-            $places = $this->placeService->getTouristPlaces();
-            return PlaceResource::collection($places);
+    public function getHotels(Request $request)
+    {
+        $places = $this->placeService->getHotels();
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
         }
-        public function getTopRatedTouristPlaces(Request $request)
-        {
-            $places = $this->placeService->getTopRatedTouristPlaces($request->all());
-            return PlaceResource::collection($places);
+        $this->placeService->annotateWithGlobalTouristRank($places);
+        return PlaceResource::collection($places);
+    }
+
+    public function getTouristPlaces(Request $request)
+    {
+        $places = $this->placeService->getTouristPlaces();
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
         }
-        public function getTouristPlacesByClassification($classification)
-        {
-            $places = $this->placeService->getTouristPlacesByClassification($classification);
-            return PlaceResource::collection($places);
+        $this->placeService->annotateWithGlobalTouristRank($places);
+        return PlaceResource::collection($places);
+    }
+
+    public function getTopRatedTouristPlaces(Request $request)
+    {
+        $places = $this->placeService->getTopRatedTouristPlaces($request->all());
+        $user = $request->user('api');
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
         }
-            public function getTouristPlacesByClassificationAndCity($classification, $cityName)
+        return PlaceResource::collection($places);
+    }
+
+    public function getTouristPlacesByClassification($classification)
+    {
+        $places = $this->placeService->getTouristPlacesByClassification($classification);
+        $user = auth('api')->user();
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($places);
+        return PlaceResource::collection($places);
+    }
+
+    public function getTouristPlacesByClassificationAndCity($classification, $cityName)
     {
         $city = City::where('name', $cityName)->first();
         if (!$city) { return response()->json(['message' => 'City not found'], 404); }
         $places = $this->placeService->getTouristPlacesByClassificationAndCity($classification, $city->id);
+        $user = auth('api')->user();
+        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
+            $places->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
-        public function getRestaurantsByCity(Request $request)
+
+    public function getRestaurantsByCity(Request $request)
     {
         $request->validate([
             'city' => 'required|string|exists:cities,name'
         ]);
-        
         $cityName = $request->input('city');
         $restaurants = $this->placeService->getRestaurantsByCityName($cityName);
-        
+        $user = $request->user('api');
+        if ($user && $restaurants instanceof \Illuminate\Database\Eloquent\Collection) {
+            $restaurants->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($restaurants);
         return PlaceResource::collection($restaurants);
     }
 
@@ -146,12 +234,18 @@ public function show($id)
         $request->validate([
             'city' => 'required|string|exists:cities,name'
         ]);
-        
         $cityName = $request->input('city');
         $hotels = $this->placeService->getHotelsByCityName($cityName);
-        
+        $user = $request->user('api');
+        if ($user && $hotels instanceof \Illuminate\Database\Eloquent\Collection) {
+            $hotels->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('place_id');
+            }]);
+        }
+        $this->placeService->annotateWithGlobalTouristRank($hotels);
         return PlaceResource::collection($hotels);
     }
+
     private function handleImages($request, $place)
     {
         if ($request->hasFile('images')) {
