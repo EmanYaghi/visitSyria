@@ -17,7 +17,7 @@ class EventRepository
     {
         return Event::create($data);
     }
- public function update(Event $event, array $data)
+    public function update(Event $event, array $data)
     {
         $event->update($data);
         $event->refresh();

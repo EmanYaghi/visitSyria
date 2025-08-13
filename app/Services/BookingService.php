@@ -3,14 +3,22 @@
 namespace App\Services;
 
 use App\Http\Resources\Event\ResesrvationEventResource;
+use App\Http\Resources\ReservationResource;
 use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
 use App\Models\Event;
 use App\Models\Trip;
+use App\Notifications\AccountActivated;
 use Illuminate\Support\Facades\Auth;
 
 class BookingService
 {
+    protected $stripe;
+
+    public function __construct(StripePaymentService $stripe)
+    {
+        $this->stripe = $stripe;
+    }
     public function reserve($request)
     {
         $user = Auth::user();
@@ -19,6 +27,8 @@ class BookingService
         if($type=='trip')
         {
             $trip=Trip::find($request['id']);
+            if(Booking::where('user_id',$user->id)->where('trip_id',$trip->id)->first())
+                return['message'=>"you already reserve this trip",'code'=>400];
             if($trip->start_date<=now())
                 return['message'=>"the trip has ended",'code'=>400];
             if($request['number_of_tickets']!=count($request['passengers']))
@@ -31,6 +41,8 @@ class BookingService
         else if($type=='event')
         {
             $event=Event::find($request['id']);
+            if(Booking::where('user_id',$user->id)->where('event_id',$event->id)->first())
+                return['message'=>"you already reserve this event",'code'=>400];
             if($event->date<=now())
                 return['message'=>"the event has ended",'code'=>400];
             if($request['number_of_tickets']!=count($request['passengers']))
@@ -71,27 +83,16 @@ class BookingService
                 'id'=>$booking->id,
                 'is_paid'=>$booking->is_paid,
                 'price'=>$booking->price,
-            ]
+            ],
         ];
     }
 
-    public function cancel($id)
-    {
-        $booking = Booking::find($id);
-        if (!$booking) {
-            return ['message' => 'Booking not found.', 'code' => 404];
-        }
-        if($booking->is_paid)
-            return ['message' => 'you can not cancel this booking because you are paid', 'code' => 404];
-        $booking->delete();
-        return ['message' => 'booking cancelled.', 'code' => 200];
-    }
 
-    public function myReservations()
+    public function myBookings()
     {
         $user = Auth::user();
         $type=request()->query('type');
-        $bookings = $user->bookings()->whereNotNull($type.'_id')->with($type)->get()->pluck($type);
+        $bookings = $user->bookings()->whereNotNull($type.'_id')->get();
         if ($bookings->isEmpty()) {
              return [
                 'bookings'   => null,
@@ -99,10 +100,7 @@ class BookingService
                 'code'    => 404,
             ];
         }
-        if($type=='trip')
-            $b= ReservationTripResource::collection($bookings);
-        else if($type=='event')
-            $b= ResesrvationEventResource::collection($bookings);
+        $b= ReservationResource::collection($bookings);
          return [
             'bookings'   => $b,
             'message' => 'All reserved '.$type.' retrieved.',
@@ -111,3 +109,4 @@ class BookingService
 
     }
 }
+

@@ -7,21 +7,40 @@
 	},
 	"item": [
 		{
-			"name": "cancelReservation",
+			"name": "Reserve",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUxMjAwMzEsIm5iZiI6MTc1NTEyMDAzMSwianRpIjoiYW5kWTN6TzM4Rm4xSjRMTCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mkm7b3hnInJQwsZnXEZYfYW3LrbFk8OgL7reqv8x2IQ",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"type\":\"trip\",\r\n    \"id\": 2,\r\n    \"number_of_tickets\": 3,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "{{URL}}",
+					"raw": "{{URL}}reserve",
 					"host": [
-						"{{URL}}"
+						"{{URL}}reserve"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "MyReservation",
+			"name": "myBookings",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -36,9 +55,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}reservations?type=trip",
+					"raw": "{{URL}}myBookings?type=trip",
 					"host": [
-						"{{URL}}reservations"
+						"{{URL}}myBookings"
 					],
 					"query": [
 						{
@@ -58,7 +77,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTM1MzMwMTgsImV4cCI6MTc1MzUzNjYxOCwibmJmIjoxNzUzNTMzMDE4LCJqdGkiOiJYenJrYm9SemdqdWZseW1BIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.VMzJDOR2z6Q1rqiDPGESQ2SXEbBtiOL3NxqidtMdp1w",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUxMDY0NjMsIm5iZiI6MTc1NTEwNjQ2MywianRpIjoiajFpV1dMem0wVW1DTHVaTyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.nRdz6a6j57BsZwmwh1dJtMpMwLgzIWq-uIuLC8mS4mg",
 							"type": "string"
 						}
 					]
@@ -67,7 +86,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"card_holder\":\"stave jobs\",\r\n    \"card_number\":\"4242 4242 4242 4242\",\r\n    \"cvc\":\"\",\r\n    \"expiry_date\":\"2025-09-26\",\r\n    \"save_credit_card\":true\r\n}",
+					"raw": "{\r\n    \"booking_id\":1,\r\n    \"stripeToken\":\"tok_visa\"//success\r\n   // \"stripeToken\":\"tok_visa_chargeDeclined\"//fail\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -75,12 +94,11 @@
 					}
 				},
 				"url": {
-					"raw": "{{URL}}bookings/1/pay",
+					"raw": "{{URL}}stripe/pay",
 					"host": [
-						"{{URL}}bookings"
+						"{{URL}}stripe"
 					],
 					"path": [
-						"1",
 						"pay"
 					]
 				}
@@ -88,33 +106,28 @@
 			"response": []
 		},
 		{
-			"name": "reserveTrip",
+			"name": "Refund",
 			"request": {
 				"auth": {
 					"type": "bearer",
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQyNTU5NjMsImV4cCI6MTc1NDI1OTU2MywibmJmIjoxNzU0MjU1OTYzLCJqdGkiOiJxWUo0eXVSWjlsMWg4bXRoIiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.eCMKE-WR2Kascgqgias5l6dytSYdZWcDblKptDiciVI",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUxMDI2MzAsIm5iZiI6MTc1NTEwMjYzMCwianRpIjoiMmZZSFl0SEpzSGo0bGlRSyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.zkCnQANZi8RnYCocZ1qp09uRIEKefbI5KPHpe9j3waI",
 							"type": "string"
 						}
 					]
 				},
 				"method": "POST",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"type\":\"trip\",\r\n    \"id\": 5,\r\n    \"number_of_tickets\": 3,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\"\r\n        }\r\n    ]\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "{{URL}}reserve",
+					"raw": "{{URL}}stripe/refund/1",
 					"host": [
-						"{{URL}}reserve"
+						"{{URL}}stripe"
+					],
+					"path": [
+						"refund",
+						"1"
 					]
 				}
 			},

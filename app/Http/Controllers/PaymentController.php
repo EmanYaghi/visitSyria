@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-
+use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Services\StripePaymentService;
-use App\Models\CreditCard;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -15,50 +15,65 @@ class PaymentController extends Controller
     {
         $this->stripe = $stripe;
     }
-
-    // Provide a SetupIntent to the client for adding a new card
-    public function setupIntent(Request $request)
-    {
-        $secret = $this->stripe->generateSetupIntent($request->user());
-        return response()->json(['client_secret' => $secret]);
-    }
-
-    // Save the client's new card and optionally make it default
-    public function storeCard(Request $request)
-    {
-        $request->validate(['payment_method_id' => 'required']);
-        $card = $this->stripe->storePaymentMethod(
-            $request->user(),
-            $request->payment_method_id,
-            true // mark new card as default
-        );
-        return response()->json($card);
-    }
-
-    // Charge the user for a tour, event, or flight
     public function pay(Request $request)
     {
         $request->validate([
-            'type'           => 'required|in:trip,event,flight',
-            'booking_id' => 'required|integer',
-            'amount'         => 'required|integer',
-            'payment_method_id' => 'sometimes|string'
+            'stripeToken' => 'required|string',
+            'booking_id' => 'required|integer|exists:bookings,id',
         ]);
-        $secret = $this->stripe->createPaymentIntent(
-            $request->user(),
-            $request->amount,
-            $request->type,
-            $request->booking_id,
-            $request->payment_method_id ?? null
-        );
-        return response()->json(['client_secret' => $secret]);
+        $user = $request->user();
+        $booking = Booking::findOrFail($request->booking_id);
+        if($user->id!=$booking->user_id)
+            return response()->json([
+                'unauthorized'
+            ],403);
+        if($booking->trip_id!=null&&($booking->trip->tickets-$booking->trip->reserved_tickets<$booking->number_of_tickets)||
+            $booking->event_id!=null&&($booking->event->tickets-$booking->event->reserved_tickets<$booking->number_of_tickets))
+        {
+            return response()->json(['message'=>'the tickets not valid']);
+        }
+        $data = $this->stripe->pay($user, $booking, $request->stripeToken);
+        if($booking->payment_status=='succeeded'&&$booking->trip_id!=null)
+        {
+            $res=$booking->trip->reserved_tickets;
+            $booking->trip->update(['reserved_tickets'=>$res+$booking->number_of_tickets]);
+        }
+        else if($booking->payment_status=='succeeded'&&$booking->event_id!=null)
+        {
+            $res=$booking->event->reserved_tickets;
+            $booking->event->update(['reserved_tickets'=>$res+$booking->number_of_tickets]);
+        }
+        return response()->json([
+            'message'=>$data['message'],
+            'booking'=>$data['booking']??null,
+        ]);
     }
 
-    // Refund a payment by its ID
-    public function refund(Request $request, $id)
+    public function refund($id)
     {
-        $payment = Payment::findOrFail($id);
-        $this->stripe->refund($payment);
-        return response()->json(['message' => 'Refund processed']);
+        $booking = Booking::findOrFail($id);
+        $user=Auth::user();
+         if($user->id!=$booking->user_id)
+            return response()->json([
+                'unauthorized'
+            ],403);
+        if ($booking->payment_status!='succeeded') {
+            return response()->json(['error' => 'No payment found'], 404);
+        }
+        $data = $this->stripe->refund($booking);
+        if($booking->payment_status=='refunded'&&$booking->trip_id!=null)
+        {
+            $res=$booking->trip->reserved_tickets;
+            $booking->trip->update(['reserved_tickets'=>$res-$booking->number_of_tickets]);
+        }
+        else if($booking->payment_status=='refunded'&&$booking->event_id!=null)
+        {
+            $res=$booking->event->reserved_tickets;
+            $booking->event->update(['reserved_tickets'=>$res-$booking->number_of_tickets]);
+        }
+        return response()->json([
+            'message'=>$data['message'],
+            'booking'  => $data['booking']??null,
+        ]);
     }
 }

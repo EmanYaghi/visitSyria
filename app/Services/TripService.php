@@ -6,6 +6,7 @@ use App\Http\Resources\Trip\AllTripsResource;
 use App\Http\Resources\Trip\TripResource;
 use App\Models\TagName;
 use App\Models\Trip;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -128,22 +129,7 @@ class TripService
         $message='trip updated';
         return ['message'=>$message,'code'=>$code];
     }
-    public function destroy( $id)
-    {
-        $trip=Trip::find($id);
-        $this->authorize('delete', $trip);
-        if($trip&&($trip->status=="تم الالغاء"||$trip->status=="منتهية")){
-            $trip->delete();
-            $trip->user->adminProfile->decrement('number_of_trips');
-            $code=201;
-            $message='trip deleted';
-        }
-        else{
-            $code=404;
-            $message='trip not found or trip dont finished or trip dont canceled';
-        }
-        return ['message'=>$message,'code'=>$code];
-    }
+
     public function companyTrips( $id)
     {
 
@@ -265,7 +251,15 @@ class TripService
     {
         $trip=Trip::find($id);
         $this->authorize('delete', $trip);
-        if($trip&&$trip->status=="لم تبدأ بعد"){
+        if($trip&&$trip->status=="لم تبدأ بعد"&&$trip->start_date->diffInDays(now())==3){
+            foreach($trip->bookings() as $booking){
+                if($booking->is_paid==true)
+                {
+                    $user=$booking->user;
+                    //refund
+                    //send notification
+                }
+            }
             $trip->update(['status'=>'تم الالغاء']);
             $code=201;
             $message='trip canceled';
@@ -276,4 +270,22 @@ class TripService
         }
         return ['message'=>$message,'code'=>$code];
     }
+
+    public function destroy( $id)
+    {
+        $trip=Trip::find($id);
+        $this->authorize('delete', $trip);
+        if($trip&&($trip->status=="تم الالغاء")){
+            $trip->delete();
+            $trip->user->adminProfile->decrement('number_of_trips');
+            $code=201;
+            $message='trip deleted';
+        }
+        else{
+            $code=404;
+            $message='trip not found or trip dont canceled';
+        }
+        return ['message'=>$message,'code'=>$code];
+    }
+
 }

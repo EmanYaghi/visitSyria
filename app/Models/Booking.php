@@ -11,7 +11,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id', 'trip_id', 'flight_id', 'event_id', 'number_of_tickets',
         'number_of_adults', 'number_of_children', 'number_of_infants',
-        'is_paid', 'price', 'payment_method', 'qr_code'
+        'is_paid', 'price', 'stripe_payment_id', 'qr_code','payment_status'
     ];
 
     public function user()
@@ -19,16 +19,16 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function trips()
+    public function trip()
     {
         return $this->belongsTo(Trip::class);
     }
-        public function events()
+        public function event()
     {
         return $this->belongsTo(Event::class);
     }
 
-    public function flights()
+    public function flight()
     {
         return $this->belongsTo(Flight::class);
     }
@@ -36,11 +36,6 @@ class Booking extends Model
     public function passengers()
     {
         return $this->hasMany(Passenger::class);
-    }
-
-    public function payments()
-    {
-        return $this->hasOne(Payment::class);
     }
 
 }
