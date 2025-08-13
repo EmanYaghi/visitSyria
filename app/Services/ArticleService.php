@@ -62,15 +62,25 @@ class ArticleService
 
         return $this->repo->similarByTags($article->id, $tagIds, $limit);
     }
+
     public function getArticlesByTag(string $tagName)
-{
-    $collection = $this->repo->getByTagName($tagName);
+    {
+        $normalized = mb_strtolower(trim($tagName));
+        $allKeywords = ['الكل', 'كل', 'all', '*'];
 
-    if ($collection->isEmpty()) {
-        return [];
+        if (in_array($normalized, $allKeywords, true)) {
+            $collection = $this->repo->all();
+            if ($collection->isEmpty()) {
+                return [];
+            }
+            return $collection;
+        }
+
+        $collection = $this->repo->getByTagName($tagName);
+        if ($collection->isEmpty()) {
+            return [];
+        }
+
+        return $collection;
     }
-
-    return $collection;
-}
-
 }

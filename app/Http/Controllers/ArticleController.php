@@ -39,142 +39,141 @@ class ArticleController extends Controller
         return ArticleResource::collection($articles);
     }
 
-public function show(Request $request, $id)
-{
-    $article = $this->articleService->getArticleById($id);
+    public function show(Request $request, $id)
+    {
+        $article = $this->articleService->getArticleById($id);
 
-    if (! $article) {
-        return response()->json(['message' => 'Article not found'], 404);
-    }
-
-    $user = $request->user('api');
-
-    if ($user) {
-        $article->loadMissing([
-            'media',
-            'saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('article_id');
-            },
-            'tags.tagName'
-        ]);
-    } else {
-        $article->loadMissing(['media', 'tags.tagName']);
-    }
-
-    $similar = $this->articleService->getSimilarArticles($article, 6);
-
-    $articleData = (new ArticleResource($article))->resolve();
-    $similarData = ArticleResource::collection($similar)->resolve();
-
-    return response()->json([
-        'data' => $articleData,
-        'similar' => $similarData,
-    ], 200);
-}
-
-public function store(StoreArticleRequest $request)
-{
-    DB::beginTransaction();
-    try {
-        $article = $this->articleService->createArticle($request);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('articles', 'public');
-            $article->media()->create(['url' => $path]);
+        if (! $article) {
+            return response()->json(['message' => 'Article not found'], 404);
         }
 
-        if ($request->filled('tags')) {
-            $names = $request->input('tags', []);
-            $names = array_map('trim', $names);
-            $names = array_values(array_filter(array_unique($names)));
-            $names = array_slice($names, 0, 5);
+        $user = $request->user('api');
 
-            $user = $request->user('api');
-            $rows = [];
-            foreach ($names as $name) {
-                $tagName = \App\Models\TagName::firstOrCreate(
-                    ['body' => $name, 'follow_to' => 'article']
-                );
-                $rows[] = [
-                    'tag_name_id' => $tagName->id,
-                ];
-            }
-            if (! empty($rows)) {
-                $article->tags()->createMany($rows);
-            }
+        if ($user) {
+            $article->loadMissing([
+                'media',
+                'saves' => function ($q) use ($user) {
+                    $q->where('user_id', $user->id)->whereNotNull('article_id');
+                },
+                'tags.tagName'
+            ]);
+        } else {
+            $article->loadMissing(['media', 'tags.tagName']);
         }
 
-        DB::commit();
+        $similar = $this->articleService->getSimilarArticles($article, 6);
 
-        $article->load(['media', 'tags.tagName']);
+        $articleData = (new ArticleResource($article))->resolve();
+        $similarData = ArticleResource::collection($similar)->resolve();
 
-        return (new ArticleResource($article))->response()->setStatusCode(201);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['message' => $e->getMessage()], 400);
+        return response()->json([
+            'data' => $articleData,
+            'similar' => $similarData,
+        ], 200);
     }
-}
 
-public function update(UpdateArticleRequest $request, $id)
-{
-    try {
+    public function store(StoreArticleRequest $request)
+    {
         DB::beginTransaction();
+        try {
+            $article = $this->articleService->createArticle($request);
 
-        $article = $this->articleService->updateArticle($request, $id);
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('articles', 'public');
-
-            $media = $article->media;
-            if ($media) {
-                $oldPath = $this->storagePathFromUrl($media->url);
-                if ($oldPath && Storage::disk('public')->exists($oldPath)) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-                $media->update(['url' => $path]);
-            } else {
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('articles', 'public');
                 $article->media()->create(['url' => $path]);
             }
-        }
 
-        if ($request->filled('tags')) {
-            $names = $request->input('tags', []);
-            $names = array_map('trim', $names);
-            $names = array_values(array_filter(array_unique($names)));
-            $names = array_slice($names, 0, 5);
+            if ($request->filled('tags')) {
+                $names = $request->input('tags', []);
+                $names = array_map('trim', $names);
+                $names = array_values(array_filter(array_unique($names)));
+                $names = array_slice($names, 0, 5);
 
-            $user = $request->user('api');
-
-            $article->tags()->delete();
-
-            $rows = [];
-            foreach ($names as $name) {
-                $tagName = \App\Models\TagName::firstOrCreate(
-                    ['body' => $name, 'follow_to' => 'article']
-                );
-                $rows[] = [
-                    'tag_name_id' => $tagName->id,
-                ];
+                $user = $request->user('api');
+                $rows = [];
+                foreach ($names as $name) {
+                    $tagName = \App\Models\TagName::firstOrCreate(
+                        ['body' => $name, 'follow_to' => 'article']
+                    );
+                    $rows[] = [
+                        'tag_name_id' => $tagName->id,
+                    ];
+                }
+                if (! empty($rows)) {
+                    $article->tags()->createMany($rows);
+                }
             }
-            if (! empty($rows)) {
-                $article->tags()->createMany($rows);
-            }
+
+            DB::commit();
+
+            $article->load(['media', 'tags.tagName']);
+
+            return (new ArticleResource($article))->response()->setStatusCode(201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 400);
         }
-
-        DB::commit();
-
-        $article->load(['media', 'tags.tagName']);
-
-        return new ArticleResource($article);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        DB::rollBack();
-        return response()->json(['message' => 'Article not found'], 404);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['message' => $e->getMessage()], 400);
     }
-}
 
+    public function update(UpdateArticleRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $article = $this->articleService->updateArticle($request, $id);
+
+            if ($request->hasFile('image')) {
+                $path = $request->file('image')->store('articles', 'public');
+
+                $media = $article->media;
+                if ($media) {
+                    $oldPath = $this->storagePathFromUrl($media->url);
+                    if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+                    $media->update(['url' => $path]);
+                } else {
+                    $article->media()->create(['url' => $path]);
+                }
+            }
+
+            if ($request->filled('tags')) {
+                $names = $request->input('tags', []);
+                $names = array_map('trim', $names);
+                $names = array_values(array_filter(array_unique($names)));
+                $names = array_slice($names, 0, 5);
+
+                $user = $request->user('api');
+
+                $article->tags()->delete();
+
+                $rows = [];
+                foreach ($names as $name) {
+                    $tagName = \App\Models\TagName::firstOrCreate(
+                        ['body' => $name, 'follow_to' => 'article']
+                    );
+                    $rows[] = [
+                        'tag_name_id' => $tagName->id,
+                    ];
+                }
+                if (! empty($rows)) {
+                    $article->tags()->createMany($rows);
+                }
+            }
+
+            DB::commit();
+
+            $article->load(['media', 'tags.tagName']);
+
+            return new ArticleResource($article);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Article not found'], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => $e->getMessage()], 400);
+        }
+    }
 
     public function destroy($id)
     {
@@ -224,45 +223,43 @@ public function update(UpdateArticleRequest $request, $id)
         return null;
     }
 
-public function similar(Request $request, $id)
-{
-    $article = $this->articleService->getArticleById($id);
+    public function similar(Request $request, $id)
+    {
+        $article = $this->articleService->getArticleById($id);
 
-    if (! $article) {
-        return response()->json(['message' => 'Article not found'], 404);
+        if (! $article) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
+
+        $limit = (int) $request->query('limit', 6);
+        $similar = $this->articleService->getSimilarArticles($article, $limit);
+
+        $user = $request->user('api');
+        if ($user && $similar instanceof \Illuminate\Database\Eloquent\Collection) {
+            $similar->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('article_id');
+            }]);
+        }
+
+        return ArticleResource::collection($similar);
     }
 
-    $limit = (int) $request->query('limit', 6);
-    $similar = $this->articleService->getSimilarArticles($article, $limit);
+    public function getByTag(Request $request, string $tag)
+    {
+        $articles = $this->articleService->getArticlesByTag($tag);
 
-    $user = $request->user('api');
-    if ($user && $similar instanceof \Illuminate\Database\Eloquent\Collection) {
-        $similar->load(['saves' => function ($q) use ($user) {
-            $q->where('user_id', $user->id)->whereNotNull('article_id');
-        }]);
+        if (is_array($articles) && empty($articles)) {
+            return response()->json([], 200);
+        }
+
+        $user = $request->user('api');
+
+        if ($user && $articles instanceof \Illuminate\Database\Eloquent\Collection) {
+            $articles->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('article_id');
+            }]);
+        }
+
+        return ArticleResource::collection($articles);
     }
-
-    return ArticleResource::collection($similar);
-}
-
-public function getByTag(Request $request, string $tag)
-{
-    $articles = $this->articleService->getArticlesByTag($tag);
-
-    if (is_array($articles) && empty($articles)) {
-        return response()->json([], 200);
-    }
-
-    $user = $request->user('api');
-
-    if ($user && $articles instanceof \Illuminate\Database\Eloquent\Collection) {
-        $articles->load(['saves' => function ($q) use ($user) {
-            $q->where('user_id', $user->id)->whereNotNull('article_id');
-        }]);
-    }
-
-    return ArticleResource::collection($articles);
-}
-
-
 }
