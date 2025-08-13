@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "amadeus4dev/amadeus-php": "^0.3.0",
         "endroid/qr-code": "^6.0",
         "giggsey/libphonenumber-for-php": "^9.0",
         "google/apiclient": "2.14",

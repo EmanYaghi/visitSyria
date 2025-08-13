@@ -11,19 +11,31 @@ class FlightSearchRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        // تحويل nonStop لقيمة Boolean حقيقية أو null إذا لم تُرسل
+        if ($this->has('nonStop')) {
+            $this->merge([
+                'nonStop' => filter_var($this->nonStop, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            ]);
+        }
+    }
+
     public function rules()
     {
         return [
-            'origin'         => 'required|string|size:3',
-            'destination'    => 'required|string|size:3',
-            'departure_date' => 'required|date|after_or_equal:today',
-            'return_date'    => 'nullable|date|after_or_equal:departure_date',
-            'adults'         => 'required|integer|min:1',
-            'children'       => 'nullable|integer|min:0',
-            'infants'        => 'nullable|integer|min:0',
-            'travel_class'   => 'nullable|in:ECONOMY,PREMIUM_ECONOMY,BUSINESS,FIRST',
-            'non_stop'       => 'nullable',
-            'max'            => 'nullable|integer|min:1|max:250',
+            'direction' => 'nullable|string',
+            'originLocationCode' => 'required|string|size:3',
+            'destinationLocationCode' => 'required|string|size:3',
+            'departureDate' => 'required|date',
+            'returnDate' => 'nullable|date',
+            'adults' => 'required|integer|min:1',
+            'children' => 'nullable|integer|min:0',
+            'infants' => 'nullable|integer|min:0',
+            'travelClass' => 'nullable|in:ECONOMY,BUSINESS,FIRST,PREMIUM_ECONOMY',
+            'nonStop' => 'nullable|boolean',
+            'currencyCode' => 'nullable|string|size:3',
+            'max' => 'nullable|integer|min:1|max:250',
         ];
     }
 }

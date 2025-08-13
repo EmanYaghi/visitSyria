@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "c41e348b-9e5b-4ca4-a828-898e21371835",
+		"name": "Flights",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40522740"
+	},
+	"item": [
+		{
+			"name": "OffersSearch",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "fEWMmbKy00z6AjfxFTV6oEJUaAQ9",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept-Language",
+						"value": "ar",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{URL}}flights/search?direction=from_syria&originLocationCode=DAM&destinationLocationCode=LHR&departureDate=2025-09-01&returnDate=2025-09-10&adults=2&children=1&infants=0&travelClass=ECONOMY&nonStop=false&max=5",
+					"host": [
+						"{{URL}}flights"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "direction",
+							"value": "from_syria"
+						},
+						{
+							"key": "originLocationCode",
+							"value": "DAM"
+						},
+						{
+							"key": "destinationLocationCode",
+							"value": "LHR"
+						},
+						{
+							"key": "departureDate",
+							"value": "2025-09-01"
+						},
+						{
+							"key": "returnDate",
+							"value": "2025-09-10"
+						},
+						{
+							"key": "adults",
+							"value": "2"
+						},
+						{
+							"key": "children",
+							"value": "1"
+						},
+						{
+							"key": "infants",
+							"value": "0"
+						},
+						{
+							"key": "travelClass",
+							"value": "ECONOMY"
+						},
+						{
+							"key": "nonStop",
+							"value": "false"
+						},
+						{
+							"key": "max",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LocationSearch",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ClientToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_id",
+							"value": "t0BghmQCbc4gmEwzYUITRv908277toC1",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "kqTKjcsPtdq4RHuS",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}locations/search?keyword=LH",
+					"host": [
+						"{{URL}}locations"
+					],
+					"path": [
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "LH"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

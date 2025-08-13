@@ -108,7 +108,9 @@
     Route::get('cities/{id}', [CityController::class, 'show']);
 
     Route::get('flights/search', [FlightController::class, 'search']);
+    Route::get('/locations/search', [FlightController::class, 'searchLocation']);
 
+    
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);

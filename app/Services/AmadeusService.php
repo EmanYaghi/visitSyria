@@ -33,32 +33,57 @@ class AmadeusService
         throw new \Exception('Unable to fetch Amadeus access token: ' . $response->body());
     }
 
-    public function searchFlights(array $params)
-    {
-        $endpoint = $this->baseUrl . '/v2/shopping/flight-offers';
+   public function searchFlights(array $params)
+{
+    $endpoint = $this->baseUrl . '/v2/shopping/flight-offers';
 
-        $response = Http::withToken($this->accessToken)
-            ->get($endpoint, [
-                'originLocationCode'      => $params['origin'],
-                'destinationLocationCode' => $params['destination'],
-                'departureDate'           => $params['departure_date'],
-                'returnDate'              => $params['return_date'] ?? null,
-                'adults'                  => $params['adults'],
-                'children'                => $params['children'] ?? 0,
-                'infants'                 => $params['infants'] ?? 0,
-                'travelClass'             => $params['travel_class'] ?? 'ECONOMY',
-                'nonStop'                 => $params['non_stop'] ?? false,
-                'max'                     => $params['max'] ?? 10,
-            ]);
+    $response = Http::withToken($this->accessToken)
+        ->get($endpoint, [
+            'originLocationCode'      => $params['originLocationCode'],
+            'destinationLocationCode' => $params['destinationLocationCode'],
+            'departureDate'           => $params['departureDate'],
+            'returnDate'              => $params['returnDate'] ?? null,
+            'adults'                  => $params['adults'],
+            'children'                => $params['children'] ?? 0,
+            'infants'                 => $params['infants'] ?? 0,
+            'travelClass'             => $params['travelClass'] ?? 'ECONOMY',
+            'nonStop'                 => isset($params['nonStop']) ? ($params['nonStop'] ? 'true' : 'false') : null,
+            'max'                     => $params['max'] ?? 10,
+            'currencyCode'            => $params['currencyCode'] ?? 'USD',
+        ]);
 
-        if ($response->successful()) {
-            return $response->json();
-        }
-
-        return [
-            'error' => true,
-            'message' => $response->json()['errors'][0]['detail'] ?? 'Something went wrong',
-        ];
+    if ($response->successful()) {
+        return $response->json();
     }
+
+    return [
+        'error' => true,
+        'message' => $response->json()['errors'][0]['detail'] ?? 'Something went wrong',
+    ];
 }
->>>>>>> Stashed changes
+
+
+
+public function searchLocation(string $keyword)
+{
+    $endpoint = $this->baseUrl . '/v1/reference-data/locations';
+
+    $response = Http::withToken($this->accessToken)
+        ->get($endpoint, [
+            'subType' => 'AIRPORT,CITY',
+            'keyword' => $keyword,
+            'page[limit]' => 10,
+            'sort' => 'analytics.travelers.score',
+        ]);
+
+    if ($response->successful()) {
+        return $response->json();
+    }
+
+    return [
+        'error' => true,
+        'message' => $response->json()['errors'][0]['detail'] ?? 'Something went wrong',
+    ];
+}
+
+}
