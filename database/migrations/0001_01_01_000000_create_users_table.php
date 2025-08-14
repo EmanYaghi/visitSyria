@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('verification_code_sent_at')->nullable();
             $table->integer('verification_attempts')->default(0);
             $table->enum('status',User::$status)->default('on hold');
+            $table->string('stripe_customer_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -12,7 +12,6 @@ class CreateSettingsTable extends Migration
     $table->id();
     $table->enum('type', [
         'privacy_policy',
-        'support',
         'common_question',
         'about_app'
     ]);

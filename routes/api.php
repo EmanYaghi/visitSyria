@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\PaymentController;
     use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
+use Stripe\Stripe;
+use Stripe\Token;
 
     // Route::get('/user', function (Request $request) {
     //     return $request->user();
@@ -72,9 +74,9 @@ use Illuminate\Support\Facades\Route;
 
 
         Route::post('trips', [TripController::class,'store']);
-        Route::delete('trips/{id}', [TripController::class,'destroy']);
+        Route::delete('trips/{id}', [TripController::class,'destroy']);//////////////////////////////////////
         Route::post('trip/update/{id}', [TripController::class,'update']);
-        Route::post('trips/cancel/{id}',[TripController::class,'cancel']);
+        Route::post('trips/cancel/{id}',[TripController::class,'cancel']);////////////////////////////////////
 
         Route::post('reserve', [BookingController::class, 'reserve']);
 
@@ -135,7 +137,6 @@ use Illuminate\Support\Facades\Route;
     Route::get('settings/category/{category}', [SettingController::class, 'getByCategory']);
 
 
-
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
@@ -144,13 +145,13 @@ use Illuminate\Support\Facades\Route;
         Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
     });
 
+    Route::get('myBookings', [BookingController::class, 'myBookings'])->middleware('auth:api');
+
+
     Route::middleware('auth:api')->group(function () {
-        Route::post('stripe/setup-intent', [PaymentController::class, 'setupIntent']);
-        Route::post('stripe/store-card',    [PaymentController::class, 'storeCard']);
         Route::post('stripe/pay',           [PaymentController::class, 'pay']);
         Route::post('stripe/refund/{id}',   [PaymentController::class, 'refund']);
     });
-
-    Route::post('stripe/webhook', WebhookController::class);
+    Route::post('/stripe/webhook', [WebhookController::class, 'handle']);
 
 ?>

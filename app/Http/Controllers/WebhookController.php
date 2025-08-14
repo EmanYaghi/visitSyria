@@ -1,21 +1,74 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Booking;
 use Illuminate\Http\Request;
-use App\Services\StripePaymentService;
+use Stripe\Stripe;
+use Stripe\Webhook;
+use Illuminate\Support\Facades\Log;
 
 class WebhookController extends Controller
 {
-    protected $stripe;
-    public function __construct(StripePaymentService $stripe)
+    public function handle(Request $request)
     {
-        $this->stripe = $stripe;
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
+        $webhookSecret = env('STRIPE_WEBHOOK_SECRET');
+
+        try {
+            $event = Webhook::constructEvent(
+                $payload,
+                $sig_header,
+                $webhookSecret
+            );
+        } catch (\UnexpectedValueException $e) {
+            // Payload غير صالح
+            return response('Invalid payload', 400);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            // توقيع غير صالح
+            return response('Invalid signature', 400);
+        }
+
+        // معالجة الأحداث
+        switch ($event->type) {
+            case 'charge.succeeded':
+                $charge = $event->data->object;
+                $this->handleChargeSucceeded($charge);
+                break;
+
+            case 'charge.refunded':
+                $charge = $event->data->object;
+                $this->handleChargeRefunded($charge);
+                break;
+
+            default:
+                Log::info('Unhandled event type: ' . $event->type);
+        }
+
+        return response('Webhook handled', 200);
     }
 
-    // Stripe sends events here; we update our records accordingly
-    public function __invoke(Request $request)
+    private function handleChargeSucceeded($charge)
     {
-        $this->stripe->handleWebhook($request->all());
-        return response('OK', 200);
+        $booking = Booking::where('stripe_payment_id', $charge->id)->first();
+        if ($booking) {
+            $booking->is_paid = true;
+            $booking->payment_status = $charge->status;
+            $booking->save();
+            Log::info("Booking #{$booking->id} marked as paid.");
+        }
     }
+
+    private function handleChargeRefunded($charge)
+    {
+        $booking = Booking::where('stripe_payment_id', $charge->id)->first();
+        if ($booking) {
+            $booking->is_paid = false;
+            $booking->payment_status = 'refunded';
+            $booking->save();
+            Log::info("Booking #{$booking->id} marked as refunded.");
+        }
+    }
+
 }

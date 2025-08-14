@@ -21,6 +21,7 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     protected $fillable = [
         'email',
         'password',
+        'stripe_customer_id'
     ];
     protected $hidden = [
         'password',
@@ -81,14 +82,6 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return $this->hasMany(Rating::class);
     }
-    public function payments()
-    {
-        return $this->hasMany(Payment::class);
-    }
-    public function creditcards()
-    {
-        return $this->hasMany(CreditCard::class);
-    }
     public function media()
     {
         return $this->hasOne(Media::class);
@@ -113,15 +106,12 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return $this->hasMany(Notification::class);
     }
-
-    public function creditCard()
-    {
-        return $this->hasOne(CreditCard::class);
-    }
-
-     public function fcnTokens()
+     public function fcmTokens()
     {
         return $this->hasMany(FcmToken::class);
     }
-
+    public function routeNotificationForFcm()
+    {
+        return $this->fcmTokens;
+    }
 }

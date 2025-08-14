@@ -27,27 +27,14 @@ class BookingController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-    public function cancel($id)
+    public function myBookings()
     {
         $data = [];
         try {
-            $data = $this->bookingService->cancel($id);
+            $data = $this->bookingService->myBookings();
             return response()->json([
                 "message" => $data['message'],
-            ], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
-        }
-    }
-    public function myReservations()
-    {
-        $data = [];
-        try {
-            $data = $this->bookingService->myReservations();
-            return response()->json([
-                "message" => $data['message'],
-                "bookings" => $data['booking'] ?? null,
+                "bookings" => $data['bookings'] ?? null,
             ], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();
