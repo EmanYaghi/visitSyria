@@ -11,7 +11,6 @@ class FlightOfferResource extends JsonResource
     protected array $locations;
     protected ?string $travelClass;
 
-    // قائمة 50 مطار شهير بالعربية
     protected array $airportNamesArabic = [
         'DAM' => 'مطار دمشق الدولي',
         'AMM' => 'مطار الملكة علياء الدولي',
@@ -71,31 +70,20 @@ class FlightOfferResource extends JsonResource
         $this->travelClass = $travelClass;
     }
 
-    public function toArray($request)
+    /**
+     * Build a structured representation for a single itinerary (used for outbound/inbound).
+     */
+    protected function buildItinerary(array $itinerary, $request)
     {
-        $itinerary = $this->resource['itineraries'][0] ?? null;
-        $segments  = $itinerary['segments'] ?? [];
-        $first     = $segments[0] ?? null;
-        $last      = end($segments);
+        $segments = $itinerary['segments'] ?? [];
+        $first = $segments[0] ?? null;
+        $last  = end($segments);
 
-        $departureDateTime = isset($first['departure']['at']) ? Carbon::parse($first['departure']['at']) : null;
-        $arrivalDateTime   = isset($last['arrival']['at']) ? Carbon::parse($last['arrival']['at']) : null;
+        $departureDT = isset($first['departure']['at']) ? Carbon::parse($first['departure']['at']) : null;
+        $arrivalDT   = isset($last['arrival']['at']) ? Carbon::parse($last['arrival']['at']) : null;
 
         $originCode = $first['departure']['iataCode'] ?? null;
         $destCode   = $last['arrival']['iataCode'] ?? null;
-
-        $totalPrice = isset($this->resource['price']['total']) ? (float) $this->resource['price']['total'] : null;
-        $currency   = $this->resource['price']['currency'] ?? null;
-
-        $travelerCount = isset($this->resource['travelerPricings']) 
-            ? count($this->resource['travelerPricings']) 
-            : 0;
-
-        $pricePerPassenger = ($totalPrice && $travelerCount > 0)
-            ? round($totalPrice / $travelerCount, 2)
-            : null;
-
-        $seatsRemaining = $this->resource['numberOfBookableSeats'] ?? null;
 
         $segmentsDetails = [];
         foreach ($segments as $index => $segment) {
@@ -105,51 +93,105 @@ class FlightOfferResource extends JsonResource
             $segOriginCode = $segment['departure']['iataCode'] ?? null;
             $segDestCode   = $segment['arrival']['iataCode'] ?? null;
 
-            $segmentInfo = [
-                'segment_number'         => $index + 1,
-                'origin_airport_code'    => $segOriginCode,
-                'origin_airport_name'    => $this->getAirportName($segOriginCode),
-                'destination_airport_code'=> $segDestCode,
-                'destination_airport_name'=> $this->getAirportName($segDestCode),
-                'departure_time'         => $depTime->format('Y-m-d H:i'),
-                'arrival_time'           => $arrTime->format('Y-m-d H:i'),
-                'duration_hours'         => $this->convertDurationToHours($segment['duration'] ?? null),
-                'airline'                => $this->carriers[$segment['carrierCode']] ?? $segment['carrierCode'],
+            $segInfo = [
+                'segment_number' => $index + 1,
+                'origin_airport_code' => $segOriginCode,
+                'origin_airport_name' => $this->getAirportName($segOriginCode),
+                'destination_airport_code' => $segDestCode,
+                'destination_airport_name' => $this->getAirportName($segDestCode),
+                'departure_time' => $depTime->format('Y-m-d H:i'),
+                'arrival_time'   => $arrTime->format('Y-m-d H:i'),
+                'duration_hours' => $this->convertDurationToHours($segment['duration'] ?? null),
+                'airline'        => $this->carriers[$segment['carrierCode']] ?? $segment['carrierCode'],
             ];
 
             if (isset($segments[$index + 1])) {
                 $nextDepTime = Carbon::parse($segments[$index + 1]['departure']['at']);
                 $layoverHours = (int) floor($arrTime->diffInMinutes($nextDepTime) / 60);
-                $segmentInfo['layover_hours'] = $layoverHours;
+                $segInfo['layover_hours'] = $layoverHours;
             }
 
-            $segmentsDetails[] = $segmentInfo;
+            $segmentsDetails[] = $segInfo;
         }
 
         return [
-            'airline'                   => $this->carriers[$first['carrierCode']] ?? null,
-            'origin_airport_code'        => $originCode,
-            'origin_airport_name'        => $this->getAirportName($originCode),
-            'destination_airport_code'   => $destCode,
-            'destination_airport_name'   => $this->getAirportName($destCode),
-            'departure_date'             => $departureDateTime?->format('Y-m-d'),
-            'departure_time'             => $departureDateTime?->format('H:i'),
-            'arrival_date'               => $arrivalDateTime?->format('Y-m-d'),
-            'arrival_time'               => $arrivalDateTime?->format('H:i'),
-            'duration_hours'             => $this->convertDurationToHours($itinerary['duration'] ?? null),
-            'stops'                      => max(count($segments) - 1, 0),
-            'travel_class'               => $this->travelClass,
-            'price_total'                => $totalPrice,
-            'currency'                   => $currency,
-            'traveler_count'             => $travelerCount,
-            'price_per_passenger'        => $pricePerPassenger,
-            'seats_remaining'            => $seatsRemaining,
-            'segments'                   => $segmentsDetails,
+            'origin_airport_code' => $originCode,
+            'origin_airport_name' => $this->getAirportName($originCode),
+            'destination_airport_code' => $destCode,
+            'destination_airport_name' => $this->getAirportName($destCode),
+            'departure_date' => $departureDT?->format('Y-m-d'),
+            'departure_time' => $departureDT?->format('H:i'),
+            'arrival_date'   => $arrivalDT?->format('Y-m-d'),
+            'arrival_time'   => $arrivalDT?->format('H:i'),
+            'departure_datetime_iso' => $departureDT?->toIso8601String(),
+            'departure_timestamp'    => $departureDT?->timestamp,
+            'duration_hours' => $this->convertDurationToHours($itinerary['duration'] ?? null),
+            'stops' => max(count($segments) - 1, 0),
+            'segments' => $segmentsDetails,
+            'airline'  => $this->carriers[$first['carrierCode']] ?? ($first['carrierCode'] ?? null),
         ];
+    }
+
+    public function toArray($request)
+    {
+        $priceTotal = isset($this->resource['price']['total']) ? (float)$this->resource['price']['total'] : null;
+        $currency   = $this->resource['price']['currency'] ?? null;
+        $travelerCount = isset($this->resource['travelerPricings']) ? count($this->resource['travelerPricings']) : 0;
+        $pricePerPassenger = ($priceTotal && $travelerCount > 0) ? round($priceTotal / $travelerCount, 2) : null;
+        $seatsRemaining = $this->resource['numberOfBookableSeats'] ?? null;
+
+        $itineraries = $this->resource['itineraries'] ?? [];
+
+        // If there are two or more itineraries -> treat as a round-trip (outbound + inbound)
+        if (count($itineraries) >= 2) {
+            $out = $this->buildItinerary($itineraries[0], $request);
+            $in  = $this->buildItinerary($itineraries[1], $request);
+
+            return [
+                'id' => $this->resource['id'] ?? null,
+                'is_round_trip' => true,
+                'price_total' => $priceTotal,
+                'currency'    => $currency,
+                'traveler_count' => $travelerCount,
+                'price_per_passenger' => $pricePerPassenger,
+                'seats_remaining' => $seatsRemaining,
+                'outbound' => $out,
+                'inbound'  => $in,
+                // convenience top-level timestamps for sorting/timeline
+                'departure_timestamp' => $out['departure_timestamp'] ?? null,
+                'return_timestamp'    => $in['departure_timestamp'] ?? null,
+            ];
+        }
+
+        // Otherwise single-itinerary (one-way)
+        $singleItinerary = $itineraries[0] ?? null;
+        if (!$singleItinerary) {
+            // fallback: return minimal data
+            return [
+                'id' => $this->resource['id'] ?? null,
+                'is_round_trip' => false,
+                'price_total' => $priceTotal,
+                'currency' => $currency,
+            ];
+        }
+
+        // reuse buildItinerary for single
+        $built = $this->buildItinerary($singleItinerary, $request);
+        return array_merge([
+            'id' => $this->resource['id'] ?? null,
+            'is_round_trip' => false,
+            'price_total' => $priceTotal,
+            'currency' => $currency,
+            'traveler_count' => $travelerCount,
+            'price_per_passenger' => $pricePerPassenger,
+            'seats_remaining' => $seatsRemaining,
+        ], $built);
     }
 
     protected function getAirportName($code)
     {
+        if (!$code) return null;
+
         if (isset($this->airportNamesArabic[$code])) {
             return $this->airportNamesArabic[$code];
         }

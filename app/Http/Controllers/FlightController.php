@@ -7,6 +7,7 @@ use App\Http\Requests\FlightSearchRequest;
 use Illuminate\Http\Request;
 use App\Services\AmadeusService;
 use App\Http\Resources\FlightOfferResource;
+use Illuminate\Support\Arr;
 
 class FlightController extends Controller
 {
@@ -17,131 +18,220 @@ class FlightController extends Controller
         $this->flightService = $flightService;
     }
 
-    /**
-     * Search flights depending on direction:
-     * - from_syria : DAM -> destinationLocationCode
-     * - to_syria   : originLocationCode -> DAM
-     * - both       : return both outbound (DAM->dest) and inbound (origin->DAM) if possible
-     *
-     * Request uses the same validated fields from FlightSearchRequest.
-     */
-    public function search(FlightSearchRequest $request)
-    {
-        $validated = $request->validated();
-        $direction = $request->input('direction'); // expect: 'from_syria' | 'to_syria' | 'both' (or null)
-        $travelClass = $request->input('travelClass');
+public function search(FlightSearchRequest $request)
+{
+    $validated = $request->validated();
+    $direction = $request->input('direction'); // 'from_syria'|'to_syria'|'both'|null
+    $travelClass = $request->input('travelClass');
 
-        // Helper to run a search and map offers to resources
-        $mapResponseToResources = function ($resp) use ($travelClass, $request) {
-            if (empty($resp) || !empty($resp['error'])) {
-                return [
-                    'meta'   => $resp['meta'] ?? [],
-                    'offers' => collect([]),
-                    'error'  => $resp['error'] ?? null,
-                    'message'=> $resp['message'] ?? null,
-                ];
-            }
-
-            $carriers  = $resp['dictionaries']['carriers'] ?? [];
-            $locations = $resp['dictionaries']['locations'] ?? [];
-
-            $offers = collect($resp['data'] ?? [])->map(function ($offer) use ($carriers, $locations, $travelClass) {
-                return new FlightOfferResource($offer, $carriers, $locations, $travelClass);
-            });
-
+    $mapResponseToResources = function ($resp) use ($travelClass, $request) {
+        if (empty($resp) || !empty($resp['error'])) {
             return [
                 'meta'   => $resp['meta'] ?? [],
-                'offers' => $offers,
+                'offers' => collect([]),
+                'error'  => $resp['error'] ?? null,
+                'message'=> $resp['message'] ?? null,
             ];
-        };
+        }
 
-        // Prepare containers
-        $outboundResult = ['meta' => [], 'offers' => collect([])];
-        $inboundResult  = ['meta' => [], 'offers' => collect([])];
+        $carriers  = $resp['dictionaries']['carriers'] ?? [];
+        $locations = $resp['dictionaries']['locations'] ?? [];
 
-        // normalize keys used by AmadeusService (your service expects originLocationCode/destinationLocationCode)
-        // We'll clone validated each time and override only necessary fields
-        if ($direction === 'to_syria') {
-            // search flights TO Syria: origin supplied -> destination = DAM
-            if (empty($validated['originLocationCode'])) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'originLocationCode required for direction=to_syria'
-                ], 422);
+        $offers = collect($resp['data'] ?? [])->map(function ($offer) use ($carriers, $locations, $travelClass, $request) {
+            $resource = new FlightOfferResource($offer, $carriers, $locations, $travelClass);
+            return $resource->toArray($request);
+        });
+
+        return [
+            'meta' => $resp['meta'] ?? [],
+            'offers' => $offers,
+        ];
+    };
+
+    $doSearch = function(array $params) {
+        return $this->flightService->searchFlights($params);
+    };
+
+    // ----- simple cases: only to_syria or from_syria -----
+    if ($direction === 'to_syria') {
+        if (empty($validated['originLocationCode'])) {
+            return response()->json(['error' => true, 'message' => 'originLocationCode required for direction=to_syria'], 422);
+        }
+        $params = $validated;
+        $params['destinationLocationCode'] = 'DAM';
+        $mapped = $mapResponseToResources($doSearch($params));
+        return response()->json(['offers' => ['inbound' => $mapped['offers']->values()]]);
+    }
+
+    if ($direction === 'from_syria') {
+        if (empty($validated['destinationLocationCode'])) {
+            return response()->json(['error' => true, 'message' => 'destinationLocationCode required for direction=from_syria'], 422);
+        }
+        $params = $validated;
+        $params['originLocationCode'] = 'DAM';
+        $mapped = $mapResponseToResources($doSearch($params));
+        return response()->json(['offers' => ['outbound' => $mapped['offers']->values()]]);
+    }
+
+    // ----- both: try round-trip search first (flexible with origin/destination order) -----
+    if ($direction === 'both') {
+        // if returnDate provided, prefer a round-trip style search (but respect user's order if both origin & destination sent)
+        if (!empty($validated['returnDate'])) {
+            // determine origin/destination to send to Amadeus:
+            // if user provided both, use them as-is (so LHR->DAM or DAM->LHR both work).
+            // if only one side provided, assume the other is DAM (to support the "from/to Syria" UX).
+            $origin = $validated['originLocationCode'] ?? null;
+            $destination = $validated['destinationLocationCode'] ?? null;
+
+            if (!$origin && !$destination) {
+                return response()->json(['offers' => ['paired' => collect([]), 'unpaired' => collect([])]]);
             }
 
-            $params = $validated;
-            $params['destinationLocationCode'] = 'DAM';
-            // call search
-            $resp = $this->flightService->searchFlights($params);
-            $inboundResult = $mapResponseToResources($resp);
-
-        } elseif ($direction === 'from_syria') {
-            // search flights FROM Syria: origin = DAM -> destination supplied
-            if (empty($validated['destinationLocationCode'])) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'destinationLocationCode required for direction=from_syria'
-                ], 422);
+            if ($origin && $destination) {
+                $params = $validated;
+                $params['originLocationCode'] = $origin;
+                $params['destinationLocationCode'] = $destination;
+            } elseif ($destination && !$origin) {
+                $params = $validated;
+                $params['originLocationCode'] = 'DAM';
+                $params['destinationLocationCode'] = $destination;
+            } else {
+                $params = $validated;
+                $params['originLocationCode'] = $origin;
+                $params['destinationLocationCode'] = 'DAM';
             }
 
-            $params = $validated;
-            $params['originLocationCode'] = 'DAM';
-            $resp = $this->flightService->searchFlights($params);
-            $outboundResult = $mapResponseToResources($resp);
+            $resp = $doSearch($params);
+            $mapped = $mapResponseToResources($resp);
+            $offers = $mapped['offers'] ?? collect([]);
 
-        } elseif ($direction === 'both') {
-            // both: attempt outbound (DAM -> destination) and inbound (origin -> DAM)
-            // Outbound (DAM -> destination) if destinationLocationCode provided
-            if (!empty($validated['destinationLocationCode'])) {
-                $outParams = $validated;
-                $outParams['originLocationCode'] = 'DAM';
-                $outResp = $this->flightService->searchFlights($outParams);
-                $outboundResult = $mapResponseToResources($outResp);
-            }
+            $paired = $offers->filter(fn($o) => !empty($o['is_round_trip']))->values();
+            $unpaired = $offers->filter(fn($o) => empty($o['is_round_trip']))->values();
 
-            // Inbound (origin -> DAM) if originLocationCode provided
-            if (!empty($validated['originLocationCode'])) {
-                $inParams = $validated;
-                $inParams['destinationLocationCode'] = 'DAM';
-                $inResp = $this->flightService->searchFlights($inParams);
-                $inboundResult = $mapResponseToResources($inResp);
-            }
-
-        } else {
-            // default / legacy: do a single search with provided origin & destination (no special DAM override)
-            // This keeps backward compatibility when no direction param is provided.
-            $params = $validated;
-            $resp = $this->flightService->searchFlights($params);
-            $single = $mapResponseToResources($resp);
-
-            // return same shape but populate outbound with single result (so caller still gets offers)
             return response()->json([
-                'meta' => $single['meta'] ?? [],
-                'offers' => $single['offers'],
+                'offers' => [
+                    'paired' => $paired,
+                    'unpaired' => $unpaired,
+                ],
             ]);
         }
 
-        // Build final meta: include both counts/links if available
-        $finalMeta = [
-            'outbound_meta' => $outboundResult['meta'] ?? [],
-            'inbound_meta'  => $inboundResult['meta'] ?? [],
-        ];
+        $outboundResult = ['offers' => collect([])];
+        $inboundResult  = ['offers' => collect([])];
+
+        if (!empty($validated['destinationLocationCode'])) {
+            $outParams = $validated;
+            $outParams['originLocationCode'] = 'DAM';
+            $outParams['destinationLocationCode'] = $validated['destinationLocationCode'];
+            $outboundResult = $mapResponseToResources($doSearch($outParams));
+        }
+
+        if (!empty($validated['originLocationCode'])) {
+            $inParams = $validated;
+            $inParams['destinationLocationCode'] = 'DAM';
+            $inParams['originLocationCode'] = $validated['originLocationCode'];
+            $inboundResult = $mapResponseToResources($doSearch($inParams));
+        }
+
+        $outOffers = $outboundResult['offers'] ?? collect([]);
+        $inOffers  = $inboundResult['offers'] ?? collect([]);
+
+        if ($outOffers->isEmpty() || $inOffers->isEmpty()) {
+            return response()->json([
+                'offers' => [
+                    'paired' => collect([]),
+                    'unpaired_outbound' => $outOffers->values(),
+                    'unpaired_inbound'  => $inOffers->values(),
+                ],
+            ]);
+        }
+
+        // pairing heuristic (price/class/stops)
+        $inList = $inOffers->values()->all();
+        $usedIn = [];
+        $paired = collect();
+
+        foreach ($outOffers->values()->all() as $outOffer) {
+            $bestIdx = null;
+            $bestScore = null;
+
+            foreach ($inList as $iIdx => $inOffer) {
+                if (in_array($iIdx, $usedIn, true)) continue;
+
+                $outP = isset($outOffer['price_total']) ? (float)$outOffer['price_total'] : null;
+                $inP  = isset($inOffer['price_total'])  ? (float)$inOffer['price_total']  : null;
+                $priceDiff = ($outP !== null && $inP !== null) ? abs($outP - $inP) : 1000000;
+
+                $classPenalty = 0;
+                if (!empty($travelClass)) {
+                    $outClass = $outOffer['travel_class'] ?? null;
+                    $inClass  = $inOffer['travel_class'] ?? null;
+                    if ($outClass && $inClass && $outClass !== $inClass) $classPenalty += 5000;
+                }
+
+                $outStops = $outOffer['stops'] ?? 0;
+                $inStops  = $inOffer['stops'] ?? 0;
+                $stopsPenalty = abs($outStops - $inStops) * 100;
+
+                $score = $priceDiff + $classPenalty + $stopsPenalty;
+
+                if ($bestScore === null || $score < $bestScore) {
+                    $bestScore = $score;
+                    $bestIdx = $iIdx;
+                }
+            }
+
+            if ($bestIdx !== null) {
+                $matched = $inList[$bestIdx];
+                $usedIn[] = $bestIdx;
+
+                $combinedPrice = null;
+                if (isset($outOffer['price_total']) && isset($matched['price_total'])) {
+                    $combinedPrice = (float)$outOffer['price_total'] + (float)$matched['price_total'];
+                }
+
+                $paired->push([
+                    'outbound' => $outOffer,
+                    'inbound'  => $matched,
+                    'combined_price' => $combinedPrice,
+                    'currency' => $outOffer['currency'] ?? $matched['currency'] ?? null,
+                    'pair_score' => $bestScore,
+                ]);
+            }
+        }
+
+        $pairedOutIds = $paired->pluck('outbound')->pluck('id')->all();
+        $pairedInIds  = $paired->pluck('inbound')->pluck('id')->all();
+
+        $unpairedOut = $outOffers->filter(fn($o) => !in_array($o['id'] ?? null, $pairedOutIds))->values();
+        $unpairedIn  = $inOffers->filter(fn($o) => !in_array($o['id'] ?? null, $pairedInIds))->values();
 
         return response()->json([
-            'meta' => $finalMeta,
             'offers' => [
-                'outbound' => $outboundResult['offers']->values(), // reindex collections
-                'inbound'  => $inboundResult['offers']->values(),
+                'paired' => $paired->values(),
+                'unpaired_outbound' => $unpairedOut,
+                'unpaired_inbound'  => $unpairedIn,
             ],
         ]);
-    }
+    } // end both
+
+    // ----- default single search (legacy) -----
+    $params = $validated;
+    $resp = $this->flightService->searchFlights($params);
+    $single = $mapResponseToResources($resp);
+
+    return response()->json([
+        'offers' => [
+            'outbound' => $single['offers']->values(),
+            'inbound'  => collect([]),
+            'timeline' => $single['offers']->values()->sortBy('departure_timestamp')->values(),
+        ],
+    ]);
+}
 
     public function searchLocation(Request $request)
     {
-        $request->validate([
-            'keyword' => 'required|string|min:2',
-        ]);
+        $request->validate(['keyword' => 'required|string|min:2']);
 
         $response = $this->flightService->searchLocation($request->keyword);
 
@@ -154,7 +244,7 @@ class FlightController extends Controller
                 'name'       => ucfirst(strtolower($loc['name'] ?? '')),
                 'iataCode'   => $loc['iataCode'] ?? '',
                 'country'    => ucfirst(strtolower($loc['address']['countryName'] ?? '')),
-                'type'       => strtolower($loc['subType'] ?? ''), // airport أو city
+                'type'       => strtolower($loc['subType'] ?? ''),
             ];
         });
 

@@ -27,6 +27,11 @@
 						"type": "text"
 					},
 					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
 						"key": "Accept-Language",
 						"value": "ar",
 						"type": "text",
@@ -34,7 +39,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}flights/search?direction=from_syria&originLocationCode=DAM&destinationLocationCode=LHR&departureDate=2025-09-01&returnDate=2025-09-10&adults=2&children=1&infants=0&travelClass=ECONOMY&nonStop=false&max=5",
+					"raw": "{{URL}}flights/search?direction=both&originLocationCode=LHR&destinationLocationCode=DAM&departureDate=2025-09-01&returnDate=2025-09-10&adults=2&children=1&infants=0&travelClass=ECONOMY&nonStop=0&max=5",
 					"host": [
 						"{{URL}}flights"
 					],
@@ -44,15 +49,15 @@
 					"query": [
 						{
 							"key": "direction",
-							"value": "from_syria"
+							"value": "both"
 						},
 						{
 							"key": "originLocationCode",
-							"value": "DAM"
+							"value": "LHR"
 						},
 						{
 							"key": "destinationLocationCode",
-							"value": "LHR"
+							"value": "DAM"
 						},
 						{
 							"key": "departureDate",
@@ -80,7 +85,7 @@
 						},
 						{
 							"key": "nonStop",
-							"value": "false"
+							"value": "0"
 						},
 						{
 							"key": "max",
