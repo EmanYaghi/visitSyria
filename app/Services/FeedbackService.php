@@ -114,6 +114,7 @@ class FeedbackService
         }
         return ['saves'=>$saves];
     }
+
    public function setRating( $request,$id)
     {
         $user = Auth::user();

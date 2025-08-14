@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReserveFlightRequest extends FormRequest
+class BookFlightRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -13,7 +13,6 @@ class ReserveFlightRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'required|exists:flights,id',
             'number_of_adults' => 'required|integer|min:1',
             'number_of_children' => 'nullable|integer',
             'number_of_infants' => 'nullable|integer',
@@ -28,6 +27,8 @@ class ReserveFlightRequest extends FormRequest
             'passengers.0.email' => 'required|email',
             'passengers.0.phone' => 'required|string|max:20',
             'passengers.0.country_code' => 'required|string|max:10',
+
+            'flight_data'=>'required|array',
         ];
     }
 }

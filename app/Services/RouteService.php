@@ -27,11 +27,14 @@ class RouteService
 
         try {
 
-            $resp = Http::withHeaders([
+            $resp = Http::timeout(120)
+            ->connectTimeout(30)
+            ->withHeaders([
                 'Accept' => 'application/json, application/geo+json, application/gpx+xml',
                 'Content-Type' => 'application/json; charset=utf-8',
                 'Authorization' => $this->apiKey,
-            ])->post($this->baseUrl, [
+            ])
+            ->post($this->baseUrl, [
                 'coordinates'  => $coordinates,
                 'instructions' => false,
             ]);
