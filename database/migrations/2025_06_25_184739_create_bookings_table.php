@@ -16,14 +16,12 @@ class CreateBookingsTable extends Migration
             $table->foreignId('trip_id')->nullable()
                   ->constrained()
                   ->cascadeOnDelete();
-            $table->foreignId('flight_id')->nullable()
-                  ->nullable()
-                  ->constrained()
-                  ->nullOnDelete();
             $table->foreignId('event_id')->nullable()
                   ->nullable()
                   ->constrained()
                   ->nullOnDelete();
+            $table->json('flight_data')->nullable();
+            $table->string('flightOrderId')->nullable();
             $table->unsignedInteger('number_of_tickets')->default(1);
             $table->unsignedInteger('number_of_adults')->default(0);
             $table->unsignedInteger('number_of_children')->default(0);

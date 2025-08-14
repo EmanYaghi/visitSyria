@@ -92,6 +92,8 @@ use Stripe\Token;
         Route::delete('ratings/{id}',[FeedbackController::class,'deleteRating']);
         Route::get('saves',[FeedbackController::class,'getSaves']);
 
+        Route::post('bookFlight', [FlightController::class, 'bookFlight']);
+
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -132,7 +134,7 @@ use Stripe\Token;
     Route::get('articles/by-tag/{tag}', [ArticleController::class, 'getByTag']);
 
     Route::get('settings', [SettingController::class, 'index']);
-    Route::get('settings/{setting}', [SettingController::class, 'show']);    
+    Route::get('settings/{setting}', [SettingController::class, 'show']);
     Route::get('settings/type/{type}', [SettingController::class, 'getByType']);
     Route::get('settings/category/{category}', [SettingController::class, 'getByCategory']);
 

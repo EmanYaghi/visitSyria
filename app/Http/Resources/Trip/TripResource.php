@@ -48,7 +48,7 @@ class TripResource extends JsonResource
                 return asset('storage/' . $media->url);
             }),
 
-            "trip_path" => $this->getRoute($trip),
+            "trip_path" => $this->getRoute($trip)?:null,
 
             'timelines' => $this->timelines->map(function ($timeline) {
                 return [

@@ -9,9 +9,13 @@ class Booking extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'trip_id', 'flight_id', 'event_id', 'number_of_tickets',
+        'user_id', 'trip_id', 'event_id', 'number_of_tickets',
         'number_of_adults', 'number_of_children', 'number_of_infants',
-        'is_paid', 'price', 'stripe_payment_id', 'qr_code','payment_status'
+        'is_paid', 'price', 'stripe_payment_id', 'qr_code','payment_status',
+        'flight_data','flightOrderId'
+    ];
+    protected $casts = [
+        'flight_data' => 'array',
     ];
 
     public function user()
@@ -26,11 +30,6 @@ class Booking extends Model
         public function event()
     {
         return $this->belongsTo(Event::class);
-    }
-
-    public function flight()
-    {
-        return $this->belongsTo(Flight::class);
     }
 
     public function passengers()
