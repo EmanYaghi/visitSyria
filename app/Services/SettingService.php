@@ -61,5 +61,14 @@ class SettingService
         return $this->create(array_merge(['type' => $type, 'category' => $category], $data));
     }
 
-
+    /**
+     * إرجاع عدد الإعدادات لنوع محدد مفصّل حسب الفئة app و admin.
+     *
+     * @param string $type
+     * @return array{app:int, admin:int}
+     */
+    public function countByType(string $type): array
+    {
+        return $this->repo->countByType($type);
+    }
 }

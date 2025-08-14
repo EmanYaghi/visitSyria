@@ -1,15 +1,17 @@
 <?php
+
 namespace App\Services;
 
 use App\Repositories\PlaceRepository;
 use App\Models\Media;
+use App\Models\Save;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 
 class PlaceService
 {
-    protected $placeRepo;
+    protected PlaceRepository $placeRepo;
 
     public function __construct(PlaceRepository $placeRepo)
     {
@@ -81,6 +83,11 @@ class PlaceService
         return $this->placeRepo->getRestaurantsByCityName($cityName);
     }
 
+    public function getHotelsByCityName($cityName)
+    {
+        return $this->placeRepo->getHotelsByCityName($cityName);
+    }
+
     public function getTouristPlacesByClassificationAndCity($classification, $cityId)
     {
         $places = $this->placeRepo->getTouristPlacesByClassificationAndCity($classification, $cityId);
@@ -92,11 +99,6 @@ class PlaceService
             $place->rank = ($index = array_search((int)$place->getKey(), $topRatedIds)) !== false ? $index + 1 : null;
         }
         return $places;
-    }
-
-    public function getHotelsByCityName($cityName)
-    {
-        return $this->placeRepo->getHotelsByCityName($cityName);
     }
 
     public function storeImages($images, $place)
@@ -186,5 +188,41 @@ class PlaceService
             $rankMap[(int)$id] = $i + 1;
         }
         $place->rank = $rankMap[(int)$place->getKey()] ?? null;
+    }
+
+    public function annotateIsSavedForCollection($places, $user): void
+    {
+        if (! $user || ! ($places instanceof Collection) || $places->isEmpty()) {
+            foreach ($places as $p) {
+                $p->is_saved = $user ? false : null;
+            }
+            return;
+        }
+
+        $placeIds = $places->map(fn($p) => (int)$p->getKey())->toArray();
+
+        $savedPlaceIds = Save::where('user_id', $user->id)
+            ->whereNotNull('place_id')
+            ->whereIn('place_id', $placeIds)
+            ->pluck('place_id')
+            ->map(fn($v) => (int)$v)
+            ->toArray();
+
+        foreach ($places as $place) {
+            $place->is_saved = in_array((int)$place->getKey(), $savedPlaceIds, true);
+        }
+    }
+
+    public function annotateIsSavedForModel($place, $user): void
+    {
+        if (! $user) {
+            $place->is_saved = null;
+            return;
+        }
+
+        $place->is_saved = (bool) Save::where('user_id', $user->id)
+            ->where('place_id', (int)$place->getKey())
+            ->whereNotNull('place_id')
+            ->exists();
     }
 }

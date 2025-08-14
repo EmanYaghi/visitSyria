@@ -19,12 +19,31 @@ class SettingController extends Controller
         $this->service = $service;
     }
 
-
     public function index(Request $request)
     {
+        $type = $request->query('type');
+        $categoryFilter = $request->query('category'); // optional
+        $limit = $request->query('limit');
+
+        if ($type !== null) {
+            // إذا طُلب النوع، نرجع العدّ أولاً ثم البيانات (بالفلتر إن وُجد)
+            $counts = $this->service->countByType($type);
+
+            $settings = $this->service->findByType($type, $categoryFilter);
+
+            if ($limit !== null && is_numeric($limit)) {
+                $settings = $settings->take((int) $limit);
+            }
+
+            return response()->json([
+                'counts' => $counts,
+                'data' => SettingResource::collection($settings),
+            ], 200);
+        }
+
+        // السلوك الافتراضي: رجْع كل الإعدادات (مع دعم limit)
         $all = $this->service->getAll();
 
-        $limit = $request->query('limit');
         if ($limit !== null && is_numeric($limit)) {
             $all = $all->take((int) $limit);
         }
@@ -59,13 +78,17 @@ class SettingController extends Controller
         ], 200);
     }
 
-
     public function getByType(Request $request, $type)
     {
         $category = $request->query('category'); // optional
         $settings = $this->service->findByType($type, $category);
 
-        return SettingResource::collection($settings);
+        $counts = $this->service->countByType($type);
+
+        return response()->json([
+            'counts' => $counts,
+            'data' => SettingResource::collection($settings),
+        ], 200);
     }
 
     public function getByCategory($category)
@@ -73,7 +96,6 @@ class SettingController extends Controller
         $settings = $this->service->getByCategory($category);
         return SettingResource::collection($settings);
     }
-
 
     public function upsertByType(Request $request, $type)
     {

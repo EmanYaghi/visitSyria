@@ -70,9 +70,26 @@ class SettingRepository
     {
         return (bool) $setting->delete();
     }
-    public function findOrFail($id)
-{
-    return $this->model->findOrFail($id);
-}
 
+    public function findOrFail($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    /**
+     * عدّاد: عدد الإعدادات لنوع معيّن مفصّل حسب الفئة (app/admin).
+     *
+     * @param string $type
+     * @return array{app:int, admin:int}
+     */
+    public function countByType(string $type): array
+    {
+        $appCount = $this->model->where('type', $type)->where('category', 'app')->count();
+        $adminCount = $this->model->where('type', $type)->where('category', 'admin')->count();
+
+        return [
+            'app' => (int) $appCount,
+            'admin' => (int) $adminCount,
+        ];
+    }
 }

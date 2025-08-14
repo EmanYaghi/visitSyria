@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -6,36 +7,123 @@ use Illuminate\Support\Facades\Storage;
 
 class PlaceResource extends JsonResource
 {
+    protected function normalizeMediaUrl(?string $raw): ?string
+    {
+        if (! $raw) return null;
+
+        // إذا هو رابط كامل
+        if (filter_var($raw, FILTER_VALIDATE_URL)) {
+            return $raw;
+        }
+
+        // إذا بدأ بـ /storage/ أو storage/ — نحدف الـ prefix ونبني رابط public
+        $path = $raw;
+        if (str_starts_with($path, '/storage/')) {
+            $path = ltrim(substr($path, strlen('/storage/')), '/');
+        } elseif (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        // الآن path متوقع مثل 'places/xxx.jpg'
+        return Storage::disk('public')->url(ltrim($path, '/'));
+    }
+
     public function toArray($request)
     {
-        $avgRating = $this->ratings()->avg('rating_value') ?: 0;
-        $userId = auth('api')->check() ? auth('api')->id() : null;
-        if ($userId) {
-            $userRatingModel = $this->ratings()->where('user_id', $userId)->first();
-            $userRating = $userRatingModel?->rating_value ?? null;
-            $userCommentModel = $this->comments()->where('user_id', $userId)->first();
-            $userComment = $userCommentModel?->body ?? null;
+        // نحمّل العلاقات الضرورية إذا لم تكن محمّلة
+        $this->loadMissing([
+            'media',
+            'ratings',
+            'comments.user.profile',
+            'comments.user.media',
+            'latestComments.user.profile',
+            'latestComments.user.media',
+        ]);
+
+        $avgRating = (float) ($this->ratings()->avg('rating_value') ?: 0);
+
+        $user = $request->user('api');
+        $userId = $user ? $user->id : null;
+
+        $userRating = $userId ? $this->ratings()->where('user_id', $userId)->value('rating_value') ?? null : null;
+        $userComment = $userId ? $this->comments()->where('user_id', $userId)->value('body') ?? null : null;
+
+        // images: نستخدم العلاقة المحمّلة إن وُجدت، أو نجلبها إن لم تكن محمّلة
+        $mediaCollection = $this->relationLoaded('media') ? $this->media : $this->media()->get();
+
+        $images = $mediaCollection->map(fn($m) => $this->normalizeMediaUrl($m->url))
+                                 ->filter()
+                                 ->values()
+                                 ->all();
+
+        // is_saved: نعطي أولوية لخاصية set من الـ Service (is_saved) إذا وُجِدت
+        if (array_key_exists('is_saved', $this->resource->getAttributes())) {
+            $isSaved = $this->resource->is_saved;
         } else {
-            $userRating = 'guest';
-            $userComment = 'guest';
-        }
-        if ($userId === null) {
-            $isSaved = null;
-        } else {
-            if ($this->relationLoaded('saves')) {
-                $isSaved = $this->saves->isNotEmpty();
+            if ($userId === null) {
+                $isSaved = null;
             } else {
-                $isSaved = (bool) $this->saves()->where('user_id', $userId)->whereNotNull('place_id')->exists();
+                $s = $this->saves()->where('user_id', $userId)->whereNotNull('place_id')->exists();
+                $isSaved = (bool) $s;
             }
         }
-        $images = $this->media->map(function($media) {
-            $raw = $media->url ?? null;
-            if (! $raw) return null;
-            if (filter_var($raw, FILTER_VALIDATE_URL)) {
-                return $raw;
+
+        // آخر 3 تعليقات
+        $latestComments = $this->relationLoaded('latestComments') ? $this->latestComments : null;
+        if (! $latestComments || $latestComments->isEmpty()) {
+            $latestComments = $this->comments()
+                                   ->with(['user.profile', 'user.media'])
+                                   ->latest()
+                                   ->limit(3)
+                                   ->get();
+        } else {
+            $latestComments->loadMissing(['user.profile', 'user.media']);
+        }
+
+        $recentComments = $latestComments->map(function ($comment) {
+            $user = $comment->user;
+            $profile = $user?->profile;
+
+            $userName = $profile
+                ? trim(($profile->first_name ?? '') . ' ' . ($profile->last_name ?? ''))
+                : ($user?->name ?? null);
+
+            $avatarRaw = null;
+            if ($profile) {
+                foreach (['avatar', 'image', 'photo', 'profile_image', 'url'] as $field) {
+                    if (! empty($profile->{$field})) {
+                        $avatarRaw = $profile->{$field};
+                        break;
+                    }
+                }
+                if (! $avatarRaw && method_exists($profile, 'media')) {
+                    $first = $profile->media()->first();
+                    $avatarRaw = $first?->url ?? null;
+                }
             }
-            return Storage::disk('public')->url(ltrim($raw, '/'));
-        })->filter()->values()->all();
+
+            if (! $avatarRaw && $user && method_exists($user, 'media')) {
+                $first = $user->media()->first();
+                $avatarRaw = $first?->url ?? null;
+            }
+
+            $avatarFull = $avatarRaw
+                ? (filter_var($avatarRaw, FILTER_VALIDATE_URL) ? $avatarRaw : Storage::disk('public')->url(ltrim($avatarRaw, '/')))
+                : null;
+
+            $userRatingValue = optional($comment->user->ratings()->where('place_id', $this->id)->first())->rating_value ?? 0;
+
+            return [
+                'id' => $comment->id,
+                'user_id' => $comment->user_id,
+                'user_name' => $userName,
+                'user_avatar' => $avatarFull,
+                'body' => $comment->body,
+                'created_at' => $comment->created_at?->toDateString(),
+                'rating_value' => $userRatingValue,
+            ];
+        })->values()->all();
+
         return [
             'id' => $this->resource->id,
             'city_id' => $this->resource->city_id,
@@ -55,22 +143,7 @@ class PlaceResource extends JsonResource
             'is_saved' => $isSaved,
             'user_rating' => $userRating,
             'user_comment' => $userComment,
-            'recent_comments' => $this->latestComments->map(function ($comment) {
-                $profile = $comment->user?->profile;
-                $userRating = $comment->user->ratings()
-                    ->where('place_id', $this->id)
-                    ->first();
-                return [
-                    'id' => $comment->id,
-                    'user_id' => $comment->user_id,
-                    'user_name' => $profile
-                        ? $profile->first_name . ' ' . $profile->last_name
-                        : null,
-                    'body' => $comment->body,
-                    'created_at' => $comment->created_at->toDateString(),
-                    'rating_value' => $userRating?->rating_value ?? 0,
-                ];
-            })->values(),
+            'recent_comments' => $recentComments,
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

@@ -1,14 +1,21 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Models\Place;
 
 class PlaceRepository
 {
-        public function getByIdWithDetails($id)
+    public function getByIdWithDetails($id)
     {
-        return Place::with(['media', 'latestComments.user.profile', 'ratings','comments'])->findOrFail($id);
-    }  
+        return Place::with([
+            'media',
+            'latestComments.user.profile',
+            'ratings',
+            'comments'
+        ])->findOrFail($id);
+    }
+
     public function findByTypeExceptId(string $type, int $excludeId)
     {
         return Place::where('type', $type)
@@ -16,39 +23,45 @@ class PlaceRepository
                     ->latest()
                     ->get();
     }
-    public function calculateAvgRating($place)
+
+public function getAll($filters = [])
+{
+    return Place::with([
+            'media',
+            'ratings',
+            'latestComments' => function ($q) {
+                $q->limit(3);
+            },
+            'latestComments.user.profile',
+            'latestComments.user.media'
+        ])
+        ->when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
+        ->when(isset($filters['city_id']), fn($q) => $q->where('city_id', $filters['city_id']))
+        ->latest()
+        ->get();
+}
+
+    public function getTouristPlacesByClassificationAndCity($classification, $cityId)
     {
-        return $place->ratings->avg('rating_value') ?? 0;
-    }
-    public function getAll($filters = [])
-    {
-        return Place::when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
-                    ->when(isset($filters['city_id']), fn($q) => $q->where('city_id', $filters['city_id']))
+        return Place::withAvg('ratings as ratings_avg', 'rating_value')
+                    ->where([
+                        ['type', 'tourist'],
+                        ['classification', $classification],
+                        ['city_id', $cityId],
+                    ])
                     ->latest()
                     ->get();
     }
 
-public function getTouristPlacesByClassificationAndCity($classification, $cityId)
-{
-    return Place::withAvg('ratings as ratings_avg', 'rating_value')
-                ->where([
-                    ['type', 'tourist'],
-                    ['classification', $classification],
-                    ['city_id', $cityId],
-                ])
-                ->latest()
-                ->get();
-}
-
-public function getTopRatedPlaces(array $filters = [])
-{
-    return Place::withAvg('ratings as ratings_avg', 'rating_value')
-                ->when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
-                ->when(isset($filters['city_id']), fn($q) => $q->where('city_id', $filters['city_id']))
-                ->orderByDesc('ratings_avg')
-                ->limit(10)
-                ->get();
-}
+    public function getTopRatedPlaces(array $filters = [])
+    {
+        return Place::withAvg('ratings as ratings_avg', 'rating_value')
+                    ->when(isset($filters['type']), fn($q) => $q->where('type', $filters['type']))
+                    ->when(isset($filters['city_id']), fn($q) => $q->where('city_id', $filters['city_id']))
+                    ->orderByDesc('ratings_avg')
+                    ->limit(10)
+                    ->get();
+    }
 
     public function getTouristPlacesByClassification($classification)
     {
@@ -80,12 +93,10 @@ public function getTopRatedPlaces(array $filters = [])
             ->get();
     }
 
-public function findById($id)
-{
-    return Place::with([
-        'media',
-    ])->findOrFail($id);
-}
+    public function findById($id)
+    {
+        return Place::with(['media'])->findOrFail($id);
+    }
 
     public function create(array $data)
     {

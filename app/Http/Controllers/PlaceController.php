@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PlaceStoreRequest;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 
 class PlaceController extends Controller
 {
-    protected $placeService;
+    protected PlaceService $placeService;
 
     public function __construct(PlaceService $placeService)
     {
@@ -23,11 +24,7 @@ class PlaceController extends Controller
         $filters = $request->only(['type', 'city_id']);
         $places = $this->placeService->getAll($filters);
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -42,11 +39,7 @@ class PlaceController extends Controller
         $filters['city_id'] = $city->id;
         $places = $this->placeService->getAll($filters);
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -55,13 +48,9 @@ class PlaceController extends Controller
     {
         $place = Place::findOrFail($id);
         $similar = $this->placeService->getSimilarPlaces($id, $place->type);
-        $this->placeService->annotateWithGlobalTouristRank($similar);
         $user = auth('api')->user();
-        if ($user && $similar instanceof \Illuminate\Database\Eloquent\Collection) {
-            $similar->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($similar, $user);
+        $this->placeService->annotateWithGlobalTouristRank($similar);
         return PlaceResource::collection($similar);
     }
 
@@ -82,11 +71,7 @@ class PlaceController extends Controller
             }
         }
         $user = $request->user('api');
-        if ($user) {
-            $place->loadMissing(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForModel($place, $user);
         return new PlaceResource($place);
     }
 
@@ -97,11 +82,7 @@ class PlaceController extends Controller
         $place = $this->placeService->store($data);
         $this->handleImages($request, $place);
         $user = $request->user('api');
-        if ($user) {
-            $place->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForModel($place, $user);
         $this->placeService->annotateSingleWithGlobalTouristRank($place);
         return response()->json(['place' => new PlaceResource($place)],201);
     }
@@ -115,11 +96,7 @@ class PlaceController extends Controller
         $place = $this->placeService->update($id, $data);
         $this->handleImages($request, $place);
         $user = $request->user('api');
-        if ($user) {
-            $place->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForModel($place, $user);
         $this->placeService->annotateSingleWithGlobalTouristRank($place);
         return response()->json(['place' => new PlaceResource($place)]);
     }
@@ -137,11 +114,7 @@ class PlaceController extends Controller
     {
         $places = $this->placeService->getRestaurants();
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -150,11 +123,7 @@ class PlaceController extends Controller
     {
         $places = $this->placeService->getHotels();
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -163,11 +132,7 @@ class PlaceController extends Controller
     {
         $places = $this->placeService->getTouristPlaces();
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -176,11 +141,7 @@ class PlaceController extends Controller
     {
         $places = $this->placeService->getTopRatedTouristPlaces($request->all());
         $user = $request->user('api');
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         return PlaceResource::collection($places);
     }
 
@@ -188,11 +149,7 @@ class PlaceController extends Controller
     {
         $places = $this->placeService->getTouristPlacesByClassification($classification);
         $user = auth('api')->user();
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -203,11 +160,7 @@ class PlaceController extends Controller
         if (!$city) { return response()->json(['message' => 'City not found'], 404); }
         $places = $this->placeService->getTouristPlacesByClassificationAndCity($classification, $city->id);
         $user = auth('api')->user();
-        if ($user && $places instanceof \Illuminate\Database\Eloquent\Collection) {
-            $places->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($places, $user);
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
@@ -220,11 +173,7 @@ class PlaceController extends Controller
         $cityName = $request->input('city');
         $restaurants = $this->placeService->getRestaurantsByCityName($cityName);
         $user = $request->user('api');
-        if ($user && $restaurants instanceof \Illuminate\Database\Eloquent\Collection) {
-            $restaurants->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($restaurants, $user);
         $this->placeService->annotateWithGlobalTouristRank($restaurants);
         return PlaceResource::collection($restaurants);
     }
@@ -237,11 +186,7 @@ class PlaceController extends Controller
         $cityName = $request->input('city');
         $hotels = $this->placeService->getHotelsByCityName($cityName);
         $user = $request->user('api');
-        if ($user && $hotels instanceof \Illuminate\Database\Eloquent\Collection) {
-            $hotels->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('place_id');
-            }]);
-        }
+        $this->placeService->annotateIsSavedForCollection($hotels, $user);
         $this->placeService->annotateWithGlobalTouristRank($hotels);
         return PlaceResource::collection($hotels);
     }
@@ -249,8 +194,7 @@ class PlaceController extends Controller
     private function handleImages($request, $place)
     {
         if ($request->hasFile('images')) {
-            $imageUrls = $this->placeService->storeImages($request->file('images'), $place);
-            return $imageUrls;
+            $this->placeService->storeImages($request->file('images'), $place);
         }
     }
 }
