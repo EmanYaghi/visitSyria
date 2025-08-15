@@ -132,6 +132,106 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Book Flight",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUyNjA1ODQsIm5iZiI6MTc1NTI2MDU4NCwianRpIjoiZDdNeHU0UDJTNVpVelBVdyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FeLoQO3Fn-j7nrGoAURsqu8U2UHxO03BvAzqZTZ1Klk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"flight_data\":{\r\n        \"airline\": \"ROYAL JORDANIAN\",\r\n        \"origin_airport_code\": \"DAM\",\r\n        \"origin_airport_name\": \"مطار دمشق الدولي\",\r\n        \"destination_airport_code\": \"LHR\",\r\n        \"destination_airport_name\": \"مطار هيثرو الدولي\",\r\n        \"departure_date\": \"2025-09-01\",\r\n        \"departure_time\": \"08:40\",\r\n        \"arrival_date\": \"2025-09-01\",\r\n        \"arrival_time\": \"15:25\",\r\n        \"duration_hours\": 9,\r\n        \"stops\": 1,\r\n        \"travel_class\": \"ECONOMY\",\r\n        \"price_total\": 2160,\r\n        \"currency\": \"USD\",\r\n        \"traveler_count\": 3,\r\n        \"price_per_passenger\": 720,\r\n        \"seats_remaining\": 5,\r\n        \"segments\": [\r\n            {\r\n                \"segment_number\": 1,\r\n                \"origin_airport_code\": \"DAM\",\r\n                \"origin_airport_name\": \"مطار دمشق الدولي\",\r\n                \"destination_airport_code\": \"AMM\",\r\n                \"destination_airport_name\": \"مطار الملكة علياء الدولي\",\r\n                \"departure_time\": \"2025-09-01 08:40\",\r\n                \"arrival_time\": \"2025-09-01 09:30\",\r\n                \"duration_hours\": 1,\r\n                \"airline\": \"ROYAL JORDANIAN\",\r\n                \"layover_hours\": 2\r\n            },\r\n            {\r\n                \"segment_number\": 2,\r\n                \"origin_airport_code\": \"AMM\",\r\n                \"origin_airport_name\": \"مطار الملكة علياء الدولي\",\r\n                \"destination_airport_code\": \"LHR\",\r\n                \"destination_airport_name\": \"مطار هيثرو الدولي\",\r\n                \"departure_time\": \"2025-09-01 11:35\",\r\n                \"arrival_time\": \"2025-09-01 15:25\",\r\n                \"duration_hours\": 6,\r\n                \"airline\": \"ROYAL JORDANIAN\"\r\n            }\r\n        ]\r\n    },\r\n    \"number_of_adults\": 3,\r\n    \"number_of_children\":0,\r\n    \"number_of_infants\":0,\r\n    \"passengers\": [\r\n        {\r\n            \"first_name\": \"Ali\",\r\n            \"last_name\": \"Ahmad\",\r\n            \"gender\": \"male\",\r\n            \"birth_date\": \"1990-01-01\",\r\n            \"nationality\": \"Syrian\",\r\n            \"email\": \"ali@example.com\",\r\n            \"phone\": \"0999999999\",\r\n            \"country_code\": \"+963\",\r\n            \"passport_number\":\"7465839\",\r\n            \"passport_expiry_date\":\"2026-12-05\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\",\r\n             \"passport_number\":\"7460839\",\r\n            \"passport_expiry_date\":\"2026-12-05\"\r\n        },\r\n        {\r\n            \"first_name\": \"Sara\",\r\n            \"last_name\": \"Mohamed\",\r\n            \"gender\": \"female\",\r\n            \"birth_date\": \"1995-05-20\",\r\n            \"nationality\": \"Egyptian\",\r\n            \"passport_number\":\"7465809\",\r\n            \"passport_expiry_date\":\"2026-12-5\"\r\n        }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}bookFlight",
+					"host": [
+						"{{URL}}bookFlight"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Confirm Book Flight",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUyMDYzNDgsIm5iZiI6MTc1NTIwNjM0OCwianRpIjoiYUNBaFZuS0hOSWhSck5ZcSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.Ef2ryyVdWXx-hkm4YaLmlaqZ-FcKiTiXdzqLJRA__BM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"booking_id\":2,\r\n    \"stripeToken\":\"tok_visa\"//success\r\n   // \"stripeToken\":\"tok_visa_chargeDeclined\"//fail\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}confirmBookFlight",
+					"host": [
+						"{{URL}}confirmBookFlight"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reserver Event",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUyNzMxMzUsIm5iZiI6MTc1NTI3MzEzNSwianRpIjoiOUZzQmJIZWJPc1RlWFU3RyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.K_yQ4eEWCQQmbcgcmQy9CQ-UKF3D09_6hW68xskRbsQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}persons/book/1?type=event",
+					"host": [
+						"{{URL}}persons"
+					],
+					"path": [
+						"book",
+						"1"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "event"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

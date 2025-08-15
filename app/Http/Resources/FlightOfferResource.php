@@ -82,6 +82,19 @@ class FlightOfferResource extends JsonResource
         $originCode = $first['departure']['iataCode'] ?? null;
         $destCode   = $last['arrival']['iataCode'] ?? null;
 
+        $totalPrice = isset($this->resource['price']['total']) ? (float) $this->resource['price']['total'] : null;
+        $currency   = $this->resource['price']['currency'] ?? null;
+
+        $travelerCount = isset($this->resource['travelerPricings'])
+            ? count($this->resource['travelerPricings'])
+            : 0;
+
+        $pricePerPassenger = ($totalPrice && $travelerCount > 0)
+            ? round($totalPrice / $travelerCount, 2)
+            : null;
+
+        $seatsRemaining = $this->resource['numberOfBookableSeats'] ?? null;
+
         $segmentsDetails = [];
         foreach ($segments as $index => $segment) {
             $depTime = Carbon::parse($segment['departure']['at']);

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\Event\ResesrvationEventResource;
+use App\Http\Resources\PersonResource;
 use App\Http\Resources\ReservationResource;
 use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
@@ -19,6 +20,52 @@ class BookingService
     {
         $this->stripe = $stripe;
     }
+    public function bookFlight($request)
+    {
+        $user = Auth::user();
+        $request['is_paid']=false;
+        $request['number_of_tickets']=$request['number_of_adults']+$request['number_of_children']+$request['number_of_infants'];
+        $bookings = Booking::where('user_id', $user->id)->get();
+        foreach ($bookings as $booking) {
+            if ($booking->flight_data == $request['flight_data']) {
+                return [
+                    'message' => "you already reserve this flight",
+                    'code'    => 400
+            ];
+        }}
+
+        if($request['number_of_tickets']!=count($request['passengers']))
+            return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];
+        $remainingTickets=$request['flight_data']['seats_remaining'];
+        if($request['number_of_tickets']>$remainingTickets)
+            return['message'=>"the number of tickets not available",'code'=>400];
+        $adults=$children=$infants=0;
+        foreach($request['passengers'] as $passenger)
+        {
+            if($passenger->birth_date->diffInYears(now())>=18)
+                $adults++;
+            else if($passenger->birth_date->diffInYears(now())<2)
+                $infants++;
+            else
+                $children++;
+        }
+        if($adults!=$request['adults']||$children!=$request['children']||$infants!=$request['infants'])
+            return['message'=>"the birth_dates not equals with number of adults and children and infants",'code'=>400];
+        $booking=$user->bookings()->create($request);
+        foreach($request['passengers'] as $passenger)
+            $booking->passengers()->create($passenger);
+        $booking->price=$booking->flight_data['price_total'];
+        $booking->save();
+        return [
+            'message' => 'please pay to confirm bookings',
+            'code' => 201,
+            'booking' => [
+                'id'=>$booking->id,
+                'price'=>$booking->price,
+            ],
+        ];
+    }
+
     public function reserve($request)
     {
         $user = Auth::user();
@@ -92,7 +139,17 @@ class BookingService
     {
         $user = Auth::user();
         $type=request()->query('type');
-        $bookings = $user->bookings()->whereNotNull($type.'_id')->get();
+        if($type=='flight')
+        {
+            $bookings=$user->bookings()->whereNotNull('flight_data')->get();
+                return [
+                'bookings'   => $bookings,
+                'message' => 'All reserved '.$type.' retrieved.',
+                'code'    => 200,
+            ];
+        }
+        else
+            $bookings = $user->bookings()->whereNotNull($type.'_id')->get();
         if ($bookings->isEmpty()) {
              return [
                 'bookings'   => null,
@@ -108,5 +165,30 @@ class BookingService
         ];
 
     }
+
+   public function person($id, $type)
+{
+    if ($type == 'event') {
+        $event = Event::with('bookings.user.profile')->find($id); // Eager load
+        if (!$event) {
+            return [
+                'message' => "event not found",
+                'code' => 400
+            ];
+        }
+
+        // جلب كل المستخدمين من الحجوزات
+        $users = $event->bookings->map(function ($booking) {
+            return $booking->user;
+        });
+    }
+
+    return [
+        'message' => 'this is all user that book this ' . $type,
+        'code' => 200,
+        'users' => PersonResource::collection($users)
+    ];
+}
+
 }
 
