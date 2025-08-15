@@ -76,9 +76,9 @@ use Stripe\Token;
 
 
         Route::post('trips', [TripController::class,'store']);
-        Route::delete('trips/{id}', [TripController::class,'destroy']);//////////////////////////////////////
+        Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
-        Route::post('trips/cancel/{id}',[TripController::class,'cancel']);////////////////////////////////////
+        Route::post('trips/cancel/{id}',[TripController::class,'cancel']);
 
         Route::post('reserve', [BookingController::class, 'reserve']);
 
@@ -94,16 +94,12 @@ use Stripe\Token;
         Route::delete('ratings/{id}',[FeedbackController::class,'deleteRating']);
         Route::get('saves',[FeedbackController::class,'getSaves']);
 
-<<<<<<< HEAD
         Route::post('bookFlight', [FlightController::class, 'bookFlight']);
 
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
 
 
-=======
-        Route::post('bookFlight', [BookingController::class, 'bookFlight']);
->>>>>>> origin/per
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -133,6 +129,8 @@ use Stripe\Token;
 
     Route::get('admin/events', [EventController::class, 'adminIndex']);
     Route::post('admin/events/{id}/cancel', [EventController::class, 'cancel']);
+
+
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 
@@ -160,8 +158,6 @@ use Stripe\Token;
         Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
 
         Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
-
-        Route::get('persons/book/{id}', [BookingController::class, 'person']);
     });
 
     Route::get('myBookings', [BookingController::class, 'myBookings'])->middleware('auth:api');

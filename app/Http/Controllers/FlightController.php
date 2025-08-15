@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BookFlightRequest;
 use App\Http\Requests\FlightSearchRequest;
 use Illuminate\Http\Request;
 use App\Services\AmadeusService;
@@ -18,12 +19,8 @@ class FlightController extends Controller
         $this->flightService = $flightService;
     }
 
-    /**
-     * Clean itinerary/object keys we don't want to expose in departure/return
-     */
     protected function cleanItineraryArray(array $it): array
     {
-        // remove the iso/timestamp fields if present
         unset($it['departure_datetime_iso'], $it['departure_timestamp']);
         return $it;
     }
@@ -216,13 +213,10 @@ class FlightController extends Controller
 
         return response()->json($locations);
     }
-<<<<<<< HEAD
 
     public function bookFlight(BookFlightRequest $request)
     {
         $data = $this->flightService->bookFlight($request->validated());
         return response()->json(['message' => $data['message'], 'booking' => $data['booking'] ?? null], $data['code']);
     }
-=======
->>>>>>> origin/per
 }
