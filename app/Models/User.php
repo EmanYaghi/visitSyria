@@ -64,7 +64,7 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     }
     public function supports()
     {
-        return $this->hasOne(Support::class);
+        return $this->hasMany(Support::class);
     }
     public function likes()
     {

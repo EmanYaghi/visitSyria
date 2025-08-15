@@ -9,7 +9,12 @@ class Support extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'rating', 'comment'];
+    protected $fillable = [
+        'user_id',
+        'rating',
+        'comment',
+        'category', // app | admin
+    ];
 
     public function user()
     {

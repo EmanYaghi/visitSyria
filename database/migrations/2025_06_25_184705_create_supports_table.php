@@ -13,6 +13,7 @@ class CreateSupportsTable extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->unsignedTinyInteger('rating')->default(0);
             $table->text('comment')->nullable();
+            $table->string('category', 20)->default('app')->index();
             $table->timestamps();
         });
     }

@@ -1,0 +1,86 @@
+{
+	"info": {
+		"_postman_id": "2c0b3e51-ae76-47a0-a81d-94d308917886",
+		"name": "Support",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40522740"
+	},
+	"item": [
+		{
+			"name": "Create Support Note",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUyNTE5NTIsIm5iZiI6MTc1NTI1MTk1MiwianRpIjoiM0M5aHhoMzdXUm1iWTJBUCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.hM3fypghxRssYNkSB8lLtwOsckTR3VFgzcMHkcyub3k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}supports?rating=4&comment=واجهت مشكلة في حجز التذاكر، الرجاء المساعدة.",
+					"host": [
+						"{{URL}}supports"
+					],
+					"query": [
+						{
+							"key": "rating",
+							"value": "4"
+						},
+						{
+							"key": "comment",
+							"value": "واجهت مشكلة في حجز التذاكر، الرجاء المساعدة."
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get SupportNotes by category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}supports?category=app",
+					"host": [
+						"{{URL}}supports"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "app"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

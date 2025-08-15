@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\FlightController;
     use App\Http\Controllers\PlaceController;
     use App\Http\Controllers\PaymentController;
-    use App\Http\Controllers\TripController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
 use Stripe\Stripe;
 use Stripe\Token;
@@ -155,5 +156,14 @@ use Stripe\Token;
         Route::post('stripe/refund/{id}',   [PaymentController::class, 'refund']);
     });
     Route::post('/stripe/webhook', [WebhookController::class, 'handle']);
+
+
+
+
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/supports', [SupportController::class, 'store']);
+    Route::get('/supports', [SupportController::class, 'index']);
+});
+
 
 ?>

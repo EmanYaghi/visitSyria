@@ -20,6 +20,16 @@ class FlightController extends Controller
         $this->flightService = $flightService;
     }
 
+    /**
+     * Clean itinerary/object keys we don't want to expose in departure/return
+     */
+    protected function cleanItineraryArray(array $it): array
+    {
+        // remove the iso/timestamp fields if present
+        unset($it['departure_datetime_iso'], $it['departure_timestamp']);
+        return $it;
+    }
+
     public function search(FlightSearchRequest $request)
     {
         $validated = $request->validated();
@@ -62,13 +72,38 @@ class FlightController extends Controller
 
             $params = $validated;
             $params['destinationLocationCode'] = 'DAM';
+            // force one-way behavior: remove returnDate
             if (isset($params['returnDate'])) unset($params['returnDate']);
 
             $mapped = $mapResponseToResources($doSearch($params));
-
+            // only one-way offers
             $oneWays = $mapped['offers']->filter(fn($o) => empty($o['is_round_trip']))->values();
 
-            return response()->json(['offers' => $oneWays]);
+            // wrap each into { departure, return: null } and clean unwanted keys
+            $result = $oneWays->map(function($o) {
+                // the one-way resource returns top-level itinerary fields (not outbound/inbound)
+                $departure = $o;
+                // if resource used 'outbound' key unexpectedly, prefer it
+                if (!empty($o['outbound']) && is_array($o['outbound'])) {
+                    $departure = $o['outbound'];
+                }
+                // clean
+                $departure = $this->cleanItineraryArray($departure);
+
+                return [
+                    'id' => $o['id'] ?? null,
+                    'is_round_trip' => false,
+                    'price_total' => $o['price_total'] ?? null,
+                    'currency' => $o['currency'] ?? null,
+                    'traveler_count' => $o['traveler_count'] ?? null,
+                    'price_per_passenger' => $o['price_per_passenger'] ?? null,
+                    'seats_remaining' => $o['seats_remaining'] ?? null,
+                    'departure' => $departure,
+                    'return' => null,
+                ];
+            })->values();
+
+            return response()->json(['offers' => $result]);
         }
 
         // ------------------- from_syria -------------------
@@ -79,17 +114,38 @@ class FlightController extends Controller
 
             $params = $validated;
             $params['originLocationCode'] = 'DAM';
+            // force one-way behavior: remove returnDate
             if (isset($params['returnDate'])) unset($params['returnDate']);
 
             $mapped = $mapResponseToResources($doSearch($params));
-
             $oneWays = $mapped['offers']->filter(fn($o) => empty($o['is_round_trip']))->values();
 
-            return response()->json(['offers' => $oneWays]);
+            $result = $oneWays->map(function($o) {
+                $departure = $o;
+                if (!empty($o['outbound']) && is_array($o['outbound'])) {
+                    $departure = $o['outbound'];
+                }
+                $departure = $this->cleanItineraryArray($departure);
+
+                return [
+                    'id' => $o['id'] ?? null,
+                    'is_round_trip' => false,
+                    'price_total' => $o['price_total'] ?? null,
+                    'currency' => $o['currency'] ?? null,
+                    'traveler_count' => $o['traveler_count'] ?? null,
+                    'price_per_passenger' => $o['price_per_passenger'] ?? null,
+                    'seats_remaining' => $o['seats_remaining'] ?? null,
+                    'departure' => $departure,
+                    'return' => null,
+                ];
+            })->values();
+
+            return response()->json(['offers' => $result]);
         }
 
         // ------------------- both -------------------
         if ($direction === 'both') {
+            // require returnDate to get round-trip offers from Amadeus
             if (empty($validated['returnDate'])) {
                 return response()->json(['offers' => collect([])]);
             }
@@ -103,36 +159,39 @@ class FlightController extends Controller
             }
 
             $mapped = $mapResponseToResources($doSearch($params));
-
+            // keep only offers that Resource marked as round-trip
             $roundTrips = $mapped['offers']->filter(fn($o) => !empty($o['is_round_trip']))->values();
 
             $result = $roundTrips->map(function($o) {
-                if (empty($o['outbound']) || empty($o['inbound'])) return null;
+                // prefer outbound/inbound keys from resource
+                $departure = $o['outbound'] ?? null;
+                $return    = $o['inbound'] ?? null;
 
-                $priceTotal = $o['price_total'] ?? null;
-                $travCount = $o['traveler_count'] ?? 0;
-                $pricePerPassenger = ($priceTotal !== null && $travCount > 0) ? round($priceTotal / $travCount, 2) : null;
+                if ($departure && is_array($departure)) $departure = $this->cleanItineraryArray($departure);
+                if ($return && is_array($return)) $return = $this->cleanItineraryArray($return);
 
                 return [
                     'id' => $o['id'] ?? null,
                     'is_round_trip' => true,
-                    'price_total' => $priceTotal,
+                    'price_total' => $o['price_total'] ?? null,
                     'currency' => $o['currency'] ?? null,
-                    'traveler_count' => $travCount,
-                    'price_per_passenger' => $pricePerPassenger,
+                    'traveler_count' => $o['traveler_count'] ?? null,
+                    'price_per_passenger' => $o['price_per_passenger'] ?? null,
                     'seats_remaining' => $o['seats_remaining'] ?? null,
-                    'departure' => $o['outbound'],
-                    'return'    => $o['inbound'],
+                    'departure' => $departure,
+                    'return'    => $return,
                 ];
             })->filter()->values();
 
             return response()->json(['offers' => $result]);
         }
 
+        // ------------------- default generic single search (legacy) -------------------
         $params = $validated;
         $resp = $this->flightService->searchFlights($params);
         $single = $mapResponseToResources($resp);
 
+        // return raw mapped offers (keeps existing behaviour)
         return response()->json([
             'offers' => $single['offers']->values(),
         ]);
