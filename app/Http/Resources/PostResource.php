@@ -106,6 +106,11 @@ class PostResource extends JsonResource
         // owner display name
         $userDisplayName = $this->userDisplayName($user);
 
+        // === counts: support both withCount() (likes_count ...) or fallback to loaded relations ===
+        $likesCount    = $this->likes_count ?? $this->likes->count();
+        $commentsCount = $this->comments_count ?? $this->comments->count();
+        $savesCount    = $this->saves_count ?? $this->saves->count();
+
         return [
             'id' => $this->id,
             'user' => [
@@ -116,6 +121,12 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'image' => $imageFull,
             'tags' => $tags,
+            // اضافه الحقل status لو لسا ما اضفته:
+            'status' => $this->status,
+            // counts
+            'likes_count' => (int) $likesCount,
+            'comments_count' => (int) $commentsCount,
+            'saves_count' => (int) $savesCount,
             'is_liked' => $isLiked,
             'is_saved' => $isSaved,
             'comments' => $comments,

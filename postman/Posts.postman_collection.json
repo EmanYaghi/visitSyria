@@ -88,6 +88,39 @@
 			"response": []
 		},
 		{
+			"name": "Top active users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}users/top-active",
+					"host": [
+						"{{URL}}users"
+					],
+					"path": [
+						"top-active"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Post by ID",
 			"request": {
 				"auth": {
@@ -146,13 +179,13 @@
 					"formdata": [
 						{
 							"key": "description",
-							"value": "لارالرتارت",
+							"value": "post 122",
 							"type": "text"
 						},
 						{
 							"key": "image",
 							"type": "file",
-							"src": "/C:/Users/Dell/Downloads/c766d5c8-aa25-44ed-b24b-7dc910fed931.jfif"
+							"src": "/C:/Users/Dell/Desktop/my files/visitSyria/VisitSyria.jpg"
 						},
 						{
 							"key": "tags[0]",
@@ -201,7 +234,7 @@
 					"formdata": [
 						{
 							"key": "post_id",
-							"value": "3",
+							"value": "2",
 							"type": "text"
 						},
 						{

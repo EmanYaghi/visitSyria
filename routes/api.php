@@ -99,7 +99,6 @@ use Stripe\Token;
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
 
-
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -151,7 +150,10 @@ use Stripe\Token;
     Route::get('posts/by-status', [PostController::class, 'byStatus'])->middleware('auth:api');
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{post}', [PostController::class, 'show']);
+    Route::get('users/top-active', [PostController::class, 'topActiveUsers']);
 
+
+    
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);

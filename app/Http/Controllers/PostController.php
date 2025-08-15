@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Post;
-use App\Http\Resources\PostResource;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\TopActiveUserResource;
+use App\Models\Post;
+use App\Models\User;
 use App\Services\PostService;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\JsonResponse;
 
 class PostController extends Controller
 {
@@ -15,36 +18,20 @@ class PostController extends Controller
 
     public function __construct(PostService $postService)
     {
-        // حسب طلبك: لا نستخدم $this->middleware(...) داخل الكونستركتور
         $this->postService = $postService;
     }
 
-    /**
-     * GET /posts
-     *
-     * Query params:
-     *  - tag: string (optional)
-     *  - status: Pending|Approved|Rejected (optional - only accepted for admin|super_admin)
-     *
-     * Behavior:
-     *  - If no status param => only Approved posts are returned (public feed).
-     *  - If status param is provided:
-     *      - if user is authenticated and has role admin|super_admin => filter by that status.
-     *      - otherwise ignore status and return only Approved.
-     */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $tag = $request->query('tag');
-        $status = $request->query('status'); // optional
+        $status = $request->query('status');
 
         $allowedStatuses = ['Pending', 'Approved', 'Rejected'];
 
-        // default behavior for public: only Approved
         $useStatus = 'Approved';
 
         $authUser = $request->user();
         if ($status && in_array($status, $allowedStatuses, true) && $authUser && $authUser->hasAnyRole(['admin', 'super_admin'])) {
-            // authenticated admin/super_admin can request other statuses
             $useStatus = $status;
         }
 
@@ -53,16 +40,16 @@ class PostController extends Controller
                 'user.profile',
                 'user.media',
                 'media',
-                'tags',                   // TagName models via belongsToMany
+                'tags',
                 'comments.user.profile',
                 'likes',
                 'saves',
             ])
+            ->withCount(['likes', 'comments', 'saves'])
             ->where('status', $useStatus)
             ->orderByDesc('created_at');
 
         if ($tag) {
-            // filter by tag body (tag name)
             $query->whereHas('tags', function ($q) use ($tag) {
                 $q->where('body', $tag);
             });
@@ -73,48 +60,50 @@ class PostController extends Controller
         return PostResource::collection($posts);
     }
 
-public function byStatus(Request $request)
-{
-    $tag = $request->query('tagName') ?? $request->query('tag'); // قبول tagName أو tag
-    $status = $request->query('status'); // Pending|Approved|Rejected
+    public function byStatus(Request $request)
+    {
+        $tag = $request->query('tagName') ?? $request->query('tag');
+        $status = $request->query('status');
 
-    // تأكد من القيم المسموح بها للحالة (اختياري لكن مفيد)
-    $allowed = ['Pending', 'Approved', 'Rejected'];
-    if ($status && !in_array($status, $allowed, true)) {
-        return response()->json([
-            'error' => true,
-            'message' => 'Invalid status. Allowed: ' . implode(', ', $allowed)
-        ], 422);
+        $allowed = ['Pending', 'Approved', 'Rejected'];
+        if ($status && !in_array($status, $allowed, true)) {
+            return response()->json([
+                'error' => true,
+                'message' => 'Invalid status. Allowed: ' . implode(', ', $allowed)
+            ], 422);
+        }
+
+        $query = Post::query()
+            ->with([
+                'user.profile',
+                'user.media',
+                'media',
+                'tags',
+                'comments.user.profile',
+                'likes',
+                'saves',
+            ])
+            ->withCount(['likes', 'comments', 'saves'])
+            ->orderByDesc('created_at');
+
+        if ($status) {
+            $query->where('status', $status);
+        } else {
+            $query->where('status', 'Approved');
+        }
+
+        if ($tag) {
+            $query->whereHas('tags', function ($q) use ($tag) {
+                $q->where('body', $tag);
+            });
+        }
+
+        $posts = $query->get();
+
+        return PostResource::collection($posts);
     }
 
-    $query = Post::query()
-        ->with([
-            'user.profile',
-            'user.media',
-            'media',
-            'tags',                  // TagName models via belongsToMany
-            'comments.user.profile', // comments with user profile
-            'likes',
-            'saves',
-        ])
-        ->orderByDesc('created_at');
-
-    if ($status) {
-        $query->where('status', $status);
-    }
-
-    // فلترة حسب التاغ إن مرّ (نستخدم whereHas على علاقة tags)
-    if ($tag) {
-        $query->whereHas('tags', function ($q) use ($tag) {
-            $q->where('body', $tag);
-        });
-    }
-
-    $posts = $query->get();
-
-    return PostResource::collection($posts);
-}
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): JsonResponse
     {
         $user = $request->user();
         if (!$user) {
@@ -127,19 +116,38 @@ public function byStatus(Request $request)
             $data['image'] = $request->file('image');
         }
 
-        // PostService should handle tags as names (body) -> map/create TagName and attach
         $post = $this->postService->createPost($user, $data);
 
         $post->load(['user.profile', 'user.media', 'media', 'tags', 'comments.user.profile', 'likes', 'saves']);
+        $post->loadCount(['likes', 'comments', 'saves']);
 
         return (new PostResource($post))->response()->setStatusCode(201);
     }
 
-    /**
-     * POST /posts/status
-     * body: { post_id: int, status: "Pending|Approved|Rejected" }
-     * Only super_admin allowed.
-     */
+    public function show(Post $post, Request $request)
+    {
+        $authUser = $request->user();
+
+        if (! $authUser || ! $authUser->hasAnyRole(['admin', 'super_admin'])) {
+            if ($post->status !== 'Approved') {
+                return response()->json(['message' => 'Not Found'], 404);
+            }
+        }
+
+        $post->load([
+            'user.profile',
+            'user.media',
+            'media',
+            'tags',
+            'comments.user.profile',
+            'likes',
+            'saves',
+        ]);
+        $post->loadCount(['likes', 'comments', 'saves']);
+
+        return new PostResource($post);
+    }
+
     public function updateStatus(Request $request)
     {
         $user = $request->user();
@@ -157,8 +165,32 @@ public function byStatus(Request $request)
         ]);
 
         $post = $this->postService->updateStatus((int)$data['post_id'], $data['status']);
+
         $post->load(['user.profile', 'user.media', 'media', 'tags', 'comments.user.profile', 'likes', 'saves']);
+        $post->loadCount(['likes', 'comments', 'saves']);
 
         return new PostResource($post);
     }
+
+public function topActiveUsers(Request $request): AnonymousResourceCollection
+{
+    $limit = (int) $request->query('limit', 10);
+    $limit = $limit > 0 && $limit <= 100 ? $limit : 10;
+
+    $users = User::role('client')
+        ->whereHas('posts', function ($q) {
+            $q->where('status', 'Approved');
+        })
+        ->with(['profile', 'media'])
+        ->withCount(['posts' => function ($q) {
+            $q->where('status', 'Approved');
+        }])
+        ->orderByDesc('posts_count')
+        ->limit($limit)
+        ->get();
+
+    return TopActiveUserResource::collection($users);
+}
+
+
 }

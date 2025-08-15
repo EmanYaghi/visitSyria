@@ -70,7 +70,7 @@ class FlightOfferResource extends JsonResource
         $this->travelClass = $travelClass;
     }
 
-    protected function buildItinerary(array $itinerary, $request)
+    protected function buildItinerary(array $itinerary): array
     {
         $segments = $itinerary['segments'] ?? [];
         $first = $segments[0] ?? null;
@@ -81,19 +81,6 @@ class FlightOfferResource extends JsonResource
 
         $originCode = $first['departure']['iataCode'] ?? null;
         $destCode   = $last['arrival']['iataCode'] ?? null;
-
-        $totalPrice = isset($this->resource['price']['total']) ? (float) $this->resource['price']['total'] : null;
-        $currency   = $this->resource['price']['currency'] ?? null;
-
-        $travelerCount = isset($this->resource['travelerPricings'])
-            ? count($this->resource['travelerPricings'])
-            : 0;
-
-        $pricePerPassenger = ($totalPrice && $travelerCount > 0)
-            ? round($totalPrice / $travelerCount, 2)
-            : null;
-
-        $seatsRemaining = $this->resource['numberOfBookableSeats'] ?? null;
 
         $segmentsDetails = [];
         foreach ($segments as $index => $segment) {
@@ -140,24 +127,92 @@ class FlightOfferResource extends JsonResource
         ];
     }
 
+    protected function guessTravelClass(): ?string
+    {
+        if (!empty($this->travelClass)) {
+            return $this->normalizeClass((string) $this->travelClass);
+        }
+
+        $pathsToCheck = [
+            ['travelerPricings', 0, 'fareDetailsBySegment', 0, 'cabin'],
+            ['travelerPricings', 0, 'fareDetailsBySegment', 0, 'travelClass'],
+            ['travelerPricings', 0, 'fareDetailsBySegment', 0, 'bookingClass'],
+            ['itineraries', 0, 'segments', 0, 'cabin'],
+            ['itineraries', 0, 'segments', 0, 'class'],
+        ];
+
+        foreach ($pathsToCheck as $path) {
+            $value = $this->getNested($this->resource, $path);
+            if (!empty($value) && is_string($value)) {
+                $normalized = $this->normalizeClass($value);
+                if ($normalized !== null) return $normalized;
+            }
+        }
+
+        if (!empty($this->resource['travelerPricings']) && is_array($this->resource['travelerPricings'])) {
+            foreach ($this->resource['travelerPricings'] as $tp) {
+                if (!empty($tp['fareDetailsBySegment']) && is_array($tp['fareDetailsBySegment'])) {
+                    foreach ($tp['fareDetailsBySegment'] as $fds) {
+                        $candidate = $fds['cabin'] ?? $fds['travelClass'] ?? null;
+                        if (!empty($candidate)) {
+                            $normalized = $this->normalizeClass($candidate);
+                            if ($normalized !== null) return $normalized;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected function getNested(array $arr, array $path)
+    {
+        $cursor = $arr;
+        foreach ($path as $segment) {
+            if (is_int($segment)) {
+                if (!is_array($cursor) || !array_key_exists($segment, $cursor)) return null;
+                $cursor = $cursor[$segment];
+            } else {
+                if (!is_array($cursor) || !array_key_exists($segment, $cursor)) return null;
+                $cursor = $cursor[$segment];
+            }
+        }
+        return $cursor;
+    }
+
+    protected function normalizeClass(string $raw): ?string
+    {
+        $u = strtoupper(trim($raw));
+        return match ($u) {
+            'ECONOMY' => 'economy',
+            'PREMIUM_ECONOMY' => 'premium_economy',
+            'BUSINESS' => 'business',
+            'FIRST' => 'first',
+            'PREMIUM' => 'premium_economy',
+            default => (str_contains($u, 'BUS') ? 'business' : (str_contains($u, 'ECO') ? 'economy' : null)),
+        };
+    }
+
     public function toArray($request)
     {
-        $priceTotal = isset($this->resource['price']['total']) ? (float)$this->resource['price']['total'] : null;
-        $currency   = $this->resource['price']['currency'] ?? null;
+        $itineraries = $this->resource['itineraries'] ?? [];
+        $detectedClass = $this->guessTravelClass();
         $travelerCount = isset($this->resource['travelerPricings']) ? count($this->resource['travelerPricings']) : 0;
-        $pricePerPassenger = ($priceTotal && $travelerCount > 0) ? round($priceTotal / $travelerCount, 2) : null;
+        $totalPrice = isset($this->resource['price']['total']) ? (float) $this->resource['price']['total'] : null;
+        $currency = $this->resource['price']['currency'] ?? null;
+        $pricePerPassenger = ($totalPrice && $travelerCount > 0) ? round($totalPrice / $travelerCount, 2) : null;
         $seatsRemaining = $this->resource['numberOfBookableSeats'] ?? null;
 
-        $itineraries = $this->resource['itineraries'] ?? [];
-
         if (count($itineraries) >= 2) {
-            $out = $this->buildItinerary($itineraries[0], $request);
-            $in  = $this->buildItinerary($itineraries[1], $request);
+            $out = $this->buildItinerary($itineraries[0]);
+            $in  = $this->buildItinerary($itineraries[1]);
 
             return [
                 'id' => $this->resource['id'] ?? null,
                 'is_round_trip' => true,
-                'price_total' => $priceTotal,
+                'travel_class' => $detectedClass,
+                'price_total' => $totalPrice,
                 'currency'    => $currency,
                 'traveler_count' => $travelerCount,
                 'price_per_passenger' => $pricePerPassenger,
@@ -168,39 +223,37 @@ class FlightOfferResource extends JsonResource
         }
 
         $singleItinerary = $itineraries[0] ?? null;
+
         if (!$singleItinerary) {
             return [
                 'id' => $this->resource['id'] ?? null,
                 'is_round_trip' => false,
-                'price_total' => $priceTotal,
+                'travel_class' => $detectedClass,
+                'price_total' => $totalPrice,
                 'currency' => $currency,
             ];
         }
 
-        $built = $this->buildItinerary($singleItinerary, $request);
-        return array_merge([
+        $built = $this->buildItinerary($singleItinerary);
+
+        return [
             'id' => $this->resource['id'] ?? null,
             'is_round_trip' => false,
-            'price_total' => $priceTotal,
+            'travel_class' => $detectedClass,
+            'price_total' => $totalPrice,
             'currency' => $currency,
             'traveler_count' => $travelerCount,
             'price_per_passenger' => $pricePerPassenger,
             'seats_remaining' => $seatsRemaining,
-        ], $built);
+            'outbound' => $built,
+        ];
     }
 
     protected function getAirportName($code)
     {
         if (!$code) return null;
-
-        if (isset($this->airportNamesArabic[$code])) {
-            return $this->airportNamesArabic[$code];
-        }
-
-        if (isset($this->locations[$code]['airportName'])) {
-            return $this->locations[$code]['airportName'];
-        }
-
+        if (isset($this->airportNamesArabic[$code])) return $this->airportNamesArabic[$code];
+        if (isset($this->locations[$code]['airportName'])) return $this->locations[$code]['airportName'];
         return $code;
     }
 

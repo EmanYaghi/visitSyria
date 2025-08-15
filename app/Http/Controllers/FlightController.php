@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\BookFlightRequest;
-use App\Http\Requests\FlightSearchRequest;
-use App\Http\Requests\BookFlightRequest;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\FlightSearchRequest;
+use App\Http\Requests\BookFlightRequest as BookFlightReq;
 use App\Services\AmadeusService;
 use App\Http\Resources\FlightOfferResource;
 use Illuminate\Support\Arr;
@@ -15,6 +14,7 @@ use App\Models\Booking;
 class FlightController extends Controller
 {
     protected AmadeusService $flightService;
+
     public function __construct(AmadeusService $flightService)
     {
         $this->flightService = $flightService;
@@ -29,7 +29,7 @@ class FlightController extends Controller
     public function search(FlightSearchRequest $request)
     {
         $validated = $request->validated();
-        $direction = $request->input('direction'); // 'from_syria'|'to_syria'|'both'|null
+        $direction = $request->input('direction');
         $travelClass = $request->input('travelClass');
 
         $mapResponseToResources = function ($resp) use ($travelClass, $request) {
@@ -56,11 +56,8 @@ class FlightController extends Controller
             ];
         };
 
-        $doSearch = function(array $params) {
-            return $this->flightService->searchFlights($params);
-        };
+        $doSearch = fn(array $params) => $this->flightService->searchFlights($params);
 
-        // ------------------- to_syria -------------------
         if ($direction === 'to_syria') {
             if (empty($validated['originLocationCode'])) {
                 return response()->json(['error' => true, 'message' => 'originLocationCode required for direction=to_syria'], 422);
@@ -68,27 +65,19 @@ class FlightController extends Controller
 
             $params = $validated;
             $params['destinationLocationCode'] = 'DAM';
-            // force one-way behavior: remove returnDate
             if (isset($params['returnDate'])) unset($params['returnDate']);
 
             $mapped = $mapResponseToResources($doSearch($params));
-            // only one-way offers
             $oneWays = $mapped['offers']->filter(fn($o) => empty($o['is_round_trip']))->values();
 
-            // wrap each into { departure, return: null } and clean unwanted keys
             $result = $oneWays->map(function($o) {
-                // the one-way resource returns top-level itinerary fields (not outbound/inbound)
-                $departure = $o;
-                // if resource used 'outbound' key unexpectedly, prefer it
-                if (!empty($o['outbound']) && is_array($o['outbound'])) {
-                    $departure = $o['outbound'];
-                }
-                // clean
+                $departure = $o['outbound'] ?? $o;
                 $departure = $this->cleanItineraryArray($departure);
 
                 return [
                     'id' => $o['id'] ?? null,
                     'is_round_trip' => false,
+                    'travel_class' => $o['travel_class'] ?? null,
                     'price_total' => $o['price_total'] ?? null,
                     'currency' => $o['currency'] ?? null,
                     'traveler_count' => $o['traveler_count'] ?? null,
@@ -102,7 +91,6 @@ class FlightController extends Controller
             return response()->json(['offers' => $result]);
         }
 
-        // ------------------- from_syria -------------------
         if ($direction === 'from_syria') {
             if (empty($validated['destinationLocationCode'])) {
                 return response()->json(['error' => true, 'message' => 'destinationLocationCode required for direction=from_syria'], 422);
@@ -110,22 +98,19 @@ class FlightController extends Controller
 
             $params = $validated;
             $params['originLocationCode'] = 'DAM';
-            // force one-way behavior: remove returnDate
             if (isset($params['returnDate'])) unset($params['returnDate']);
 
             $mapped = $mapResponseToResources($doSearch($params));
             $oneWays = $mapped['offers']->filter(fn($o) => empty($o['is_round_trip']))->values();
 
             $result = $oneWays->map(function($o) {
-                $departure = $o;
-                if (!empty($o['outbound']) && is_array($o['outbound'])) {
-                    $departure = $o['outbound'];
-                }
+                $departure = $o['outbound'] ?? $o;
                 $departure = $this->cleanItineraryArray($departure);
 
                 return [
                     'id' => $o['id'] ?? null,
                     'is_round_trip' => false,
+                    'travel_class' => $o['travel_class'] ?? null,
                     'price_total' => $o['price_total'] ?? null,
                     'currency' => $o['currency'] ?? null,
                     'traveler_count' => $o['traveler_count'] ?? null,
@@ -139,9 +124,7 @@ class FlightController extends Controller
             return response()->json(['offers' => $result]);
         }
 
-        // ------------------- both -------------------
         if ($direction === 'both') {
-            // require returnDate to get round-trip offers from Amadeus
             if (empty($validated['returnDate'])) {
                 return response()->json(['offers' => collect([])]);
             }
@@ -155,11 +138,9 @@ class FlightController extends Controller
             }
 
             $mapped = $mapResponseToResources($doSearch($params));
-            // keep only offers that Resource marked as round-trip
             $roundTrips = $mapped['offers']->filter(fn($o) => !empty($o['is_round_trip']))->values();
 
             $result = $roundTrips->map(function($o) {
-                // prefer outbound/inbound keys from resource
                 $departure = $o['outbound'] ?? null;
                 $return    = $o['inbound'] ?? null;
 
@@ -169,6 +150,7 @@ class FlightController extends Controller
                 return [
                     'id' => $o['id'] ?? null,
                     'is_round_trip' => true,
+                    'travel_class' => $o['travel_class'] ?? null,
                     'price_total' => $o['price_total'] ?? null,
                     'currency' => $o['currency'] ?? null,
                     'traveler_count' => $o['traveler_count'] ?? null,
@@ -182,12 +164,10 @@ class FlightController extends Controller
             return response()->json(['offers' => $result]);
         }
 
-        // ------------------- default generic single search (legacy) -------------------
         $params = $validated;
         $resp = $this->flightService->searchFlights($params);
         $single = $mapResponseToResources($resp);
 
-        // return raw mapped offers (keeps existing behaviour)
         return response()->json([
             'offers' => $single['offers']->values(),
         ]);
@@ -215,7 +195,7 @@ class FlightController extends Controller
         return response()->json($locations);
     }
 
-    public function bookFlight(BookFlightRequest $request)
+    public function bookFlight(BookFlightReq $request)
     {
         $data = $this->flightService->bookFlight($request->validated());
         return response()->json(['message' => $data['message'], 'booking' => $data['booking'] ?? null], $data['code']);
