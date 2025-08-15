@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\FlightSearchRequest;
+use App\Http\Requests\BookFlightRequest;
 use Illuminate\Http\Request;
 use App\Services\AmadeusService;
 use App\Http\Resources\FlightOfferResource;
@@ -216,13 +217,10 @@ class FlightController extends Controller
 
         return response()->json($locations);
     }
-<<<<<<< HEAD
 
     public function bookFlight(BookFlightRequest $request)
     {
         $data = $this->flightService->bookFlight($request->validated());
         return response()->json(['message' => $data['message'], 'booking' => $data['booking'] ?? null], $data['code']);
     }
-=======
->>>>>>> origin/per
 }
