@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\FlightController;
     use App\Http\Controllers\PlaceController;
     use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
@@ -95,6 +96,10 @@ use Stripe\Token;
 
         Route::post('bookFlight', [FlightController::class, 'bookFlight']);
 
+        Route::post('posts', [PostController::class, 'store']);
+        Route::post('posts/status', [PostController::class, 'updateStatus']);
+
+
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -119,9 +124,11 @@ use Stripe\Token;
     Route::get('places/{id}/similar', [PlaceController::class, 'similarPlaces']);
     Route::get('places/{id}', [PlaceController::class,'show']);
 
-        Route::get('events', [EventController::class,'index']);
+    Route::get('events', [EventController::class,'index']);
     Route::get('events/{id}', [EventController::class,'show']);
 
+    Route::get('admin/events', [EventController::class, 'adminIndex']);
+    Route::post('admin/events/{id}/cancel', [EventController::class, 'cancel']);
     Route::get('cities', [CityController::class, 'index']);
     Route::get('cities/{id}', [CityController::class, 'show']);
 
@@ -139,6 +146,9 @@ use Stripe\Token;
     Route::get('settings/type/{type}', [SettingController::class, 'getByType']);
     Route::get('settings/category/{category}', [SettingController::class, 'getByCategory']);
 
+    Route::get('posts/by-status', [PostController::class, 'byStatus'])->middleware('auth:api');
+    Route::get('posts', [PostController::class, 'index']);
+    Route::get('posts/{post}', [PostController::class, 'show']);
 
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
@@ -156,8 +166,6 @@ use Stripe\Token;
         Route::post('stripe/refund/{id}',   [PaymentController::class, 'refund']);
     });
     Route::post('/stripe/webhook', [WebhookController::class, 'handle']);
-
-
 
 
 Route::group(['middleware' => ['auth:api']], function () {

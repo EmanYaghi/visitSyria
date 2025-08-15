@@ -24,6 +24,7 @@ public function up()
         $table->enum('event_type', ['limited', 'unlimited'])->default('limited');
         $table->enum('price_type', ['free', 'paid'])->default('free');
         $table->boolean('pre_booking')->default(false);
+        $table->enum('status', ['active', 'cancelled'])->default('active');
         $table->timestamps();
     });
 }

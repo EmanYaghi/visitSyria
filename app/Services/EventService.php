@@ -27,13 +27,16 @@ class EventService
         }
     }
 
+    /**
+     * Public listing: do NOT return cancelled events.
+     */
     public function getAllEvents()
     {
         $events = $this->eventRepository->getAll();
-        $events->load('media');
+        // remove cancelled for public listing
+        $events = $events->filter(fn($e) => ($e->status !== 'cancelled'));
 
         $user = auth('api')->user();
-
         if ($user) {
             $events->load(['saves' => function ($q) use ($user) {
                 $q->where('user_id', $user->id)->whereNotNull('event_id');
@@ -44,7 +47,37 @@ class EventService
             if (! $user) {
                 $event->is_saved = null;
             } else {
-                $event->is_saved = (bool) ($event->relationLoaded('saves') ? $event->saves->isNotEmpty() : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
+                $event->is_saved = (bool) ($event->relationLoaded('saves')
+                    ? $event->saves->isNotEmpty()
+                    : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
+            }
+            return $event;
+        })->values();
+    }
+
+    /**
+     * Admin listing: return ALL events including cancelled.
+     */
+    public function getAllEventsForAdmin()
+    {
+        $this->checkAuthorization();
+
+        $events = $this->eventRepository->getAll();
+
+        $user = auth('api')->user();
+        if ($user) {
+            $events->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('event_id');
+            }]);
+        }
+
+        return $events->map(function ($event) use ($user) {
+            if (! $user) {
+                $event->is_saved = null;
+            } else {
+                $event->is_saved = (bool) ($event->relationLoaded('saves')
+                    ? $event->saves->isNotEmpty()
+                    : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
             }
             return $event;
         })->values();
@@ -75,6 +108,15 @@ class EventService
     {
         $this->checkAuthorization();
 
+        $data = $request->validated();
+        // ensure DB only stores active/cancelled — default to active for new events
+        if (empty($data['status'])) {
+            $data['status'] = 'active';
+        } else {
+            $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
+        }
+
+        // handle images
         $imageUrls = [];
         if ($request->hasFile('images')) {
             $images = $request->file('images');
@@ -86,7 +128,7 @@ class EventService
             }
         }
 
-        $event = $this->eventRepository->create($request->validated());
+        $event = $this->eventRepository->create($data);
 
         foreach ($imageUrls as $url) {
             $event->media()->create([
@@ -107,7 +149,13 @@ class EventService
             throw new NotFoundHttpException('Event not found.');
         }
 
-        $updatedEvent = $this->eventRepository->update($event, $request->validated());
+        $data = $request->validated();
+        // Do not change status unless explicitly provided; when provided, normalize to active/cancelled
+        if (isset($data['status'])) {
+            $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
+        }
+
+        $updatedEvent = $this->eventRepository->update($event, $data);
 
         if ($request->hasFile('images')) {
             $images = $request->file('images');
@@ -141,5 +189,21 @@ class EventService
         });
 
         return $this->eventRepository->delete($event);
+    }
+
+    /**
+     * Cancel event: persist 'cancelled' into DB.
+     */
+    public function cancelEvent($id)
+    {
+        $this->checkAuthorization();
+
+        try {
+            $event = $this->eventRepository->find($id);
+        } catch (\Throwable $e) {
+            throw new NotFoundHttpException('Event not found.');
+        }
+
+        return $this->eventRepository->updateStatus($event, 'cancelled');
     }
 }

@@ -23,8 +23,18 @@ class Event extends Model
         'price',
         'event_type',
         'price_type',
-        'pre_booking'
+        'pre_booking',
+        'status',
     ];
+
+    protected $casts = [
+        'date' => 'datetime',
+        'duration_days' => 'integer',
+        'duration_hours' => 'integer',
+        'pre_booking' => 'boolean',
+        'price' => 'decimal:2',
+    ];
+
     public function media()
     {
         return $this->hasMany(Media::class);

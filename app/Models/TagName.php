@@ -17,6 +17,6 @@ class TagName extends Model
 
     public function tags()
     {
-        return $this->hasMany(Tag::class);
+        return $this->hasMany(Tag::class, 'tag_name_id');
     }
 }

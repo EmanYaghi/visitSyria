@@ -45,6 +45,38 @@
 			"response": []
 		},
 		{
+			"name": "getAllEvents (forSuperAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}admin/events",
+					"host": [
+						"{{URL}}admin"
+					],
+					"path": [
+						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "createEvent (bySuperAdmin)",
 			"request": {
 				"auth": {
@@ -157,6 +189,120 @@
 					"path": [
 						"api",
 						"events"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Event (bySuperAdmin)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "مهرجان مرمريتا",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "مهرجان مرمريتا هو حدث سنوي يقام في بلدة مرمريتا، حيث يحتفل الزوار بالثقافة السورية من خلال عروض موسيقية، فنون شعبية، ومعارض تقليدية. يعتبر هذا المهرجان فرصة رائعة للتعرف على التراث المحلي والتمتع بأجواء ساحرة.",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "36.3083",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "33.5082",
+							"type": "text"
+						},
+						{
+							"key": "place",
+							"value": "حمص, وادي النصارى",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "2025-07-10 12:00:00",
+							"type": "text"
+						},
+						{
+							"key": "duration_days",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "duration_hours",
+							"value": "5",
+							"type": "text"
+						},
+						{
+							"key": "tickets",
+							"value": "100",
+							"type": "text"
+						},
+						{
+							"key": "price",
+							"value": "50",
+							"type": "text"
+						},
+						{
+							"key": "event_type",
+							"value": "limited",
+							"type": "text"
+						},
+						{
+							"key": "price_type",
+							"value": "free",
+							"type": "text"
+						},
+						{
+							"key": "pre_booking",
+							"value": "0",
+							"type": "text"
+						},
+						{
+							"key": "images[0]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+						},
+						{
+							"key": "images[1]",
+							"type": "file",
+							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}admin/events/1/cancel",
+					"host": [
+						"{{URL}}admin"
+					],
+					"path": [
+						"events",
+						"1",
+						"cancel"
 					]
 				}
 			},

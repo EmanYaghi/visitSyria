@@ -39,6 +39,6 @@ class Tag extends Model
 
     public function tagName()
     {
-        return $this->belongsTo(TagName::class);
+        return $this->belongsTo(TagName::class, 'tag_name_id');
     }
 }
