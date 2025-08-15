@@ -99,10 +99,7 @@ use Stripe\Token;
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 1922afd5f291f80f9112f1b329e888b7817072af
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -159,11 +156,11 @@ use Stripe\Token;
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
         Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
+        Route::post('bookFlight', [BookingController::class, 'bookFlight']);
 
         Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
     });
 
-    Route::get('myBookings', [BookingController::class, 'myBookings'])->middleware('auth:api');
 
 
     Route::middleware('auth:api')->group(function () {

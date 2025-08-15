@@ -12,11 +12,14 @@ class ReservationResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $type = $this->trip_id ? 'trip' : 'event';
+        $type = $this->trip_id ? 'trip' : ($this->event_id ? 'event' : 'flight');
         return [
-            'info' =>$type == 'trip'
-                ? new TripResource($this->trip)
-                : $this->event,
+                'info' => $type == 'trip'
+                    ? new TripResource($this->trip)
+                    : ($type == 'event'
+                        ? new EventResource($this->event)
+                        : $this->flight_data),
+
             'booking_info' => [
                 'id' => $this->id ?? null,
                 'number_of_tickets' => $this->number_of_tickets ?? null,
