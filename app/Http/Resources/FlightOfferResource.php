@@ -87,8 +87,8 @@ class FlightOfferResource extends JsonResource
         $totalPrice = isset($this->resource['price']['total']) ? (float) $this->resource['price']['total'] : null;
         $currency   = $this->resource['price']['currency'] ?? null;
 
-        $travelerCount = isset($this->resource['travelerPricings']) 
-            ? count($this->resource['travelerPricings']) 
+        $travelerCount = isset($this->resource['travelerPricings'])
+            ? count($this->resource['travelerPricings'])
             : 0;
 
         $pricePerPassenger = ($totalPrice && $travelerCount > 0)

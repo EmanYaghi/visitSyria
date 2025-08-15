@@ -4,13 +4,7 @@ namespace App\Services;
 
 use App\Models\Booking;
 use Stripe\Stripe;
-use Stripe\Customer;
-use Stripe\SetupIntent;
-use Stripe\PaymentIntent;
 use Stripe\Refund;
-use App\Models\User;
-use App\Models\Payment;
-use App\Models\CreditCard;
 use Stripe\Charge;
 
 class StripePaymentService
@@ -53,8 +47,6 @@ class StripePaymentService
             $refund = Refund::create([
                 'charge' => $booking->stripe_payment_id,
             ]);
-
-
             $booking->stripe_payment_id=null;
             if($refund->status=='succeeded'){
                 $booking->payment_status ='refunded';

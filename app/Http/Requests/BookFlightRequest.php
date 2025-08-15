@@ -27,7 +27,6 @@ class BookFlightRequest extends FormRequest
             'passengers.0.email' => 'required|email',
             'passengers.0.phone' => 'required|string|max:20',
             'passengers.0.country_code' => 'required|string|max:10',
-
             'flight_data'=>'required|array',
         ];
     }
