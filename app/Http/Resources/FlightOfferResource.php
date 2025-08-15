@@ -70,9 +70,6 @@ class FlightOfferResource extends JsonResource
         $this->travelClass = $travelClass;
     }
 
-    /**
-     * Build a structured representation for a single itinerary (used for outbound/inbound).
-     */
     protected function buildItinerary(array $itinerary, $request)
     {
         $segments = $itinerary['segments'] ?? [];
@@ -123,8 +120,6 @@ class FlightOfferResource extends JsonResource
             'departure_time' => $departureDT?->format('H:i'),
             'arrival_date'   => $arrivalDT?->format('Y-m-d'),
             'arrival_time'   => $arrivalDT?->format('H:i'),
-            'departure_datetime_iso' => $departureDT?->toIso8601String(),
-            'departure_timestamp'    => $departureDT?->timestamp,
             'duration_hours' => $this->convertDurationToHours($itinerary['duration'] ?? null),
             'stops' => max(count($segments) - 1, 0),
             'segments' => $segmentsDetails,
@@ -142,7 +137,6 @@ class FlightOfferResource extends JsonResource
 
         $itineraries = $this->resource['itineraries'] ?? [];
 
-        // If there are two or more itineraries -> treat as a round-trip (outbound + inbound)
         if (count($itineraries) >= 2) {
             $out = $this->buildItinerary($itineraries[0], $request);
             $in  = $this->buildItinerary($itineraries[1], $request);
@@ -157,16 +151,11 @@ class FlightOfferResource extends JsonResource
                 'seats_remaining' => $seatsRemaining,
                 'outbound' => $out,
                 'inbound'  => $in,
-                // convenience top-level timestamps for sorting/timeline
-                'departure_timestamp' => $out['departure_timestamp'] ?? null,
-                'return_timestamp'    => $in['departure_timestamp'] ?? null,
             ];
         }
 
-        // Otherwise single-itinerary (one-way)
         $singleItinerary = $itineraries[0] ?? null;
         if (!$singleItinerary) {
-            // fallback: return minimal data
             return [
                 'id' => $this->resource['id'] ?? null,
                 'is_round_trip' => false,
@@ -175,7 +164,6 @@ class FlightOfferResource extends JsonResource
             ];
         }
 
-        // reuse buildItinerary for single
         $built = $this->buildItinerary($singleItinerary, $request);
         return array_merge([
             'id' => $this->resource['id'] ?? null,

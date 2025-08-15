@@ -2,7 +2,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
-use Illuminate\Support\Facades\Auth;
+use Google\Service\ServiceControl\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 
@@ -48,24 +48,30 @@ class AmadeusService
         throw new \Exception('Unable to fetch Amadeus access token: ' . $response->body());
     }
 
-   public function searchFlights(array $params)
+    public function searchFlights(array $params)
     {
         $endpoint = $this->baseUrl . '/v2/shopping/flight-offers';
 
+        $query = [
+            'originLocationCode'      => $params['originLocationCode'] ?? null,
+            'destinationLocationCode' => $params['destinationLocationCode'] ?? null,
+            'departureDate'           => $params['departureDate'] ?? null,
+            'returnDate'              => $params['returnDate'] ?? null,
+            'adults'                  => $params['adults'] ?? 1,
+            'children'                => $params['children'] ?? 0,
+            'infants'                 => $params['infants'] ?? 0,
+            'travelClass'             => $params['travelClass'] ?? 'ECONOMY',
+            'nonStop'                 => array_key_exists('nonStop', $params) ? ($params['nonStop'] ? 'true' : 'false') : null,
+            'max'                     => $params['max'] ?? 10,
+            'currencyCode'            => $params['currencyCode'] ?? 'USD',
+        ];
+
+        $query = array_filter($query, function ($v) {
+            return $v !== null;
+        });
+
         $response = Http::withToken($this->accessToken)
-            ->get($endpoint, [
-                'originLocationCode'      => $params['originLocationCode'],
-                'destinationLocationCode' => $params['destinationLocationCode'],
-                'departureDate'           => $params['departureDate'],
-                'returnDate'              => $params['returnDate'] ?? null,
-                'adults'                  => $params['adults'],
-                'children'                => $params['children'] ?? 0,
-                'infants'                 => $params['infants'] ?? 0,
-                'travelClass'             => $params['travelClass'] ?? 'ECONOMY',
-                'nonStop'                 => isset($params['nonStop']) ? ($params['nonStop'] ? 'true' : 'false') : null,
-                'max'                     => $params['max'] ?? 10,
-                'currencyCode'            => $params['currencyCode'] ?? 'USD',
-            ]);
+            ->get($endpoint, $query);
 
         if ($response->successful()) {
             return $response->json();
@@ -76,7 +82,6 @@ class AmadeusService
             'message' => $response->json()['errors'][0]['detail'] ?? 'Something went wrong',
         ];
     }
-
     public function searchLocation(string $keyword)
     {
         $endpoint = $this->baseUrl . '/v1/reference-data/locations';
