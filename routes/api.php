@@ -153,17 +153,16 @@ use Stripe\Token;
     Route::get('users/top-active', [PostController::class, 'topActiveUsers']);
 
 
-    
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
         Route::post('/bookings/{booking}/pay', [BookingController::class, 'pay']);
         Route::delete('/bookings/{booking}/cancel', [BookingController::class, 'cancelReservation']);
+
         Route::post('bookFlight', [BookingController::class, 'bookFlight']);
 
-        Route::get('trips/myReserved', [BookingController::class, 'myReservedTrips']);
+        Route::get('myBookings', [BookingController::class, 'myBookings']);
+        Route::get('persons/book/{id}', [BookingController::class, 'person']);
     });
-
-
 
     Route::middleware('auth:api')->group(function () {
         Route::post('stripe/pay',           [PaymentController::class, 'pay']);
