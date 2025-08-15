@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookFlightRequest;
 use App\Http\Requests\FlightSearchRequest;
+use App\Http\Requests\BookFlightRequest;
 use Illuminate\Http\Request;
 use App\Services\AmadeusService;
 use App\Http\Resources\FlightOfferResource;

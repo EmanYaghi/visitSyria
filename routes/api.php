@@ -99,7 +99,10 @@ use Stripe\Token;
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1922afd5f291f80f9112f1b329e888b7817072af
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
