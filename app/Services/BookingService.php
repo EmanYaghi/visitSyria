@@ -8,6 +8,7 @@ use App\Http\Resources\ReservationResource;
 use App\Http\Resources\Trip\ReservationTripResource;
 use App\Models\Booking;
 use App\Models\Event;
+use App\Models\Flight;
 use App\Models\Trip;
 use App\Notifications\AccountActivated;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,12 @@ class BookingService
     public function bookFlight($request)
     {
         $user = Auth::user();
+        if (!$user->hasRole('client')) {
+            return [
+                'message' => "unauthorized",
+                'code'    => 403
+            ];
+        }
         $request['is_paid']=false;
         $request['number_of_tickets']=$request['number_of_adults']+$request['number_of_children']+$request['number_of_infants'];
         $bookings = Booking::where('user_id', $user->id)->get();
@@ -40,16 +47,18 @@ class BookingService
         if($request['number_of_tickets']>$remainingTickets)
             return['message'=>"the number of tickets not available",'code'=>400];
         $adults=$children=$infants=0;
-        foreach($request['passengers'] as $passenger)
-        {
-            if($passenger->birth_date->diffInYears(now())>=18)
+        foreach ($request['passengers'] as $passenger) {
+            $birthDate = \Carbon\Carbon::parse($passenger['birth_date']);
+            if ($birthDate->diffInYears(now()) >= 18) {
                 $adults++;
-            else if($passenger->birth_date->diffInYears(now())<2)
+            } elseif ($birthDate->diffInYears(now()) < 2) {
                 $infants++;
-            else
+            } else {
                 $children++;
+            }
         }
-        if($adults!=$request['adults']||$children!=$request['children']||$infants!=$request['infants'])
+
+        if($adults!=$request['number_of_adults']||$children!=$request['number_of_children']||$infants!=$request['number_of_infants'])
             return['message'=>"the birth_dates not equals with number of adults and children and infants",'code'=>400];
         $booking=$user->bookings()->create($request);
         foreach($request['passengers'] as $passenger)
@@ -65,10 +74,15 @@ class BookingService
             ],
         ];
     }
-
     public function reserve($request)
     {
         $user = Auth::user();
+        if (!$user->hasRole('client')) {
+            return [
+                'message' => "unauthorized",
+                'code'    => 403
+            ];
+        }
         $type=$request['type'];
         $request['is_paid']=false;
         if($type=='trip')
@@ -133,21 +147,18 @@ class BookingService
             ],
         ];
     }
-
-
     public function myBookings()
     {
         $user = Auth::user();
-        $type=request()->query('type');
-        if($type=='flight')
-        {
-            $bookings=$user->bookings()->whereNotNull('flight_data')->get();
-                return [
-                'bookings'   => $bookings,
-                'message' => 'All reserved '.$type.' retrieved.',
-                'code'    => 200,
+        if (!$user->hasRole('client')) {
+            return [
+                'message' => "unauthorized",
+                'code'    => 403
             ];
         }
+        $type=request()->query('type');
+        if($type=='flight')
+            $bookings=$user->bookings()->whereNotNull('flight_data')->get();
         else
             $bookings = $user->bookings()->whereNotNull($type.'_id')->get();
         if ($bookings->isEmpty()) {
@@ -167,28 +178,39 @@ class BookingService
     }
 
    public function person($id, $type)
-{
-    if ($type == 'event') {
-        $event = Event::with('bookings.user.profile')->find($id); // Eager load
-        if (!$event) {
+    {
+        $user = Auth::user();
+        if (! $user->hasAnyRole(['admin', 'super_admin'])||(!$user->hasRole('super_admin')&&$type=='event')||($user->hasRole('admin')&&$type=='trip'&&Trip::find($id)->user->id!=$user->id)) {
             return [
-                'message' => "event not found",
+                'message' => "unauthorized",
+                'code'    => 403
+            ];
+        }
+        $models = [
+            'event'  => Event::class,
+            'trip'   => Trip::class,
+        ];
+        if (!isset($models[$type])) {
+            return [
+                'message' => "type not valid",
                 'code' => 400
             ];
         }
-
-        // جلب كل المستخدمين من الحجوزات
-        $users = $event->bookings->map(function ($booking) {
-            return $booking->user;
-        });
+        $model = $models[$type]::with('bookings.user.profile')->find($id);
+        if (!$model) {
+            return [
+                'message' => "$type not found",
+                'code' => 400
+            ];
+        }
+        $users = $model->bookings->pluck('user');
+        return [
+            'message' => 'this is all user that book this ' . $type,
+            'code' => 200,
+            'users' => PersonResource::collection($users)
+        ];
     }
 
-    return [
-        'message' => 'this is all user that book this ' . $type,
-        'code' => 200,
-        'users' => PersonResource::collection($users)
-    ];
-}
 
 }
 
