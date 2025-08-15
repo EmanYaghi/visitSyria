@@ -923,7 +923,6 @@
 				}
 			},
 			"response": []
-<<<<<<< HEAD
 		},
 		{
 			"name": "update preference",
@@ -1002,8 +1001,6 @@
 				}
 			},
 			"response": []
-=======
->>>>>>> origin/trip2
 		}
 	],
 	"event": [
