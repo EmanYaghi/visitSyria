@@ -114,4 +114,8 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return $this->fcmTokens;
     }
+        public function Itineraries()
+    {
+        return $this->hasMany(Itinerary::class);
+    }
 }

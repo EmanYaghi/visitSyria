@@ -1,54 +1,5 @@
 <?php
 
-//---------------------------------------------
-
-// Microsoft Phi-4 Model
-
-//---------------------------------------------
-
-
-// namespace App\Services;
-
-// use Illuminate\Support\Facades\Http;
-
-// class AIChatService
-// {
-//     // protected string $endpoint = 'https://router.huggingface.co/nebius/v1/chat/completions';
-//     protected string $endpoint = 'https://router.huggingface.co/v1/chat/completions';
-//     protected string $apiKey;
-
-//     public function __construct()
-//     {
-//         $this->apiKey = env('HUGGINGFACE_API_KEY');
-//     }
-
-//     public function generateItinerary(array $messages, string $model = 'microsoft/phi-4'): array|string
-//     {
-//         $response = Http::withHeaders([
-//             'Authorization' => 'Bearer ' . $this->apiKey,
-//             'Content-Type' => 'application/json',
-//         ])->post($this->endpoint, [
-//             'model' => $model,
-//             'stream' => false,
-//             'messages' => $messages,
-//         ]);
-
-//         if ($response->successful()) {
-//             return $response->json();
-//         }
-
-//         return [
-//             'error' => true,
-//             'status' => $response->status(),
-//             'message' => $response->body(),
-//         ];
-//     }
-// }
-//---------------------------------------------
-
-// DeepSeek R1 Model
-
-//---------------------------------------------
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
@@ -56,8 +7,10 @@ use Illuminate\Support\Facades\Log;
 
 class AIChatService
 {
-    protected string $endpoint = 'https://router.huggingface.co/v1/chat/completions';
+    protected string $endpoint;
     protected string $apiKey;
+
+    // --- maps (احتفظت بالقوائم التي زودتني بها) ---
     protected array $tripTypes = [
         'طبيعة و مناظر خلابة' => 'nature',
         'ترفيهية و تسوق' => 'family, shopping',
@@ -123,15 +76,21 @@ class AIChatService
     public function __construct()
     {
         $this->apiKey = env('HUGGINGFACE_API_KEY');
+        $this->endpoint = env('HUGGINGFACE_ENDPOINT', 'https://router.huggingface.co/v1/chat/completions');
     }
 
+    /**
+     * Main entry: generate itinerary (title + timelines)
+     *
+     * @param array $requestData
+     * @return array
+     */
     public function generateTripItinerary(array $requestData): array
     {
         $messages = $this->prepareMessages($requestData);
         $response = $this->callAI($messages);
         return $this->processResponse($response);
     }
-
 
     protected function prepareMessages(array $data): array
     {
@@ -149,43 +108,39 @@ class AIChatService
 
     protected function getSystemMessage(): string
     {
+        // الصيغة تطلب title + timelines فقط وبصرامة
         return <<<EOT
-You are a Syrian tourism planning assistant. Given the user's preferences, generate a structured JSON itinerary in Arabic.
+You are a Syrian tourism planning assistant. Given the user's preferences, return ONLY valid JSON that exactly matches the schema below (no extra text, no explanation).
 
-Instructions:
-- Use this exact JSON format:
+Schema (must follow exactly):
 {
-  "Trip": {
-    "Title": "عنوان عام للرحلة باللغة العربية", // General trip title in Arabic
-      "Day1": [
+  "title": "عنوان عام للرحلة باللغة العربية",
+  "timelines": [
+    {
+      "day_number": 1,
+      "sections": [
         {
-          "Time": "08:00AM - 10:00AM",
-          "Title": "Activity Title in Arabic",
-          "Content": [
-            "Detailed description point 1 in Arabic",
-            "Detailed description point 2 in Arabic"
+          "time": "09:00",
+          "title": "عنوان النشاط باللغة العربية",
+          "description": [
+            "نقطة وصفية 1 باللغة العربية",
+            "نقطة وصفية 2 باللغة العربية"
           ]
-        },
-        ...
-      ],
-      "Day2": [ ... ]
+        }
+      ]
     }
+  ]
 }
-- Keep keys in English: Trip, Day1, Time, Title, Content
-- The general Title should reflect the trip's main theme (e.g., "رحلة ثقافية في دمشق لمدة ٣ أيام")
-- All content values (Title and Content array) must be in formal Arabic
-- Use exact clock time ranges (e.g., "9:30AM - 11:00AM")
-- Realistic time estimates:
-  - Sightseeing: 1.5-2 hours
-  - Museum visits: 1.5-2 hours
-  - Meals: 1-1.5 hours
-  - Relaxation: 1.5-2.5 hours
-- Include ONLY real, verified places in Syria. If unsure, omit it.
-- Use only famous landmarks: قلعة حلب، الجامع الأموي، المتحف الوطني، سوق الحميدية,مقهى الكمال,سينما سيتي في دمشق,ساحة الساعة في حمص, etc.
-- Avoid vague or fictional names
-- Customize the trip depeneding on user input to be professional and nice trip
-- Use professional, tourism-quality Arabic
-- Return ONLY valid JSON without any additional text
+
+Rules:
+- Keys must be exactly: title, timelines, day_number, sections, time, title, description.
+- "title" must be a short Arabic title summarizing the trip (e.g., "رحلة ثقافية في دمشق لمدة ٣ أيام").
+- "day_number" must be integer starting at 1.
+- "time" must be in 24-hour HH:MM format (e.g., "09:30", "14:15").
+- All text values must be in formal Arabic.
+- Return only JSON content (no backticks, no code fences, no commentary).
+- If a day has no activities, return "sections": [] for that day.
+- Ensure JSON parses without errors.
 EOT;
     }
 
@@ -226,27 +181,43 @@ EOT;
             . ($places ? "We are specifically interested in visiting places like: {$places}. " : "")
             . "{$hotelText} "
             . ($activityMood ? "We prefer a travel pace that is {$activityMood}. " : "")
-            . "Please suggest a detailed, realistic daily itinerary using only real, verified, and famous places that exist in the selected cities. "
-            . "Make sure the activities match our interests and travel style. This plan should be practical, based on real locations, and reflect our choices accurately.";
+            . "Return JSON that includes a short Arabic title and a 'timelines' array following the system schema.";
     }
 
-
+    /**
+     * Call Hugging Face (or router) API
+     *
+     * @param array $messages
+     * @return array  decoded response or ['raw' => string] on non-json response
+     */
     protected function callAI(array $messages): array
     {
         try {
+            $model = env('HUGGINGFACE_MODEL', 'deepseek-ai/DeepSeek-R1:nebius');
+
             $response = Http::timeout(120)
                 ->retry(2, 500)
                 ->withHeaders([
                     'Authorization' => 'Bearer ' . $this->apiKey,
                     'Content-Type' => 'application/json',
                 ])->post($this->endpoint, [
-                    'model' => 'deepseek-ai/DeepSeek-R1:nebius',
+                    'model' => $model,
                     'stream' => false,
                     'messages' => $messages,
                 ]);
 
+            // Logging for dev (remove or lower level in production)
+            Log::info('HF response status: ' . $response->status());
+            Log::debug('HF response body: ' . $response->body());
+
             if ($response->successful()) {
-                return $response->json();
+                try {
+                    // try decode structured json
+                    return $response->json();
+                } catch (\Throwable $e) {
+                    // return raw body for parsing later
+                    return ['raw' => $response->body()];
+                }
             }
 
             return [
@@ -264,18 +235,23 @@ EOT;
         }
     }
 
+    /**
+     * Process response from callAI() and return normalized array:
+     * ['success'=>true, 'title'=>..., 'timelines'=>..., 'raw'=>..., 'model'=>...]
+     */
     protected function processResponse(array $response): array
     {
-        if (isset($response['error'])) {
+        if (isset($response['error']) && $response['error'] === true) {
             return [
                 'success' => false,
                 'error' => 'AI service error',
-                'status' => $response['status'],
-                'message' => $response['message']
+                'status' => $response['status'] ?? null,
+                'message' => $response['message'] ?? null
             ];
         }
 
-        $content = $response['choices'][0]['message']['content'] ?? null;
+        // content could be choices[0].message.content OR raw string
+        $content = $response['choices'][0]['message']['content'] ?? $response['raw'] ?? null;
 
         if (!$content) {
             return [
@@ -285,42 +261,100 @@ EOT;
             ];
         }
 
-        $cleaned = $this->cleanResponse($content);
+        $cleaned = $this->cleanResponse((string)$content);
         $parsed = $this->parseResponse($cleaned);
 
         if (!$parsed['success']) {
-            return $parsed;
+            return $parsed; // contains error + raw
+        }
+
+        $title = $parsed['title'] ?? null;
+        $timelines = $parsed['timelines'] ?? null;
+
+        if (is_array($timelines)) {
+            return [
+                'success' => true,
+                'title' => $title ?? null,
+                'timelines' => $timelines,
+                'raw' => $cleaned,
+                'model' => env('HUGGINGFACE_MODEL')
+            ];
+        }
+
+        // Backwards compatibility: if Trip exists convert
+        if (isset($parsed['Trip']) && is_array($parsed['Trip'])) {
+            $timelines = $this->transformTripToTimelines($parsed['Trip']);
+            return [
+                'success' => true,
+                'title' => $title ?? null,
+                'timelines' => $timelines,
+                'raw' => $cleaned,
+                'model' => env('HUGGINGFACE_MODEL')
+            ];
         }
 
         return [
-            'success' => true,
-            'Trip' => $parsed['Trip']
+            'success' => false,
+            'error' => 'Unexpected response structure',
+            'raw' => $cleaned
         ];
     }
 
+    /**
+     * Clean model output and extract first JSON object if possible
+     *
+     * @param string $content
+     * @return string
+     */
     protected function cleanResponse(string $content): string
     {
-        return preg_replace([
-            '/^<think>.*?<\/think>\n?/si',
-            '/^(?:json)?\n/m',
-            '/$/m',
-            '/^[\s\S]*?({[\s\S]*})[\s\S]*$/s'
-        ], ['', '', '', '$1'], trim($content));
+        $content = trim($content);
+
+        // Remove <think> blocks sometimes used by models
+        $content = preg_replace('/^<think>.*?<\/think>\s*/si', '', $content);
+
+        // Extract first JSON object {...}
+        if (preg_match('/({[\s\S]*})/s', $content, $m)) {
+            return $m[1];
+        }
+
+        return $content;
     }
 
+    /**
+     * Parse cleaned JSON string
+     *
+     * @param string $content
+     * @return array
+     */
     protected function parseResponse(string $content): array
     {
         try {
             $parsed = json_decode($content, true, 512, JSON_THROW_ON_ERROR);
 
-            if (!isset($parsed['Trip']) || !is_array($parsed['Trip'])) {
-                throw new \JsonException('Missing "Trip" object');
+            $out = ['success' => true];
+
+            if (isset($parsed['title'])) {
+                $out['title'] = $parsed['title'];
             }
 
-            return [
-                'success' => true,
-                'Trip' => $parsed['Trip']
-            ];
+            if (isset($parsed['timelines']) && is_array($parsed['timelines'])) {
+                $out['timelines'] = $parsed['timelines'];
+                return $out;
+            }
+
+            if (isset($parsed['Trip']) && is_array($parsed['Trip'])) {
+                $out['Trip'] = $parsed['Trip'];
+                return $out;
+            }
+
+            // If top-level array of day objects or a single day object
+            if (isset($parsed[0]['day_number']) || isset($parsed['day_number'])) {
+                $out['timelines'] = is_array($parsed) ? $parsed : [$parsed];
+                return $out;
+            }
+
+            throw new \JsonException('Missing "timelines" or "Trip" object');
         } catch (\JsonException $e) {
             Log::error('JSON Parse Error', [
                 'error' => $e->getMessage(),
@@ -334,5 +368,103 @@ EOT;
                 'raw' => $content
             ];
         }
+    }
+
+    /**
+     * Convert older Trip format (Day1, Day2...) to timelines
+     *
+     * @param array $trip
+     * @return array
+     */
+    protected function transformTripToTimelines(array $trip): array
+    {
+        $timelines = [];
+
+        foreach ($trip as $key => $value) {
+            if (preg_match('/^Day(\d+)$/i', $key, $m) && is_array($value)) {
+                $dayNumber = (int)$m[1];
+                $sections = [];
+
+                foreach ($value as $activity) {
+                    $time = $activity['Time'] ?? null;
+                    $title = $activity['Title'] ?? null;
+                    $description = $activity['Content'] ?? [];
+
+                    $normalizedTime = $this->normalizeTime($time);
+
+                    $sections[] = [
+                        'time' => $normalizedTime ?: '09:00',
+                        'title' => $title ?: '',
+                        'description' => is_array($description) ? array_values($description) : [strval($description)]
+                    ];
+                }
+
+                $timelines[] = [
+                    'day_number' => $dayNumber,
+                    'sections' => $sections
+                ];
+            }
+        }
+
+        // If no DayN keys found, try fallback: treat top-level arrays as day1 sections
+        if (empty($timelines)) {
+            $sections = [];
+            foreach ($trip as $k => $v) {
+                if (is_array($v)) {
+                    foreach ($v as $act) {
+                        $sections[] = [
+                            'time' => $this->normalizeTime($act['Time'] ?? null) ?: '09:00',
+                            'title' => $act['Title'] ?? '',
+                            'description' => is_array($act['Content'] ?? []) ? ($act['Content'] ?? []) : [($act['Content'] ?? '')]
+                        ];
+                    }
+                }
+            }
+
+            $timelines[] = [
+                'day_number' => 1,
+                'sections' => $sections
+            ];
+        }
+
+        usort($timelines, fn($a, $b) => $a['day_number'] <=> $b['day_number']);
+
+        return $timelines;
+    }
+
+    /**
+     * Normalize time strings to HH:MM 24-hour format
+     *
+     * @param string|null $time
+     * @return string|null
+     */
+    protected function normalizeTime(?string $time): ?string
+    {
+        if (!$time) return null;
+        $time = trim($time);
+
+        // Already HH:MM
+        if (preg_match('/^\d{1,2}:\d{2}$/', $time)) {
+            [$h, $m] = explode(':', $time);
+            $h = str_pad($h, 2, '0', STR_PAD_LEFT);
+            return "{$h}:{$m}";
+        }
+
+        // Formats like "08:00AM - 10:00AM" or "9:30AM"
+        if (preg_match('/(\d{1,2}:\d{2})(?:\s*)?(AM|PM)?/i', $time, $m)) {
+            $t = $m[1];
+            $ampm = $m[2] ?? null;
+            if ($ampm) {
+                $format = 'h:iA';
+                $raw = strtoupper($t . $ampm);
+                $dt = \DateTime::createFromFormat($format, $raw);
+                if ($dt) return $dt->format('H:i');
+            }
+            if (preg_match('/^\d{1,2}:\d{2}$/', $t)) {
+                return str_pad($t, 5, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return null;
     }
 }

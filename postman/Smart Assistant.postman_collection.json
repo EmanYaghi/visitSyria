@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "itinerary",
+			"name": "generate Trip",
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -40,6 +40,69 @@
 					"raw": "{{URL}}itinerary",
 					"host": [
 						"{{URL}}itinerary"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Trips",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}itineraries",
+					"host": [
+						"{{URL}}itineraries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Trip by ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}itineraries/1",
+					"host": [
+						"{{URL}}itineraries"
+					],
+					"path": [
+						"1"
 					]
 				}
 			},

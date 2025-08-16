@@ -11,7 +11,8 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\EventController;
     use App\Http\Controllers\FeedbackController;
     use App\Http\Controllers\FlightController;
-    use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\ItineraryController;
+use App\Http\Controllers\PlaceController;
     use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportController;
@@ -187,5 +188,9 @@ use Stripe\Token;
     Route::get('companies',[CompanyController::class,'index']);
     Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);
 
-
+Route::group(['middleware' => ['auth:api']], function () {
+    Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);
+    Route::get('/itineraries', [ItineraryController::class, 'index']);
+    Route::get('/itineraries/{itinerary}', [ItineraryController::class, 'show']);
+});
 ?>
