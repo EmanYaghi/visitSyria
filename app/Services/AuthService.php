@@ -315,6 +315,7 @@ class AuthService
             'user_id'=>$user->id,
             ...$request
         ]);
+        $user->assignRole('client');
         $message= 'profile created';
         $code=201;
         return [
@@ -338,10 +339,16 @@ class AuthService
      public function setAdminProfile( $request)
     {
         $user = Auth::user();
-        AdminProfile::create([
+        $p=AdminProfile::create([
             'user_id'=>$user->id,
             ...$request
         ]);
+        $user->assignRole('admin');
+        if($user->hasRole('super_admin'))
+        {
+            $p->status='فعالة';
+            $p->save();
+        }
         $message= 'profile created';
         $code=201;
         return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];

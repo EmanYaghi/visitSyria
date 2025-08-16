@@ -22,7 +22,12 @@ class TripResource extends JsonResource
 
         $company = optional($trip->user);
         $adminProfile = optional($company->adminProfile);
-
+        $status = ($user && $this->bookings
+            ->where('user_id', $user->id)
+            ->where('is_paid', false)
+            ->isNotEmpty())
+            ? 'غير مكتملة'
+            : $this->status;
         $rs = app(RouteService::class);
 
         return [
@@ -32,13 +37,13 @@ class TripResource extends JsonResource
             'season'            => $this->season,
             'start_date'        => $this->start_date,
             'days'              =>$this->days." days",
-            'tickets'=>$this->tickets,
+            'tickets'           =>$this->tickets,
             'remaining_tickets' => ($this->tickets ?? 0) - ($this->reserved_tickets ?? 0),
             'price'             => $this->price,
             'discount'          => $this->discount,
             'new_price'         => $this->new_price,
             'improvements'      => json_decode($this->improvements ?? '[]', true),
-            'status'            => $this->status,
+            'status'            => $status,
 
             'tags' => $this->tags->map(function ($tag) {
                 return optional($tag->tagName)->body;
@@ -55,7 +60,7 @@ class TripResource extends JsonResource
                     'day_number' => $timeline->day_number,
                     'sections'   => $timeline->sections->map(function ($section) {
                         return [
-                            'time'        => $section->time,
+                            'time' => substr($section->time, 0, 5),
                             'title'       => $section->title,
                             'description' => $section->description,
                         ];

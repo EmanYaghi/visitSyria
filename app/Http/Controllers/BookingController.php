@@ -68,7 +68,7 @@ class BookingController extends Controller
             $data = $this->bookingService->person($id,$type);
             return response()->json([
                 "message" => $data['message'],
-                "users" => $data['users'] ?? null,
+                "info" => $data['users'] ?? null,
             ], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();

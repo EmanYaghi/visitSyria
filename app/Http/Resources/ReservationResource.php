@@ -23,7 +23,7 @@ class ReservationResource extends JsonResource
             'booking_info' => [
                 'id' => $this->id ?? null,
                 'number_of_tickets' => $this->number_of_tickets ?? null,
-                'is_paid' => (bool) $this->is_paid ?? false,
+                'is_paid' => (bool)$this->is_paid ?? false,
                 'price' => $this->price ?? null,
                 'payment_status' => $this->payment_status ?? null,
                 'passengers' => $this->passengers->map(function ($passenger) {

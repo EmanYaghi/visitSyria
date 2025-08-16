@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('longitude');
             $table->integer('number_of_trips')->default(0);
             $table->float('rating')->default(0);
+            $table->enum('status',['تم الانذاز','قيد الحذف','فعالة','في الانتظار'])->default('في الانتظار');
             $table->timestamps();
         });
     }

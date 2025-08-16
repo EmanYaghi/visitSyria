@@ -144,7 +144,12 @@ class EventResource extends JsonResource
                 $dateValue = $this->date;
             }
         }
-
+        $status=$status = ($user && $this->bookings
+            ->where('user_id', $user->id)
+            ->where('is_paid', false)
+            ->isNotEmpty())
+            ? 'غير مكتملة'
+            : $this->computeStatus()['label'];
         $result = [
             'id'               => $this->id,
             'name'             => $this->name,
@@ -165,6 +170,7 @@ class EventResource extends JsonResource
             'media'            => $mediaUrls,
             'created_at'       => $this->created_at?->toDateTimeString(),
             'updated_at'       => $this->updated_at?->toDateTimeString(),
+            'status'           =>$status
         ];
 
         if ($this->shouldIncludeStatus($request)) {

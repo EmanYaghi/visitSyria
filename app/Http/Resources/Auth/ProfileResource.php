@@ -27,7 +27,7 @@ class ProfileResource extends JsonResource
             'theme_mode' => $this->theme_mode,
             'allow_notification' => $this->allow_notification,
             ],
-            'preference'=>User::find($this->user_id)->preference
+            'preference'=>User::find($this->user_id)->preference??null
         ];
     }
 }

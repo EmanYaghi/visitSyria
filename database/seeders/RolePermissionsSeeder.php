@@ -43,6 +43,7 @@ class RolePermissionsSeeder extends Seeder
             'location'=>'دمشق-باب توما',
             'latitude'=>'34.44',
             'longitude'=>'45.7',
+            'status'=>'فعالة'
         ]);
         $adminUser->assignRole($adminRole);
         $adminUser2 = User::factory()->create([
@@ -61,6 +62,7 @@ class RolePermissionsSeeder extends Seeder
             'location'=>'دمشق-باب توما',
             'latitude'=>'34.44',
             'longitude'=>'45.7',
+            'status'=>'فعالة'
         ]);
         $adminUser2->assignRole($adminRole);
         $clientUser = User::factory()->create([
