@@ -213,4 +213,9 @@ class FeedbackService
 
     }
 
+    public function search($type,$word)
+    {
+
+    }
+
 }

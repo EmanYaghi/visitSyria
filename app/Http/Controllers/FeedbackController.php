@@ -101,5 +101,18 @@ class FeedbackController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+    public function search()
+    {
+        $data=[];
+        try{
+            $type=request()->query('type');
+            $word=request()->query('word');
+            $data=$this->feedbackService->search($type,$word);
+            return response()->json(["results"=>$data['results'],"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 
 }
