@@ -152,6 +152,9 @@ use Stripe\Token;
     Route::get('posts/{post}', [PostController::class, 'show']);
     Route::get('users/top-active', [PostController::class, 'topActiveUsers']);
 
+    
+    Route::get('feedback/{id}', [FeedbackController::class, 'getFeedback']);
+
 
     Route::group(['middleware' => ['jwt.auth']], function () {
         Route::post('/trips/{trip}/reserve', [BookingController::class, 'reserve']);
