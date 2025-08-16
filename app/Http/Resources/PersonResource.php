@@ -48,6 +48,8 @@ class PersonResource extends JsonResource
                 'number_of_tickets' => $this->number_of_tickets ?? null,
                 'total_price' => $this->price ?? null,
                 'price'=>$b->new_price>0?$b->new_price:$b->price,
+                'booking_date'=> \Carbon\Carbon::parse($this->created_at)->toDateString(),
+                'booking_id'=>$this->id
             ],
         ];
     }

@@ -203,7 +203,7 @@ class BookingService
                 'code' => 400
             ];
         }
-        $booking = $model->bookings;
+        $booking = $model->bookings->where('is_paid',true);
 
         return [
             'message' => 'this is all user that book this ' . $type,
