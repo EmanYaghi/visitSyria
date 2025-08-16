@@ -7,6 +7,7 @@ use App\Services\AIChatService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\ItineraryResource;
 use App\Models\Itinerary;
+use Carbon\Carbon;
 
 class TripPlannerController extends Controller
 {
@@ -16,6 +17,24 @@ class TripPlannerController extends Controller
         $user = $request->user();
         if (!$user) {
             return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $dailyLimit = (int) env('ITINERARY_DAILY_LIMIT', 2);
+
+        $todayCount = Itinerary::where('user_id', $user->id)
+            ->whereDate('created_at', Carbon::today())
+            ->count();
+
+        if ($todayCount >= $dailyLimit) {
+            return response()->json([
+                'success' => false,
+                'error' => 'limit_reached',
+                'message' => "تجاوزت الحد اليومي لإنشاء الرحلات. يمكنك إنشاء {$dailyLimit} رحلتين فقط يوميًا."
+            ], 429);
+        }
+
+        if (function_exists('set_time_limit')) {
+            set_time_limit(300);
         }
 
         $validated = $request->validate([
@@ -46,7 +65,6 @@ class TripPlannerController extends Controller
         $raw = $result['raw'] ?? null;
         $model = $result['model'] ?? env('HUGGINGFACE_MODEL');
 
-        // Save to DB
         $itinerary = Itinerary::create([
             'user_id' => $user->id,
             'title' => $title,
@@ -60,5 +78,4 @@ class TripPlannerController extends Controller
                 ->response()
                 ->setStatusCode(201);
     }
-
 }
