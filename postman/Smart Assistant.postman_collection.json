@@ -1,0 +1,49 @@
+{
+	"info": {
+		"_postman_id": "e619419d-22e0-43d1-b415-2d1e2e91e21f",
+		"name": "Smart Assistant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40522740"
+	},
+	"item": [
+		{
+			"name": "itinerary",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"cities\": [\"دمشق\", \"حلب\"],\r\n  \"duration\": [\"2-3 أيام\"],\r\n  \"type_of_trips\": [\"ثقافية و تاريخية\"],\r\n  \"type_of_places\": [\"متاحف و آثار\", \"أسواق و مراكز تجارية\"],\r\n  \"travel_with\": [\"مع العائلة بما فيهم أطفال\"],\r\n  \"average_activity\": [\"متوسط النشاط\"],\r\n  \"sleeping_in_hotel\": [\"3 نجوم\"]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}itinerary",
+					"host": [
+						"{{URL}}itinerary"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Carbon\Carbon;
 
 class EventService
 {
@@ -27,14 +28,39 @@ class EventService
         }
     }
 
-    /**
-     * Public listing: do NOT return cancelled events.
-     */
     public function getAllEvents()
     {
         $events = $this->eventRepository->getAll();
-        // remove cancelled for public listing
-        $events = $events->filter(fn($e) => ($e->status !== 'cancelled'));
+
+        $now = Carbon::now();
+
+        $events = $events->filter(function ($e) use ($now) {
+            if (!empty($e->status) && $e->status === 'cancelled') {
+                return false;
+            }
+
+            $start = null;
+            try {
+                if ($e->date instanceof Carbon) {
+                    $start = $e->date;
+                } elseif (!empty($e->date)) {
+                    $start = Carbon::parse($e->date);
+                }
+            } catch (\Throwable $ex) {
+                $start = null;
+            }
+
+            $days  = intval($e->duration_days ?? 0);
+            $hours = intval($e->duration_hours ?? 0);
+
+            if (! $start) {
+                return true;
+            }
+
+            $end = (clone $start)->addDays($days)->addHours($hours);
+
+            return $now->lt($start);
+        });
 
         $user = auth('api')->user();
         if ($user) {
@@ -55,9 +81,6 @@ class EventService
         })->values();
     }
 
-    /**
-     * Admin listing: return ALL events including cancelled.
-     */
     public function getAllEventsForAdmin()
     {
         $this->checkAuthorization();
@@ -109,14 +132,12 @@ class EventService
         $this->checkAuthorization();
 
         $data = $request->validated();
-        // ensure DB only stores active/cancelled — default to active for new events
         if (empty($data['status'])) {
             $data['status'] = 'active';
         } else {
             $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
         }
 
-        // handle images
         $imageUrls = [];
         if ($request->hasFile('images')) {
             $images = $request->file('images');
@@ -150,7 +171,6 @@ class EventService
         }
 
         $data = $request->validated();
-        // Do not change status unless explicitly provided; when provided, normalize to active/cancelled
         if (isset($data['status'])) {
             $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
         }
@@ -191,9 +211,6 @@ class EventService
         return $this->eventRepository->delete($event);
     }
 
-    /**
-     * Cancel event: persist 'cancelled' into DB.
-     */
     public function cancelEvent($id)
     {
         $this->checkAuthorization();

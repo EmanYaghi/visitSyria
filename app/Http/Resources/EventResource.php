@@ -9,46 +9,33 @@ use Illuminate\Support\Str;
 
 class EventResource extends JsonResource
 {
-    /**
-     * Include status for admin endpoints or when ?include_status=1
-     */
     protected function shouldIncludeStatus($request): bool
     {
-        // query param takes precedence
         if ($request->query('include_status') === '1') {
             return true;
         }
 
-        // check path segments for 'admin' (covers api/admin/... too)
         try {
             $segments = $request->segments();
             if (in_array('admin', $segments, true)) {
                 return true;
             }
         } catch (\Throwable $e) {
-            // ignore
         }
 
-        // fallback: if path contains admin (conservative)
         try {
             $path = $request->path();
             if (!empty($path) && Str::contains($path, 'admin')) {
                 return true;
             }
         } catch (\Throwable $e) {
-            // ignore
         }
 
         return false;
     }
 
-    /**
-     * Compute dynamic status: not_started | ongoing | finished | cancelled
-     * Respect persisted 'cancelled' flag in DB.
-     */
     protected function computeStatus(): array
     {
-        // if DB says cancelled -> cancelled
         if (!empty($this->status) && $this->status === 'cancelled') {
             return ['code' => 'cancelled', 'label' => 'تم الإلغاء'];
         }
@@ -78,16 +65,12 @@ class EventResource extends JsonResource
                 }
             }
 
-            // no date -> default not started
             return ['code' => 'not_started', 'label' => 'لم تبدأ بعد'];
         } catch (\Throwable $e) {
             return ['code' => 'not_started', 'label' => 'لم تبدأ بعد'];
         }
     }
 
-    /**
-     * Convert local storage path to full URL
-     */
     protected function toFullUrl(?string $raw): ?string
     {
         if (empty($raw)) return null;
@@ -132,24 +115,31 @@ class EventResource extends JsonResource
             $isSaved = null;
         }
 
-        // --- هنا: date كـ YYYY-MM-DD فقط ---
         $dateValue = null;
         if ($this->date instanceof Carbon) {
-            $dateValue = $this->date->toDateString(); // YYYY-MM-DD
+            $dateValue = $this->date->toDateString();
         } elseif (!empty($this->date)) {
             try {
                 $dateValue = Carbon::parse($this->date)->toDateString();
             } catch (\Throwable $e) {
-                // fall back to raw value if parsing fails
                 $dateValue = $this->date;
             }
         }
-        $status=$status = ($user && $this->bookings
+
+        $status = ($user && $this->bookings
             ->where('user_id', $user->id)
             ->where('is_paid', false)
             ->isNotEmpty())
             ? 'غير مكتملة'
             : $this->computeStatus()['label'];
+
+        $ticketsTotal = isset($this->tickets) && $this->tickets !== null ? (int) $this->tickets : null;
+        $reserved = isset($this->reserved_tickets) ? (int) $this->reserved_tickets : 0;
+        $ticketsRemaining = null;
+        if ($ticketsTotal !== null) {
+            $ticketsRemaining = max($ticketsTotal - $reserved, 0);
+        }
+
         $result = [
             'id'               => $this->id,
             'name'             => $this->name,
@@ -160,8 +150,9 @@ class EventResource extends JsonResource
             'date'             => $dateValue,
             'duration_days'    => $this->duration_days,
             'duration_hours'   => $this->duration_hours,
-            'tickets'          => $this->tickets,
-            'reserved_tickets' => $this->reserved_tickets,
+            'tickets'          => $ticketsTotal,
+            'reserved_tickets' => $reserved,
+            'tickets_remaining'=> $ticketsRemaining,
             'price'            => $this->price,
             'event_type'       => $this->event_type,
             'price_type'       => $this->price_type,
@@ -170,7 +161,7 @@ class EventResource extends JsonResource
             'media'            => $mediaUrls,
             'created_at'       => $this->created_at?->toDateTimeString(),
             'updated_at'       => $this->updated_at?->toDateTimeString(),
-            'status'           =>$status
+            'status'           => $status
         ];
 
         if ($this->shouldIncludeStatus($request)) {

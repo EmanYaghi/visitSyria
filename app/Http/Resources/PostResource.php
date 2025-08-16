@@ -100,13 +100,10 @@ class PostResource extends JsonResource
             $isSaved = null;
         }
 
-        // comments: use CommentResource which already handles body/comment fallback
-        $comments = \App\Http\Resources\CommentResource::collection($this->comments);
+        $comments = CommentResource::collection($this->comments);
 
-        // owner display name
         $userDisplayName = $this->userDisplayName($user);
 
-        // === counts: support both withCount() (likes_count ...) or fallback to loaded relations ===
         $likesCount    = $this->likes_count ?? $this->likes->count();
         $commentsCount = $this->comments_count ?? $this->comments->count();
         $savesCount    = $this->saves_count ?? $this->saves->count();

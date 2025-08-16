@@ -17,6 +17,8 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\TripPlannerController;
+
 use Stripe\Stripe;
 use Stripe\Token;
 
@@ -183,6 +185,7 @@ use Stripe\Token;
     });
 
     Route::get('companies',[CompanyController::class,'index']);
+    Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);
 
 
 ?>
