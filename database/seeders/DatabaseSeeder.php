@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             ArticlesSeeder::class,
             SettingSeeder::class,
             PostSeeder::class,
+            BookingSeeder::class
 
         ]);
         Trip::factory()->count(10)->create()->each(function ($trip) {

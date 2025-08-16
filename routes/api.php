@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Route;
     use App\Http\Controllers\WeatherController;
     use App\Http\Controllers\AuthController;
     use App\Http\Controllers\BookingController;
-    use App\Http\Controllers\EventController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\EventController;
     use App\Http\Controllers\FeedbackController;
     use App\Http\Controllers\FlightController;
     use App\Http\Controllers\PlaceController;
@@ -171,10 +172,12 @@ use Stripe\Token;
     Route::post('/stripe/webhook', [WebhookController::class, 'handle']);
 
 
-Route::group(['middleware' => ['auth:api']], function () {
-    Route::post('/supports', [SupportController::class, 'store']);
-    Route::get('/supports', [SupportController::class, 'index']);
-});
+    Route::group(['middleware' => ['auth:api']], function () {
+        Route::post('/supports', [SupportController::class, 'store']);
+        Route::get('/supports', [SupportController::class, 'index']);
+    });
+
+    Route::get('companies',[CompanyController::class,'index']);
 
 
 ?>

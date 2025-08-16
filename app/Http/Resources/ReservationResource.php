@@ -14,16 +14,16 @@ class ReservationResource extends JsonResource
     {
         $type = $this->trip_id ? 'trip' : ($this->event_id ? 'event' : 'flight');
         return [
-                'info' => $type == 'trip'
-                    ? new TripResource($this->trip)
-                    : ($type == 'event'
-                        ? new EventResource($this->event)
-                        : $this->flight_data),
+            'info' => $type == 'trip'
+                ? new TripResource($this->trip)
+                : ($type == 'event'
+                    ? new EventResource($this->event)
+                    : $this->flight_data),
 
             'booking_info' => [
                 'id' => $this->id ?? null,
                 'number_of_tickets' => $this->number_of_tickets ?? null,
-                'is_paid' => $this->is_paid ?? false,
+                'is_paid' => (bool)$this->is_paid ?? false,
                 'price' => $this->price ?? null,
                 'payment_status' => $this->payment_status ?? null,
                 'passengers' => $this->passengers->map(function ($passenger) {

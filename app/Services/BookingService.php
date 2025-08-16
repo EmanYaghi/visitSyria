@@ -203,11 +203,12 @@ class BookingService
                 'code' => 400
             ];
         }
-        $users = $model->bookings->pluck('user');
+        $booking = $model->bookings;
+
         return [
             'message' => 'this is all user that book this ' . $type,
             'code' => 200,
-            'users' => PersonResource::collection($users)
+            'users' => PersonResource::collection($booking)
         ];
     }
 
