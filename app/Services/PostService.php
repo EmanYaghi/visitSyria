@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Post;
 use App\Models\Media;
 use App\Models\TagName;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -73,5 +74,37 @@ class PostService
         $post->status = $status;
         $post->save();
         return $post;
+    }
+
+        public function getUserPosts(User $user, ?string $status = null, ?int $limit = null)
+    {
+        $allowedStatuses = ['Pending', 'Approved', 'Rejected'];
+
+        $query = Post::query()
+            ->where('user_id', $user->id)
+            ->with([
+                'user.profile',
+                'user.media',
+                'media',
+                'tags',
+                'comments.user.profile',
+                'likes',
+                'saves',
+            ])
+            ->withCount(['likes', 'comments', 'saves'])
+            ->orderByDesc('created_at');
+
+        if ($status !== null) {
+            if (!in_array($status, $allowedStatuses, true)) {
+                throw new \InvalidArgumentException('Invalid status. Allowed: ' . implode(', ', $allowedStatuses));
+            }
+            $query->where('status', $status);
+        }
+
+        if ($limit !== null && $limit > 0) {
+            $query->limit((int) $limit);
+        }
+
+        return $query->get();
     }
 }

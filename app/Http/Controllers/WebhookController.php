@@ -23,14 +23,11 @@ class WebhookController extends Controller
                 $webhookSecret
             );
         } catch (\UnexpectedValueException $e) {
-            // Payload غير صالح
             return response('Invalid payload', 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
-            // توقيع غير صالح
             return response('Invalid signature', 400);
         }
 
-        // معالجة الأحداث
         switch ($event->type) {
             case 'charge.succeeded':
                 $charge = $event->data->object;

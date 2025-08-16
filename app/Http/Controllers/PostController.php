@@ -11,6 +11,7 @@ use App\Services\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\JsonResponse;
+use Throwable;
 
 class PostController extends Controller
 {
@@ -21,7 +22,7 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request)
     {
         $tag = $request->query('tag');
         $status = $request->query('status');
@@ -172,7 +173,7 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
-public function topActiveUsers(Request $request): AnonymousResourceCollection
+public function topActiveUsers(Request $request)
 {
     $limit = (int) $request->query('limit', 10);
     $limit = $limit > 0 && $limit <= 100 ? $limit : 10;
@@ -191,6 +192,23 @@ public function topActiveUsers(Request $request): AnonymousResourceCollection
 
     return TopActiveUserResource::collection($users);
 }
+    public function myPosts(Request $request)
+    {
+        $user = $request->user();
+        if (! $user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
 
+        $status = $request->query('status');
+        $limit = $request->query('limit') ? (int) $request->query('limit') : null;
+
+        try {
+            $posts = $this->postService->getUserPosts($user, $status, $limit);
+        } catch (Throwable $e) {
+            return response()->json(['error' => true, 'message' => $e->getMessage()], 422);
+        }
+
+        return PostResource::collection($posts);
+    }
 
 }

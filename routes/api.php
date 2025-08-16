@@ -49,6 +49,7 @@ use Stripe\Token;
         Route::post('setAdminProfile', [AuthController::class,'setAdminProfile'])->middleware('auth:api');
         Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
         Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
+
     });
 
     Route::get('weather', [WeatherController::class, 'getForecast']);
@@ -152,7 +153,8 @@ use Stripe\Token;
     Route::get('posts/{post}', [PostController::class, 'show']);
     Route::get('users/top-active', [PostController::class, 'topActiveUsers']);
 
-    
+    Route::get('myPosts', [PostController::class, 'myPosts'])->middleware('auth:api');
+
     Route::get('feedback/{id}', [FeedbackController::class, 'getFeedback']);
 
 
