@@ -178,6 +178,7 @@ use Stripe\Token;
     });
 
     Route::get('companies',[CompanyController::class,'index']);
+    Route::get('search',[FeedbackController::class,'search']);
 
 
 ?>

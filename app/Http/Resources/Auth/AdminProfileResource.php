@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Auth;
 
+use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -10,6 +11,7 @@ class AdminProfileResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $companyId=$this->id;
          return [
             'user' => User::find($this->user_id),
             'id' => $this->id,
@@ -26,7 +28,11 @@ class AdminProfileResource extends JsonResource
             'longitude' => $this->longitude,
             'status' => $this->status,
             'number_of_trips' => $this->number_of_trips,
-            'rating' => $this->rating,
+            'rating' =>Rating::whereHas('trip', function($query) use ($companyId) {
+                        $query->where('user_id', $companyId);
+                    })
+                    ->whereNotNull('trip_id')
+                    ->avg('rating_value'),
         ];
     }
 }

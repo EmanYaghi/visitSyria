@@ -106,8 +106,8 @@ class FeedbackController extends Controller
         $data=[];
         try{
             $type=request()->query('type');
-            $word=request()->query('word');
-            $data=$this->feedbackService->search($type,$word);
+            $sub=request()->query('sub');
+            $data=$this->feedbackService->search($type,$sub);
             return response()->json(["results"=>$data['results'],"message" =>$data['message']], $data['code']);
         }catch(Throwable $th){
             $message=$th->getMessage();
