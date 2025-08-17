@@ -27,18 +27,14 @@ class EventService
             throw new UnauthorizedHttpException('', 'Unauthorized action.');
         }
     }
-
     public function getAllEvents()
     {
         $events = $this->eventRepository->getAll();
-
         $now = Carbon::now();
-
         $events = $events->filter(function ($e) use ($now) {
             if (!empty($e->status) && $e->status === 'cancelled') {
                 return false;
             }
-
             $start = null;
             try {
                 if ($e->date instanceof Carbon) {
@@ -53,13 +49,22 @@ class EventService
             $days  = intval($e->duration_days ?? 0);
             $hours = intval($e->duration_hours ?? 0);
 
-            if (! $start) {
-                return true;
+            if ($start) {
+                $end = (clone $start)->addDays($days)->addHours($hours);
+                if (! $now->lt($start)) {
+                    return false;
+                }
             }
 
-            $end = (clone $start)->addDays($days)->addHours($hours);
+            $ticketsTotal = isset($e->tickets) && $e->tickets !== null ? (int) $e->tickets : null;
+            $reserved = isset($e->reserved_tickets) ? (int) $e->reserved_tickets : 0;
 
-            return $now->lt($start);
+            if ($ticketsTotal !== null) {
+                $remaining = max($ticketsTotal - $reserved, 0);
+                return $remaining > 0;
+            }
+
+            return true;
         });
 
         $user = auth('api')->user();

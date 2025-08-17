@@ -99,10 +99,14 @@ use Stripe\Token;
         Route::delete('ratings/{id}',[FeedbackController::class,'deleteRating']);
         Route::get('saves',[FeedbackController::class,'getSaves']);
 
-        Route::post('bookFlight', [FlightController::class, 'bookFlight']);
 
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
+
+        Route::post('/posts/{post}/like', [FeedbackController::class, 'toggleLike']);
+
+        Route::post('bookFlight', [FlightController::class, 'bookFlight']);
+
 
     });
     Route::get('trips', [TripController::class,'index']);

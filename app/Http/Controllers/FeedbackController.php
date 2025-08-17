@@ -94,31 +94,45 @@ class FeedbackController extends Controller
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
+
     public function search()
     {
-        $data=[];
-        try{
-            $type=request()->query('type');
-            $word=request()->query('word');
-            $data=$this->feedbackService->search($type,$word);
-            return response()->json(["results"=>$data['results'],"message" =>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
+        $data = [];
+        try {
+            $type = request()->query('type');
+            $word = request()->query('word');
+            $data = $this->feedbackService->search($type, $word);
+            return response()->json(['results' => $data['results'], 'message' => $data['message']], $data['code']);
+        } catch (Throwable $th) {
+            $message = $th->getMessage();
+            return response()->json(['message' => $message]);
         }
     }
 
-public function getFeedback(Request $request, $id)
-{
-    try {
-        $data = $this->feedbackService->getFeedback($id);
-        if (isset($data['code']) && $data['code'] !== 200) {
-            return response()->json(['message' => $data['message']], $data['code']);
+    public function getFeedback(Request $request, $id)
+    {
+        try {
+            $data = $this->feedbackService->getFeedback($id);
+            if (isset($data['code']) && $data['code'] !== 200) {
+                return response()->json(['message' => $data['message']], $data['code']);
+            }
+            return response()->json(['comments' => $data['comments']], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
         }
-        return response()->json(['comments' => $data['comments']], 200);
-    } catch (\Throwable $th) {
-        return response()->json(['message' => $th->getMessage()], 500);
     }
-}
 
+    public function toggleLike(Request $request, $id)
+    {
+        try {
+            $data = $this->feedbackService->toggleLike((int) $id);
+            return response()->json([
+                'message' => $data['message'],
+                'liked' => $data['liked'] ?? null,
+                'likes_count' => $data['likes_count'] ?? null
+            ], $data['code']);
+        } catch (Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
 }
