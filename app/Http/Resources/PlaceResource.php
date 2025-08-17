@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
+use App\Models\City;
 
 class PlaceResource extends JsonResource
 {
@@ -112,9 +113,26 @@ class PlaceResource extends JsonResource
             ];
         })->values()->all();
 
+        // ==== new: resolve city name instead of returning city_id ====
+        $cityName = null;
+        try {
+            if ($this->relationLoaded('city') && $this->city) {
+                $cityName = $this->city->name ?? null;
+            } else {
+                $cityId = $this->resource->city_id ?? null;
+                if ($cityId) {
+                    $city = City::find($cityId);
+                    $cityName = $city ? $city->name : null;
+                }
+            }
+        } catch (\Throwable $e) {
+            $cityName = null;
+        }
+        // ============================================================
+
         return [
             'id' => $this->resource->id,
-            'city_id' => $this->resource->city_id,
+            'city' => $cityName, // <-- هنا اسم المدينة بدلاً من city_id
             'type' => $this->resource->type,
             'name' => $this->resource->name,
             'description' => $this->resource->description,
@@ -126,9 +144,7 @@ class PlaceResource extends JsonResource
             'latitude' => $this->resource->latitude,
             'rating' => round($avgRating, 2),
             'classification' => $this->resource->classification,
-            'images'             => $this->media->map(function ($media) {
-                return Storage::disk('public')->url($media->path);
-            })->toArray(),
+            'images'             => $images,
             'rank' => $this->rank ?? null,
             'is_saved' => $isSaved,
             'user_rating' => $userRating,
