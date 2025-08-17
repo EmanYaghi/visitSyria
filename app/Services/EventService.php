@@ -27,6 +27,7 @@ class EventService
             throw new UnauthorizedHttpException('', 'Unauthorized action.');
         }
     }
+
     public function getAllEvents()
     {
         $events = $this->eventRepository->getAll();
@@ -187,11 +188,22 @@ class EventService
             if (count($images) > 4) {
                 throw new \InvalidArgumentException('Cannot upload more than 4 images.');
             }
+
+            $updatedEvent->load('media');
+
+            foreach ($updatedEvent->media as $media) {
+                try {
+                    Storage::disk('public')->delete($media->url);
+                } catch (\Throwable $e) {
+                }
+                $media->delete();
+            }
+
             foreach ($images as $image) {
-                $url = $image->store('events', 'public');
+                $path = $image->store('events', 'public');
                 $updatedEvent->media()->create([
                     'event_id' => $updatedEvent->id,
-                    'url' => $url,
+                    'url' => $path,
                 ]);
             }
         }
