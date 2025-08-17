@@ -73,6 +73,26 @@ class PlaceService
         return $places;
     }
 
+    public function getTopRatedRestaurants(array $filters = [])
+    {
+        $filters['type'] = 'restaurant';
+        $places = $this->placeRepo->getTopRatedPlaces($filters);
+        foreach ($places as $index => $place) {
+            $place->rank = $index + 1;
+        }
+        return $places;
+    }
+
+    public function getTopRatedHotels(array $filters = [])
+    {
+        $filters['type'] = 'hotel';
+        $places = $this->placeRepo->getTopRatedPlaces($filters);
+        foreach ($places as $index => $place) {
+            $place->rank = $index + 1;
+        }
+        return $places;
+    }
+
     public function getTouristPlacesByClassification($classification)
     {
         return $this->placeRepo->getTouristPlacesByClassification($classification);

@@ -122,12 +122,14 @@ use Stripe\Token;
     Route::get('places/city/{cityName}', [PlaceController::class, 'getPlacesByCity']);
     Route::get('city/{cityName}/places', [PlaceController::class, 'cityPlaces']);
 
-    Route::get('places/top-rated-tourist', [PlaceController::class, 'getTopRatedTouristPlaces']);
     Route::get('places/tourist/{classification}', [PlaceController::class, 'getTouristPlacesByClassification']);
     Route::get('places/restaurants/byCity', [PlaceController::class, 'getRestaurantsByCity']);
     Route::get('places/hotels/byCity', [PlaceController::class, 'getHotelsByCity']);
     Route::get('places/tourist/{classification}/city/{cityName}', [PlaceController::class, 'getTouristPlacesByClassificationAndCity']);
-
+    
+    Route::get('places/top-rated-tourist', [PlaceController::class, 'getTopRatedTouristPlaces']);
+    Route::get('places/top-restaurants', [PlaceController::class, 'getTopRatedRestaurants']);
+    Route::get('places/top-hotels', [PlaceController::class, 'getTopRatedHotels']); 
     Route::get('places', [PlaceController::class,'index']);
     Route::get('places/{id}/similar', [PlaceController::class, 'similarPlaces']);
     Route::get('places/{id}', [PlaceController::class,'show']);
