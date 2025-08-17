@@ -192,7 +192,7 @@ use Stripe\Token;
     });
     Route::get('supports/monthly-ratings', [SupportController::class, 'monthlyRatings']);
     Route::get('companies',[CompanyController::class,'index']);
-    Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);
+    Route::get('search',[FeedbackController::class,'search']);
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);

@@ -196,6 +196,7 @@ class BookingService
                 'code' => 400
             ];
         }
+
         $model = $models[$type]::with('bookings.user.profile')->find($id);
         if (!$model) {
             return [
@@ -203,8 +204,9 @@ class BookingService
                 'code' => 400
             ];
         }
-        $booking = $model->bookings->where('is_paid',true);
-
+        $booking = $model->bookings()->where('is_paid',true)->get();
+        if($type=='trip')
+            $booking=Booking::where('trip_id','!=',null)->where('is_paid',true)->get();
         return [
             'message' => 'this is all user that book this ' . $type,
             'code' => 200,
