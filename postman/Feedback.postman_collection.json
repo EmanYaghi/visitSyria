@@ -274,6 +274,40 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Toggle Like",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}posts/2/like",
+					"host": [
+						"{{URL}}posts"
+					],
+					"path": [
+						"2",
+						"like"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
