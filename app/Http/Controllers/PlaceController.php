@@ -75,29 +75,46 @@ class PlaceController extends Controller
         return new PlaceResource($place);
     }
 
-    public function store(PlaceStoreRequest $request)
-    {
-        $data = $request->validated();
-        $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
-        $place = $this->placeService->store($data);
-        $this->handleImages($request, $place);
-        $user = $request->user('api');
-        $this->placeService->annotateIsSavedForModel($place, $user);
-        $this->placeService->annotateSingleWithGlobalTouristRank($place);
-        return response()->json(['place' => new PlaceResource($place)],201);
+public function store(PlaceStoreRequest $request)
+{
+    $data = $request->validated();
+    $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
+    $place = $this->placeService->store($data);
+
+    if ($request->hasFile('images')) {
+        $this->placeService->storeImages($request->file('images'), $place);
     }
 
-    public function update(PlaceUpdateRequest $request, $id)
+    // reload full place with media and relations
+    $place = $this->placeService->getById($place->id);
+    $user = $request->user('api');
+    $this->placeService->annotateIsSavedForModel($place, $user);
+    $this->placeService->annotateSingleWithGlobalTouristRank($place);
+
+    return response()->json(['place' => new PlaceResource($place)], 201);
+}
+
+public function update(PlaceUpdateRequest $request, $id)
     {
         $data = $request->validated();
         if (isset($data['city_name'])) {
             $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
+            unset($data['city_name']);
         }
+
         $place = $this->placeService->update($id, $data);
-        $this->handleImages($request, $place);
+
+        if ($request->hasFile('images')) {
+            $this->placeService->replaceImages($request->file('images'), $place);
+        }
+
+        // reload fresh model with media and relations
+        $place = $this->placeService->getById($place->id);
+
         $user = $request->user('api');
         $this->placeService->annotateIsSavedForModel($place, $user);
         $this->placeService->annotateSingleWithGlobalTouristRank($place);
+
         return response()->json(['place' => new PlaceResource($place)]);
     }
 
@@ -191,10 +208,15 @@ class PlaceController extends Controller
         return PlaceResource::collection($hotels);
     }
 
-    private function handleImages($request, $place)
+    private function handleImages($request, $place, $replace = false)
     {
         if ($request->hasFile('images')) {
-            $this->placeService->storeImages($request->file('images'), $place);
+            $images = $request->file('images');
+            if ($replace) {
+                $this->placeService->replaceImages($images, $place);
+            } else {
+                $this->placeService->storeImages($images, $place);
+            }
         }
     }
 }

@@ -101,18 +101,66 @@ class PlaceService
         return $places;
     }
 
-    public function storeImages($images, $place)
+public function storeImages($images, $place)
+{
+    $created = [];
+    foreach ($images as $image) {
+        $path = $image->store('places', 'public');
+        $m = Media::create([
+            'place_id' => $place->id,
+            'url' => $path,
+        ]);
+        $created[] = $m;
+    }
+
+    $place->load('media');
+
+    return collect($created);
+}
+
+     public function replaceImages($images, $place)
     {
-        $imageUrls = [];
+        // enforce max 4
+        if (!is_array($images) && $images instanceof \Illuminate\Support\Collection) {
+            $images = $images->all();
+        }
+        $count = is_array($images) ? count($images) : 0;
+        if ($count > 4) {
+            throw new \InvalidArgumentException('Cannot upload more than 4 images.');
+        }
+
+        // delete files and records for existing media
+        $place->loadMissing('media');
+        foreach ($place->media as $media) {
+            try {
+                if (!empty($media->url)) {
+                    Storage::disk('public')->delete(ltrim($media->url, '/'));
+                }
+            } catch (\Throwable $e) {
+                // ignore deletion errors, continue to delete record
+            }
+            try {
+                $media->delete();
+            } catch (\Throwable $e) {
+                // ignore
+            }
+        }
+
+        // store new images
+        $created = [];
         foreach ($images as $image) {
             $path = $image->store('places', 'public');
-            Media::create([
+            $m = Media::create([
                 'place_id' => $place->id,
                 'url' => $path,
             ]);
-            $imageUrls[] = Storage::disk('public')->url($path);
+            $created[] = $m;
         }
-        return $imageUrls;
+
+        // reload media relation
+        $place->load('media');
+
+        return collect($created);
     }
 
     protected function normalizeClassification(array $d): ?string

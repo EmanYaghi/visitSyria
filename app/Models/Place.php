@@ -24,9 +24,22 @@ class Place extends Model
         'classification'
     ];
 
-    public function getIdAttribute($value)
+    protected $appends = ['formatted_id'];
+
+    public function getFormattedIdAttribute(): ?string
     {
-        return str_pad($value, 6, '0', STR_PAD_LEFT);
+        $raw = $this->getRawOriginal($this->getKeyName()) ?? $this->attributes[$this->getKeyName()] ?? null;
+        if ($raw === null) return null;
+        return str_pad((int)$raw, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function getKey()
+    {
+        $raw = $this->getRawOriginal($this->getKeyName());
+        if ($raw !== null) {
+            return $raw;
+        }
+        return parent::getKey();
     }
 
     public function latestComments()
