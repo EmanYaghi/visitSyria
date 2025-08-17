@@ -93,6 +93,17 @@ public function getAll($filters = [])
             ->get();
     }
 
+public function getTouristPlacesByCityName($cityName)
+{
+    return Place::where('type', 'tourist')
+        ->whereHas('city', function($q) use ($cityName) {
+            $q->where('name', $cityName);
+        })
+        ->with(['city'])
+        ->latest()
+        ->get();
+}
+
     public function findById($id)
     {
         return Place::with(['media'])->findOrFail($id);

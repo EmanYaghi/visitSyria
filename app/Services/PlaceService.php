@@ -87,6 +87,12 @@ class PlaceService
     {
         return $this->placeRepo->getHotelsByCityName($cityName);
     }
+    
+    public function getTouristPlacesByCityName(string $cityName)
+{
+    return $this->placeRepo->getTouristPlacesByCityName($cityName);
+}
+
 
     public function getTouristPlacesByClassificationAndCity($classification, $cityId)
     {
@@ -213,7 +219,7 @@ public function storeImages($images, $place)
             return $places->take($limit)->pluck('id')->map(fn($id) => (int)$id)->toArray();
         });
     }
-
+    
     public function annotateWithGlobalTouristRank($places, int $limit = 10): void
     {
         if (! $places instanceof Collection) return;

@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMzMDQwNTAsIm5iZiI6MTc1MzMwNDA1MCwianRpIjoibjBGTThNN0xVTG5jWDZsRCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wLro8b_YE-3ARaYHt3knzej4RemYUylMcqCL9XDVIoI",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
 							"type": "string"
 						}
 					]
@@ -88,12 +88,13 @@
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+							"src": "/C:/Users/Dell/Downloads/c766d5c8-aa25-44ed-b24b-7dc910fed931.jfif"
 						},
 						{
 							"key": "images[1]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+							"src": [],
+							"disabled": true
 						}
 					]
 				},
@@ -114,7 +115,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMzMDQwNTAsIm5iZiI6MTc1MzMwNDA1MCwianRpIjoibjBGTThNN0xVTG5jWDZsRCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wLro8b_YE-3ARaYHt3knzej4RemYUylMcqCL9XDVIoI",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
 							"type": "string"
 						}
 					]
@@ -178,17 +179,17 @@
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "/C:/Users/Dell/Pictures/IMG-20240403-WA0033.jpg"
+							"src": "/C:/Users/Dell/Downloads/09df22ed-c2a5-4892-9b2a-dc8c46483a59.jfif"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}updatePlace/1",
+					"raw": "{{URL}}updatePlace/28",
 					"host": [
 						"{{URL}}updatePlace"
 					],
 					"path": [
-						"1"
+						"28"
 					]
 				}
 			},
@@ -527,7 +528,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{TOKEN}}",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
 							"type": "string"
 						}
 					]
@@ -541,12 +542,12 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}places/11",
+					"raw": "{{URL}}places/18",
 					"host": [
 						"{{URL}}places"
 					],
 					"path": [
-						"11"
+						"18"
 					]
 				}
 			},
@@ -647,6 +648,47 @@
 					],
 					"path": [
 						"top-restaurants"
+					],
+					"query": [
+						{
+							"key": "city_id",
+							"value": "1",
+							"description": "Optional",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTopRatedHotels",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/top-hotels",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"top-hotels"
 					],
 					"query": [
 						{

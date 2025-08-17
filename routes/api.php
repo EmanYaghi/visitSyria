@@ -121,6 +121,7 @@ use Stripe\Token;
 
     Route::get('places/city/{cityName}', [PlaceController::class, 'getPlacesByCity']);
     Route::get('city/{cityName}/places', [PlaceController::class, 'cityPlaces']);
+    Route::get('places/tourist/byCity', [PlaceController::class, 'getTouristPlacesByCity']);
 
     Route::get('places/tourist/{classification}', [PlaceController::class, 'getTouristPlacesByClassification']);
     Route::get('places/restaurants/byCity', [PlaceController::class, 'getRestaurantsByCity']);

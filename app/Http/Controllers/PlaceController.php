@@ -207,6 +207,21 @@ public function update(PlaceUpdateRequest $request, $id)
         $this->placeService->annotateWithGlobalTouristRank($hotels);
         return PlaceResource::collection($hotels);
     }
+public function getTouristPlacesByCity(Request $request)
+{
+    $request->validate([
+        'city' => 'required|string|exists:cities,name'
+    ]);
+
+    $cityName = $request->input('city');
+    $places = $this->placeService->getTouristPlacesByCityName($cityName);
+
+    $user = $request->user('api');
+    $this->placeService->annotateIsSavedForCollection($places, $user);
+    $this->placeService->annotateWithGlobalTouristRank($places);
+
+    return PlaceResource::collection($places);
+}
 
     private function handleImages($request, $place, $replace = false)
     {
