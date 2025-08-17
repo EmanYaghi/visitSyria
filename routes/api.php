@@ -126,7 +126,7 @@ use Stripe\Token;
     Route::get('places/restaurants/byCity', [PlaceController::class, 'getRestaurantsByCity']);
     Route::get('places/hotels/byCity', [PlaceController::class, 'getHotelsByCity']);
     Route::get('places/tourist/{classification}/city/{cityName}', [PlaceController::class, 'getTouristPlacesByClassificationAndCity']);
-    
+
     Route::get('places/top-rated-tourist', [PlaceController::class, 'getTopRatedTouristPlaces']);
     Route::get('places/top-restaurants', [PlaceController::class, 'getTopRatedRestaurants']);
     Route::get('places/top-hotels', [PlaceController::class, 'getTopRatedHotels']); 
@@ -190,7 +190,7 @@ use Stripe\Token;
         Route::post('/supports', [SupportController::class, 'store']);
         Route::get('/supports', [SupportController::class, 'index']);
     });
-
+    Route::get('supports/monthly-ratings', [SupportController::class, 'monthlyRatings']);
     Route::get('companies',[CompanyController::class,'index']);
     Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);
 

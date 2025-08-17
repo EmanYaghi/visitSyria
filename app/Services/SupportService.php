@@ -15,13 +15,6 @@ class SupportService
         $this->repo = $repo;
     }
 
-    /**
-     * Create a support note.
-     *
-     * @param User $user
-     * @param array $data
-     * @return Support
-     */
     public function createNote(User $user, array $data): Support
     {
         $payload = [
@@ -31,11 +24,9 @@ class SupportService
             'category' => $data['category'] ?? 'app',
         ];
 
-
         $support = $this->repo->create($payload);
         $support->load('user.profile','user.adminProfile','user.media');
         return $support;
-
     }
 
     public function listSupportsForAdmin(?string $category = null)
@@ -44,10 +35,15 @@ class SupportService
             return $this->repo->getByCategory($category);
         }
 
-        // return grouped: both categories as arrays (no paginator)
         return [
             'app' => $this->repo->getByCategory('app'),
             'admin' => $this->repo->getByCategory('admin'),
         ];
     }
+
+public function monthlyRatingsCounts(?int $year = null): array
+{
+    return $this->repo->getMonthlyRatingsCounts($year);
+}
+
 }

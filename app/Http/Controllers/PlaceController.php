@@ -145,22 +145,6 @@ class PlaceController extends Controller
         return PlaceResource::collection($places);
     }
 
-    public function getTopRatedRestaurants(Request $request)
-    {
-        $places = $this->placeService->getTopRatedRestaurants($request->all());
-        $user = $request->user('api');
-        $this->placeService->annotateIsSavedForCollection($places, $user);
-        return PlaceResource::collection($places);
-    }
-
-    public function getTopRatedHotels(Request $request)
-    {
-        $places = $this->placeService->getTopRatedHotels($request->all());
-        $user = $request->user('api');
-        $this->placeService->annotateIsSavedForCollection($places, $user);
-        return PlaceResource::collection($places);
-    }
-
     public function getTouristPlacesByClassification($classification)
     {
         $places = $this->placeService->getTouristPlacesByClassification($classification);

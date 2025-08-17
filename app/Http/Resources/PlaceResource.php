@@ -7,30 +7,19 @@ use Illuminate\Support\Facades\Storage;
 
 class PlaceResource extends JsonResource
 {
-    protected function normalizeMediaUrl(?string $raw): ?string
+    protected function makePublicUrl(?string $raw): ?string
     {
-        if (! $raw) return null;
-
-        // إذا هو رابط كامل
-        if (filter_var($raw, FILTER_VALIDATE_URL)) {
-            return $raw;
-        }
-
-        // إذا بدأ بـ /storage/ أو storage/ — نحدف الـ prefix ونبني رابط public
-        $path = $raw;
-        if (str_starts_with($path, '/storage/')) {
-            $path = ltrim(substr($path, strlen('/storage/')), '/');
-        } elseif (str_starts_with($path, 'storage/')) {
-            $path = substr($path, strlen('storage/'));
-        }
-
-        // الآن path متوقع مثل 'places/xxx.jpg'
-        return Storage::disk('public')->url(ltrim($path, '/'));
+        if (empty($raw)) return null;
+        $raw = trim($raw);
+        if (filter_var($raw, FILTER_VALIDATE_URL)) return $raw;
+        $raw = preg_replace('#^(storage/)+#', 'storage/', $raw);
+        $raw = preg_replace('#^(public/)+#', '', $raw);
+        $raw = ltrim($raw, '/');
+        return Storage::disk('public')->url($raw);
     }
 
     public function toArray($request)
     {
-        // نحمّل العلاقات الضرورية إذا لم تكن محمّلة
         $this->loadMissing([
             'media',
             'ratings',
@@ -48,15 +37,15 @@ class PlaceResource extends JsonResource
         $userRating = $userId ? $this->ratings()->where('user_id', $userId)->value('rating_value') ?? null : null;
         $userComment = $userId ? $this->comments()->where('user_id', $userId)->value('body') ?? null : null;
 
-        // images: نستخدم العلاقة المحمّلة إن وُجدت، أو نجلبها إن لم تكن محمّلة
         $mediaCollection = $this->relationLoaded('media') ? $this->media : $this->media()->get();
 
-        $images = $mediaCollection->map(fn($m) => $this->normalizeMediaUrl($m->url))
-                                 ->filter()
-                                 ->values()
-                                 ->all();
+        $images = $mediaCollection->map(function ($m) {
+            $raw = $m->url ?? null;
+            if (! $raw) return null;
+            if (filter_var($raw, FILTER_VALIDATE_URL)) return $raw;
+            return Storage::disk('public')->url(ltrim(preg_replace('#^(storage/)+#', 'storage/', $raw), '/'));
+        })->filter()->values()->all();
 
-        // is_saved: نعطي أولوية لخاصية set من الـ Service (is_saved) إذا وُجِدت
         if (array_key_exists('is_saved', $this->resource->getAttributes())) {
             $isSaved = $this->resource->is_saved;
         } else {
@@ -68,7 +57,6 @@ class PlaceResource extends JsonResource
             }
         }
 
-        // آخر 3 تعليقات
         $latestComments = $this->relationLoaded('latestComments') ? $this->latestComments : null;
         if (! $latestComments || $latestComments->isEmpty()) {
             $latestComments = $this->comments()
@@ -108,7 +96,7 @@ class PlaceResource extends JsonResource
             }
 
             $avatarFull = $avatarRaw
-                ? (filter_var($avatarRaw, FILTER_VALIDATE_URL) ? $avatarRaw : Storage::disk('public')->url(ltrim($avatarRaw, '/')))
+                ? (filter_var($avatarRaw, FILTER_VALIDATE_URL) ? $avatarRaw : Storage::disk('public')->url(ltrim(preg_replace('#^(storage/)+#', 'storage/', $avatarRaw), '/')))
                 : null;
 
             $userRatingValue = optional($comment->user->ratings()->where('place_id', $this->id)->first())->rating_value ?? 0;
@@ -138,7 +126,9 @@ class PlaceResource extends JsonResource
             'latitude' => $this->resource->latitude,
             'rating' => round($avgRating, 2),
             'classification' => $this->resource->classification,
-            'images' => $images,
+            'images'             => $this->media->map(function ($media) {
+                return Storage::disk('public')->url($media->path);
+            })->toArray(),
             'rank' => $this->rank ?? null,
             'is_saved' => $isSaved,
             'user_rating' => $userRating,
