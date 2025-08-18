@@ -23,9 +23,11 @@ class CreateProfilesTable extends Migration
             $table->enum('country_code',City::$country_code)->nullable();
             $table->string('photo')->nullable();
 
+            $table->enum('account_status',['نشط','حظر مؤقت','حظر نهائي'])->default('نشط');
             $table->string('lang')->default('en');
             $table->string('theme_mode')->default('light');
             $table->boolean('allow_notification')->default(true);
+
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\ArticleResource;
 use App\Http\Resources\Auth\AdminProfileResource;
+use App\Http\Resources\Auth\UserResource;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\EventResource;
 use App\Http\Resources\PlaceResource;
@@ -19,6 +20,7 @@ use App\Models\Rating;
 use App\Models\Save;
 use App\Models\Trip;
 use App\Models\Like;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -317,23 +319,26 @@ class FeedbackService
             return ['message' => 'liked', 'liked' => true, 'likes_count' => $likesCount, 'code' => 201];
         });
     }
-    
+
    public function search($type, $sub)
     {
         $user = Auth::user();
         $isClient = !$user || $user->hasRole('client');
+        $isAdmin = $user->hasRole('admin');
         switch ($type) {
             case 'event':
                 $query = Event::where('name','LIKE',"%$sub%");
                 if ($isClient) $query->where('date','>', now()) ->whereColumn('tickets', '>', 'reserved_tickets');
                 $results = $query->get();
                 $resource = EventResource::class;
+                if($isAdmin) $results=[];
                 break;
             case 'trip':
                 $query = Trip::where('name','LIKE',"%$sub%");
                 if ($isClient) $query->where('start_date','>', now()) ->whereColumn('tickets', '>', 'reserved_tickets');
                 $results = $query->get();
                 $resource = TripResource::class;
+                if($isAdmin) $results=[];
                 break;
             case 'tourist':
             case 'restaurant':
@@ -346,12 +351,14 @@ class FeedbackService
             case 'article':
                 $results = Article::where('title','LIKE',"%$sub%")->get();
                 $resource = ArticleResource::class;
+                if($isAdmin) $results=[];
                 break;
             case 'company':
                 if ($isClient) {
                     $results = AdminProfile::with('user')->where('name_of_company','LIKE',"%$sub%")->get()->pluck('user');
                     $resource = CompanyResource::class;
                 }
+                else  if($isAdmin) $results=[];
                 else{
                     $results = AdminProfile::with('user')->where('name_of_company','LIKE',"%$sub%")->get();
                     $resource=AdminProfileResource::class;
@@ -360,6 +367,13 @@ class FeedbackService
             case 'post':
                 $results = Post::where('description','LIKE',"%$sub%")->get();
                 $resource = PostResource::class;
+                if($isAdmin) $results=[];
+                break;
+            case 'user':
+                $results = Profile::where('first_name', 'LIKE', "%$sub%")->orWhere('last_name', 'LIKE', "%$sub%")->get();
+                $results = $results->map(fn($profile) => $profile->user);
+                $resource = UserResource::class;
+                if($isClient||$isAdmin) $results=[];
                 break;
             default:
                 return ['results'=>[], 'message'=>'invalid type', 'code'=>400];
