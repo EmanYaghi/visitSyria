@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\City;
 use App\Repositories\PlaceRepository;
 use App\Models\Media;
 use App\Models\Save;
@@ -63,9 +64,21 @@ class PlaceService
         return $this->placeRepo->getAll($filters);
     }
 
-    public function getTopRatedTouristPlaces(array $filters = [])
+public function getTopRatedTouristPlaces(array $filters = [])
     {
         $filters['type'] = 'tourist';
+        // allow passing 'city' as name
+        if (!empty($filters['city']) && is_string($filters['city'])) {
+            $city = City::where('name', trim($filters['city']))->first();
+            if ($city) {
+                $filters['city_id'] = $city->id;
+            } else {
+                // if city not found return empty collection
+                return collect();
+            }
+            unset($filters['city']);
+        }
+
         $places = $this->placeRepo->getTopRatedPlaces($filters);
         foreach ($places as $index => $place) {
             $place->rank = $index + 1;
@@ -73,6 +86,46 @@ class PlaceService
         return $places;
     }
 
+    public function getTopRatedRestaurants(array $filters = [])
+    {
+        $filters['type'] = 'restaurant';
+        if (!empty($filters['city']) && is_string($filters['city'])) {
+            $city = City::where('name', trim($filters['city']))->first();
+            if ($city) {
+                $filters['city_id'] = $city->id;
+            } else {
+                return collect();
+            }
+            unset($filters['city']);
+        }
+
+        $places = $this->placeRepo->getTopRatedPlaces($filters);
+        foreach ($places as $index => $place) {
+            $place->rank = $index + 1;
+        }
+        return $places;
+    }
+
+
+    public function getTopRatedHotels(array $filters = [])
+    {
+        $filters['type'] = 'hotel';
+        if (!empty($filters['city']) && is_string($filters['city'])) {
+            $city = City::where('name', trim($filters['city']))->first();
+            if ($city) {
+                $filters['city_id'] = $city->id;
+            } else {
+                return collect();
+            }
+            unset($filters['city']);
+        }
+
+        $places = $this->placeRepo->getTopRatedPlaces($filters);
+        foreach ($places as $index => $place) {
+            $place->rank = $index + 1;
+        }
+        return $places;
+    }
     public function getTouristPlacesByClassification($classification)
     {
         return $this->placeRepo->getTouristPlacesByClassification($classification);

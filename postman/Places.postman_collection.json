@@ -332,6 +332,39 @@
 			"response": []
 		},
 		{
+			"name": "GetAllTouristPlacesByCity",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/tourist/byCity?city=دمشق",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"tourist",
+						"byCity"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetAllHotels",
 			"request": {
 				"auth": {
@@ -405,12 +438,19 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}places/top-rated-tourist",
+					"raw": "{{URL}}places/top-rated-tourist?city=دمشق",
 					"host": [
 						"{{URL}}places"
 					],
 					"path": [
 						"top-rated-tourist"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق",
+							"description": "Optional"
+						}
 					]
 				}
 			},
@@ -651,8 +691,8 @@
 					],
 					"query": [
 						{
-							"key": "city_id",
-							"value": "1",
+							"key": "city",
+							"value": "دمشق",
 							"description": "Optional",
 							"disabled": true
 						}
@@ -683,7 +723,7 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}places/top-hotels",
+					"raw": "{{URL}}places/top-hotels?city=دمشق",
 					"host": [
 						"{{URL}}places"
 					],
@@ -692,10 +732,9 @@
 					],
 					"query": [
 						{
-							"key": "city_id",
-							"value": "1",
-							"description": "Optional",
-							"disabled": true
+							"key": "city",
+							"value": "دمشق",
+							"description": "Optional"
 						}
 					]
 				}
