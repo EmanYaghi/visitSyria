@@ -19,7 +19,7 @@ use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\TripPlannerController;
-
+use App\Http\Controllers\UserController;
 use Stripe\Stripe;
 use Stripe\Token;
 
@@ -130,7 +130,7 @@ use Stripe\Token;
 
     Route::get('places/top-rated-tourist', [PlaceController::class, 'getTopRatedTouristPlaces']);
     Route::get('places/top-restaurants', [PlaceController::class, 'getTopRatedRestaurants']);
-    Route::get('places/top-hotels', [PlaceController::class, 'getTopRatedHotels']); 
+    Route::get('places/top-hotels', [PlaceController::class, 'getTopRatedHotels']);
     Route::get('places', [PlaceController::class,'index']);
     Route::get('places/{id}/similar', [PlaceController::class, 'similarPlaces']);
     Route::get('places/{id}', [PlaceController::class,'show']);
@@ -178,6 +178,8 @@ use Stripe\Token;
 
         Route::get('myBookings', [BookingController::class, 'myBookings']);
         Route::get('persons/book/{id}', [BookingController::class, 'person']);
+
+        Route::get('allUser',[UserController::class,'allUser']);
     });
 
     Route::middleware('auth:api')->group(function () {

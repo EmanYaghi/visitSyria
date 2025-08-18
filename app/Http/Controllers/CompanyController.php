@@ -25,4 +25,5 @@ class CompanyController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
 }

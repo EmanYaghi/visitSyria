@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 
 class Profile extends Model
-{  
+{
     use HasFactory, HasRoles;
 
     protected $fillable = [
@@ -22,7 +22,8 @@ class Profile extends Model
         'lang',
         'theme_mode',
         'allow_notification',
-        'photo'
+        'photo',
+        'account_status'
     ];
     public static array $gender=['male', 'female', 'other'];
     public function user()

@@ -44,6 +44,10 @@ class TripService
         {
             $trips=Trip::all();
         }
+        else if($user->hasRole('admin'))
+        {
+            $trips=Trip::where('user_id',$user->id)->get();
+        }
         $code=200;
         $message='this is all trips ';
         return ['trips'=>TripResource::collection($trips),'message'=>$message,'code'=>$code];
