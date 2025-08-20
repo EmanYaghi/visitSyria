@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('phone');
             $table->enum('country_code',City::$country_code);
             $table->string('description');
-            $table->string('location');
+            $table->string('location')->nullable();
             $table->string('latitude');
             $table->string('longitude');
             $table->integer('number_of_trips')->default(0);

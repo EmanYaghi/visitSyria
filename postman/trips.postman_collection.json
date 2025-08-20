@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTQzODY5MTIsImV4cCI6MTc1NDM5MDUxMiwibmJmIjoxNzU0Mzg2OTEyLCJqdGkiOiJBT3dsTFRXWVNvUVlvN1J5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Xt9Q45gGtbzond-sewePiaMf-kLT8stBfBpE0edaOKM",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU0NTE2NDAsIm5iZiI6MTc1NTQ1MTY0MCwianRpIjoicWlxS0RoT3hodERRUFI0QiIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.G9QHfj_3x3WWqNEIMbmWDmNYNwRMS0ES6vQEFQ-QaC0",
 							"type": "string"
 						}
 					]
@@ -379,12 +379,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/17",
+					"raw": "{{URL}}trips/2",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"17"
+						"2"
 					]
 				}
 			},
@@ -502,6 +502,33 @@
 					"path": [
 						"cancel",
 						"17"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Last 6 Trip",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU3MDAxMDMsIm5iZiI6MTc1NTcwMDEwMywianRpIjoiSHN5clB3Q0dZVlM3VWk3TiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7f5rC9UlAEJrHbz0sPsbOegNeAsPP8h6Sg6qlVvyLoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}trips/lastTrip",
+					"host": [
+						"{{URL}}trips"
+					],
+					"path": [
+						"lastTrip"
 					]
 				}
 			},

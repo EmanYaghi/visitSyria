@@ -22,7 +22,7 @@ class CreateProfilesTable extends Migration
             $table->string('phone')->nullable();
             $table->enum('country_code',City::$country_code)->nullable();
             $table->string('photo')->nullable();
-
+            $table->dateTime('date_of_unblock')->nullable();
             $table->enum('account_status',['نشط','حظر مؤقت','حظر نهائي'])->default('نشط');
             $table->string('lang')->default('en');
             $table->string('theme_mode')->default('light');

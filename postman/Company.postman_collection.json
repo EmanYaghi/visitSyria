@@ -9,8 +9,124 @@
 		{
 			"name": "All Companies",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{URL}}companies",
+					"host": [
+						"{{URL}}companies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Top Companies",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}topCompanies?by=earning",
+					"host": [
+						"{{URL}}topCompanies"
+					],
+					"query": [
+						{
+							"key": "by",
+							"value": "earning",
+							"description": "trip-rating-earning"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Companies On Hold",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2MzY5MzMsIm5iZiI6MTc1NTYzNjkzMywianRpIjoiVXY3UExhNFQ5d3JDN0owNSIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.BQk6gj551YSZQv11C9Es3MsE6Godcl1VuiS8xsM8t40",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}getCompaniesOnHold",
+					"host": [
+						"{{URL}}getCompaniesOnHold"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change Company Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "company_id",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "accept",
+							"description": "reject-accept-فعالة-تم الانذاز-قيد الحذف",
+							"type": "text"
+						},
+						{
+							"key": "reason",
+							"value": "mcxnvkjhfkkd fjkghkd cxjhbk",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}changeCompanyStatus",
+					"host": [
+						"{{URL}}changeCompanyStatus"
+					]
+				}
 			},
 			"response": []
 		}

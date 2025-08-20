@@ -292,4 +292,13 @@ class TripService
         return ['message'=>$message,'code'=>$code];
     }
 
+    public function lastTrip()
+    {
+        $user=Auth::user();
+        if(!$user->hasRole('super_admin'))
+            return ['message'=>'unauthorized','code'=>403];
+        $trips = Trip::orderByDesc('created_at')->take(6)->get();
+        return ['trips'=>TripResource::collection($trips),'message'=>'this is last 6 trips' ,'code'=>200];
+    }
+
 }

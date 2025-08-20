@@ -118,4 +118,16 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
+    public function lastTrip()
+    {
+        $data=[];
+        try{
+            $data=$this->tripService->lastTrip();
+            return response()->json(["message"=>$data['message'],"trips"=>$data['trips']??null],$data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

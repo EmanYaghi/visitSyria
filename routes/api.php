@@ -54,6 +54,8 @@ use Stripe\Token;
         Route::post('updateAdminProfile', [AuthController::class,'updateAdminProfile'])->middleware('auth:api');
         Route::get('adminProfile', [AuthController::class,'getAdminProfile'])->middleware('auth:api');
 
+        Route::post('registerCompanyBySuperAdmin', [AuthController::class,'registerCompanyBySuperAdmin'])->middleware('auth:api');
+
     });
 
     Route::get('weather', [WeatherController::class, 'getForecast']);
@@ -84,6 +86,7 @@ use Stripe\Token;
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
         Route::post('trips/cancel/{id}',[TripController::class,'cancel']);
+        Route::get('trips/lastTrip', [TripController::class,'lastTrip']);
 
         Route::post('reserve', [BookingController::class, 'reserve']);
 
@@ -114,6 +117,7 @@ use Stripe\Token;
     Route::get('trip/company/{id}', [TripController::class,'companyTrips']);
     Route::get('trip/offers', [TripController::class,'offers']);
     Route::get('trips/similar/{id}',[TripController::class,'similarTrips']);
+
 
     Route::get('places/restaurants', [PlaceController::class, 'getRestaurants']);
     Route::get('places/hotels', [PlaceController::class, 'getHotels']);
@@ -180,6 +184,9 @@ use Stripe\Token;
         Route::get('persons/book/{id}', [BookingController::class, 'person']);
 
         Route::get('allUser',[UserController::class,'allUser']);
+        Route::get('mostActiveUsers',[UserController::class,'mostActiveUsers']);
+        Route::post('changeUserStatus',[UserController::class,'changeUserStatus']);
+        Route::get('userActivities/{id}',[UserController::class,'userActivities']);
     });
 
     Route::middleware('auth:api')->group(function () {
@@ -195,6 +202,9 @@ use Stripe\Token;
     });
     Route::get('supports/monthly-ratings', [SupportController::class, 'monthlyRatings']);
     Route::get('companies',[CompanyController::class,'index']);
+    Route::get('topCompanies',[CompanyController::class,'topCompanies'])->middleware('auth:api');
+    Route::get('getCompaniesOnHold',[CompanyController::class,'getCompaniesOnHold'])->middleware('auth:api');
+    Route::post('changeCompanyStatus',[CompanyController::class,'changeCompanyStatus'])->middleware('auth:api');
     Route::get('search',[FeedbackController::class,'search']);
 
 Route::group(['middleware' => ['auth:api']], function () {

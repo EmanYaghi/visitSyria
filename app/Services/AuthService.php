@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Http\Resources\Auth\AdminProfileResource;
+use App\Http\Resources\Auth\AdminResource;
 use App\Http\Resources\Auth\ProfileResource;
+use App\Http\Resources\CompanyResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -16,6 +18,7 @@ use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class AuthService
 {
@@ -344,11 +347,6 @@ class AuthService
             ...$request
         ]);
         $user->assignRole('admin');
-        if($user->hasRole('super_admin'))
-        {
-            $p->status='فعالة';
-            $p->save();
-        }
         $message= 'profile created';
         $code=201;
         return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
@@ -360,5 +358,37 @@ class AuthService
         $message= 'profile updated';
         $code=200;
         return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
+    }
+
+
+    public function registerCompanyBySuperAdmin( $request)
+    {
+        $superAdmin = Auth::user();
+        if(!$superAdmin->hasRole('super_admin'))
+            return [
+                'company' => null,
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        $user=User::create([
+            'email'=>$request['email'],
+            'password'=>Hash::make(Str::random(12)),
+            'status'=>'accept'
+        ]);
+        if (isset($request['documents']) && is_array($request['documents'])) {
+            foreach ($request['documents'] as $document) {
+                if ($document instanceof \Illuminate\Http\UploadedFile) {
+                    $url = $document->store('document_images');
+                    $user->media()->create(['url' => $url]);
+                }
+            }
+        }
+        $user->assignRole('admin');
+        $company =$user->adminProfile()->create(['status'=>'فعالة',...$request]);
+        return [
+            'company' => new AdminResource($company),
+            'message' => 'this is all company',
+            'code' => 200
+        ];
     }
 }
