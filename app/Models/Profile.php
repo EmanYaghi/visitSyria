@@ -23,7 +23,8 @@ class Profile extends Model
         'theme_mode',
         'allow_notification',
         'photo',
-        'account_status'
+        'account_status',
+        'date_of_unblock',
     ];
     public static array $gender=['male', 'female', 'other'];
     public function user()

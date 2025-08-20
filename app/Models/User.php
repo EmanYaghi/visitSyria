@@ -21,7 +21,14 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     protected $fillable = [
         'email',
         'password',
-        'stripe_customer_id'
+        'stripe_customer_id',
+        'email_verified_at',
+        'is_verified',
+        'verification_code',
+        'verification_code_sent_at',
+        'verification_attempts',
+        'status',
+        'stripe_customer_id',
     ];
     protected $hidden = [
         'password',
@@ -84,7 +91,7 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     }
     public function media()
     {
-        return $this->hasOne(Media::class);
+        return $this->hasMany(Media::class);
     }
     public function tags()
     {

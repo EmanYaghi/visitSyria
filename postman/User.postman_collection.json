@@ -29,6 +29,85 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Most Active Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2MTgzMTIsIm5iZiI6MTc1NTYxODMxMiwianRpIjoib2NoYUhmUDBiUHJVczBYQyIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.a3PqVt7Ul52RqplefrD23dpXL_0t8wj8tTUNmoTNbo0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}mostActiveUsers?by=trip",
+					"host": [
+						"{{URL}}mostActiveUsers"
+					],
+					"query": [
+						{
+							"key": "by",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change User Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2MzY5MzMsIm5iZiI6MTc1NTYzNjkzMywianRpIjoiVXY3UExhNFQ5d3JDN0owNSIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.BQk6gj551YSZQv11C9Es3MsE6Godcl1VuiS8xsM8t40",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "user_id",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "block",
+							"type": "text"
+						},
+						{
+							"key": "duration",
+							"value": "year",
+							"type": "text"
+						},
+						{
+							"key": "reason",
+							"value": "mnmkxjv dlfkgjf dlkfjkdo",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}changeUserStatus",
+					"host": [
+						"{{URL}}changeUserStatus"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

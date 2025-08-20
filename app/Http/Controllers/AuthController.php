@@ -13,6 +13,7 @@ use App\Http\Requests\Auth\{
     DeleteAccountRequest,
     LoginRequest,
     LoginWithGoogleRequest,
+    RegisterCompanyRequest,
     RegisterRequest,
     ResetPasswordRequest,
     SendCodeRequest,
@@ -201,6 +202,22 @@ class AuthController extends Controller
             'code'=>$code,
             'profile'=>new AdminProfileResource($user->adminProfile),
         ];
+    }
+
+
+
+
+     public function registerCompanyBySuperAdmin(RegisterCompanyRequest $request)
+    {
+        $data= $request->validated();
+        if ($request->hasFile('image')) {
+            $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
+            Storage::disk('public')->put($data['image'],file_get_contents($request->image));
+        }
+        $data['documents'] = $request->file('documents');
+        return $this->handle(fn() => $this->authService->registerCompanyBySuperAdmin(
+            $data
+        ));
     }
 
 }
