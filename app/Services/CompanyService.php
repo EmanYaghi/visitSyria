@@ -48,9 +48,25 @@ class CompanyService
             $companies = AdminProfile::orderBy('rating', 'desc')->take(10)->get();
         else if($by=='trip')
             $companies = AdminProfile::orderBy('number_of_trips', 'desc')->take(10)->get();
+        else if($by=='earning')
+        {
+          $companies = User::role('admin')
+            ->with('adminProfile', 'trips.bookings')
+            ->get()
+            ->map(function($user) {
+                $user->total_revenue = $user->trips->sum(function($trip) {
+                    return $trip->bookings->where('is_paid', true)->sum('price')/5;
+                });
+                return $user;
+            })
+            ->sortByDesc('total_revenue')
+            ->take(10);
+            $companies=$companies->pluck('adminProfile');
+
+        }
         else
             return [
-                'message' => 'by must be either trip or rating',
+                'message' => 'by must be either trip or rating or earning',
                 'code' => 400
             ];
         return [

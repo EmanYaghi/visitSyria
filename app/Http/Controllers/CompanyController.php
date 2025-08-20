@@ -58,5 +58,19 @@ class CompanyController extends Controller
             $message=$th->getMessage();
             return response()->json(["message"=>$message]);
         }
+    }/*
+    getEarning()
+    {
+        allearning
+        nspa mooawia lziada aw neqsan last week
     }
+    getUser()
+    {
+        allusers
+        nspa mooawia lziada aw neqsan yesterday
+    }
+    getRating()
+    {
+
+    }*/
 }

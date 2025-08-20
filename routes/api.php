@@ -86,6 +86,7 @@ use Stripe\Token;
         Route::delete('trips/{id}', [TripController::class,'destroy']);
         Route::post('trip/update/{id}', [TripController::class,'update']);
         Route::post('trips/cancel/{id}',[TripController::class,'cancel']);
+        Route::get('trips/lastTrip', [TripController::class,'lastTrip']);
 
         Route::post('reserve', [BookingController::class, 'reserve']);
 
@@ -116,6 +117,7 @@ use Stripe\Token;
     Route::get('trip/company/{id}', [TripController::class,'companyTrips']);
     Route::get('trip/offers', [TripController::class,'offers']);
     Route::get('trips/similar/{id}',[TripController::class,'similarTrips']);
+
 
     Route::get('places/restaurants', [PlaceController::class, 'getRestaurants']);
     Route::get('places/hotels', [PlaceController::class, 'getHotels']);
