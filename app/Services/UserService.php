@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Resources\Auth\ProfileResource;
 use App\Http\Resources\Auth\UserResource;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\ReservationResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -131,4 +133,38 @@ class UserService
             'code' => 200
         ];
     }
+
+    public function userActivities($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return [
+                'message' => "not found",
+                'code'    => 404
+            ];
+        }
+        $type=request()->query('type');
+        if($type=='post')
+        {
+            $activities=$user->posts;
+            $activities= PostResource::collection($activities);
+        }
+        else if($type=='trip'||$type=='event')
+        {
+            $activities = $user->bookings()->whereNotNull($type.'_id')->where('is_paid',true)->get();
+            $activities= ReservationResource::collection($activities);
+        }
+        else
+            return [
+                'message' => 'the type must be either trip or post or event',
+                'code'    => 200,
+            ];
+         return [
+            'activities'   => $activities,
+            'message' => 'All '.$type.' retrieved.',
+            'code'    => 200,
+        ];
+
+    }
+
 }

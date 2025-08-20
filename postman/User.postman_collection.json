@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU0NTMxODUsIm5iZiI6MTc1NTQ1MzE4NSwianRpIjoiTnBTUHBXS0wwUmJEZTNoQiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.gGCXgTs5a1DQaAtpadscuiB3Rtgq8Pa0z7Tsca010-k",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
 							"type": "string"
 						}
 					]
@@ -53,7 +53,8 @@
 					"query": [
 						{
 							"key": "by",
-							"value": "trip"
+							"value": "trip",
+							"description": "tip-post-event"
 						}
 					]
 				}
@@ -86,11 +87,12 @@
 						{
 							"key": "status",
 							"value": "block",
+							"description": "block-unblock",
 							"type": "text"
 						},
 						{
 							"key": "duration",
-							"value": "year",
+							"value": "month",
 							"type": "text"
 						},
 						{
@@ -104,6 +106,40 @@
 					"raw": "{{URL}}changeUserStatus",
 					"host": [
 						"{{URL}}changeUserStatus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User Activities",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}userActivities/3?type=post",
+					"host": [
+						"{{URL}}userActivities"
+					],
+					"path": [
+						"3"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "post",
+							"description": "post-trip-event"
+						}
 					]
 				}
 			},

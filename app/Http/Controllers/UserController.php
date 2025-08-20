@@ -54,4 +54,16 @@ class UserController extends Controller
         }
     }
 
+    public function userActivities($id)
+    {
+        $data=[];
+        try{
+            $data=$this->userService->userActivities($id);
+            return response()->json(["activities"=>$data['activities']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+
 }

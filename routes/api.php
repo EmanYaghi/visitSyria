@@ -184,7 +184,7 @@ use Stripe\Token;
         Route::get('allUser',[UserController::class,'allUser']);
         Route::get('mostActiveUsers',[UserController::class,'mostActiveUsers']);
         Route::post('changeUserStatus',[UserController::class,'changeUserStatus']);
-
+        Route::get('userActivities/{id}',[UserController::class,'userActivities']);
     });
 
     Route::middleware('auth:api')->group(function () {

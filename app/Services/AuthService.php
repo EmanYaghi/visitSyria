@@ -384,7 +384,7 @@ class AuthService
             }
         }
         $user->assignRole('admin');
-        $company =$user->adminProfile()->create($request);
+        $company =$user->adminProfile()->create(['status'=>'فعالة',...$request]);
         return [
             'company' => new AdminResource($company),
             'message' => 'this is all company',
