@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class TripService
 {
@@ -121,7 +124,27 @@ class TripService
         $this->authorize('update', $trip);
         $trip->update($request);
         if (isset($request['images']) && is_array($request['images'])) {
-            $trip->media()->delete();
+             $keep = collect($request['old_images'] ?? [])
+                ->map(function ($item) {
+                    if (empty($item)) return null;
+                    $path = parse_url($item, PHP_URL_PATH) ?: $item;
+                    $path = ltrim($path, '/');
+                    if (Str::startsWith($path, 'storage/')) {
+                        $path = Str::after($path, 'storage/');
+                    }
+                    return $path;
+                })
+                ->filter()
+                ->values()
+                ->all();
+            if (!empty($request['old_images'])) {
+                foreach ($trip->media as $media) {
+                    if (!in_array($media->url, $keep, true)) {
+                        Storage::disk('public')->delete($media->url);
+                        $media->delete();
+                    }
+                }
+            }
             foreach ($request['images'] as $image) {
                 if ($image instanceof \Illuminate\Http\UploadedFile) {
                     $url = $image->store('trip_images');

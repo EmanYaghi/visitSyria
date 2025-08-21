@@ -18,6 +18,8 @@ class UpdateTripRequest extends FormRequest
             'description'=>'sometimes|string',
             'images' => 'nullable|array|max:4',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'old_images'=>'nullable|array|max:4',
+            'old_images.*'=>'string'
         ];
     }
 }

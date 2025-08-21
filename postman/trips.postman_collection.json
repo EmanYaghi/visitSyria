@@ -379,12 +379,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}trips/2",
+					"raw": "{{URL}}trips/11",
 					"host": [
 						"{{URL}}trips"
 					],
 					"path": [
-						"2"
+						"11"
 					]
 				}
 			},
