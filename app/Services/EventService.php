@@ -29,63 +29,72 @@ class EventService
     }
 
     public function getAllEvents()
-    {
-        $events = $this->eventRepository->getAll();
-        $now = Carbon::now();
-        $events = $events->filter(function ($e) use ($now) {
-            if (!empty($e->status) && $e->status === 'cancelled') {
-                return false;
+{
+    $events = $this->eventRepository->getAll();
+    $now = Carbon::now();
+    $events = $events->filter(function ($e) use ($now) {
+        if (!empty($e->status) && $e->status === 'cancelled') {
+            return false;
+        }
+        $start = null;
+        try {
+            if ($e->date instanceof Carbon) {
+                $start = $e->date;
+            } elseif (!empty($e->date)) {
+                $start = Carbon::parse($e->date);
             }
+        } catch (\Throwable $ex) {
             $start = null;
-            try {
-                if ($e->date instanceof Carbon) {
-                    $start = $e->date;
-                } elseif (!empty($e->date)) {
-                    $start = Carbon::parse($e->date);
-                }
-            } catch (\Throwable $ex) {
-                $start = null;
-            }
-
-            $days  = intval($e->duration_days ?? 0);
-            $hours = intval($e->duration_hours ?? 0);
-
-            if ($start) {
-                $end = (clone $start)->addDays($days)->addHours($hours);
-                if (! $now->lt($start)) {
-                    return false;
-                }
-            }
-
-            $ticketsTotal = isset($e->tickets) && $e->tickets !== null ? (int) $e->tickets : null;
-            $reserved = isset($e->reserved_tickets) ? (int) $e->reserved_tickets : 0;
-
-            if ($ticketsTotal !== null) {
-                $remaining = max($ticketsTotal - $reserved, 0);
-                return $remaining > 0;
-            }
-
-            return true;
-        });
-
-        $user = auth('api')->user();
-        if ($user) {
-            $events->load(['saves' => function ($q) use ($user) {
-                $q->where('user_id', $user->id)->whereNotNull('event_id');
-            }]);
         }
 
-        return $events->map(function ($event) use ($user) {
-            if (! $user) {
-                $event->is_saved = null;
-            } else {
-                $event->is_saved = (bool) ($event->relationLoaded('saves')
-                    ? $event->saves->isNotEmpty()
-                    : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
+        $days  = intval($e->duration_days ?? 0);
+        $hours = intval($e->duration_hours ?? 0);
+
+        if ($start) {
+            $end = (clone $start)->addDays($days)->addHours($hours);
+            if (! $now->lt($start)) {
+                return false;
             }
-            return $event;
+        }
+
+        $ticketsTotal = isset($e->tickets) && $e->tickets !== null ? (int) $e->tickets : null;
+        $reserved = isset($e->reserved_tickets) ? (int) $e->reserved_tickets : 0;
+
+        if ($ticketsTotal !== null) {
+            $remaining = max($ticketsTotal - $reserved, 0);
+            return $remaining > 0;
+        }
+
+        return true;
+    });
+    $tokenPresent = (bool) request()->bearerToken();
+    $user = $tokenPresent ? auth('api')->user() : null;
+
+
+    if ($user) {
+        $events = $events->filter(function ($event) use ($user) {
+            return ! $event->bookings()->where('user_id', $user->id)->exists();
         })->values();
     }
+
+    if ($user) {
+        $events->load(['saves' => function ($q) use ($user) {
+            $q->where('user_id', $user->id)->whereNotNull('event_id');
+        }]);
+    }
+
+    return $events->map(function ($event) use ($user) {
+        if (! $user) {
+            $event->is_saved = null;
+        } else {
+            $event->is_saved = (bool) ($event->relationLoaded('saves')
+                ? $event->saves->isNotEmpty()
+                : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
+        }
+        return $event;
+    })->values();
+}
+
 
     public function getAllEventsForAdmin()
     {

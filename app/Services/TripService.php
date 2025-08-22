@@ -16,54 +16,63 @@ use Illuminate\Support\Facades\DB;
 class TripService
 {
     use AuthorizesRequests;
+
     public function index()
     {
-        $user=Auth::user();
-        if(!$user||$user->hasRole('client'))
-        {
-            $tag=request()->query('tag');
-            if($tag=="الكل")
-                $trips=Trip::where('start_date','>',now())->whereColumn('tickets', '>', 'reserved_tickets')->get();
-            else{
+        $tokenPresent = (bool) request()->bearerToken();
+        $user = $tokenPresent ? Auth::user() : null;
+
+        if (!$user || ($user && $user->hasRole('client'))) {
+            $tag = request()->query('tag');
+            if ($tag == "الكل") {
+                $trips = Trip::where('start_date', '>', now())
+                    ->whereColumn('tickets', '>', 'reserved_tickets')
+                    ->get();
+            } else {
                 $tagName = TagName::where('body', $tag)->where('follow_to', 'trip')->first();
                 if ($tagName) {
                     $tagIds = $tagName->tags()->whereNotNull('trip_id')->pluck('trip_id');
-                    $trips = Trip::whereIn('id', $tagIds)->where('start_date','>',now())->whereColumn('tickets', '>', 'reserved_tickets')->get();
+                    $trips = Trip::whereIn('id', $tagIds)
+                        ->where('start_date', '>', now())
+                        ->whereColumn('tickets', '>', 'reserved_tickets')
+                        ->get();
                 } else {
-                    $trips = [];
+                    $trips = collect([]);
                 }
             }
+
             if ($user) {
                 $trips = $trips->filter(function ($trip) use ($user) {
                     return !$trip->bookings()->where('user_id', $user->id)->exists();
                 })->values();
             }
 
+        } else if ($user->hasRole('super_admin')) {
+            $trips = Trip::all();
+        } else if ($user->hasRole('admin')) {
+            $trips = Trip::where('user_id', $user->id)->get();
+        } else {
+            // fallback - no trips
+            $trips = collect([]);
         }
-        else if($user->hasRole('super_admin'))
-        {
-            $trips=Trip::all();
-        }
-        else if($user->hasRole('admin'))
-        {
-            $trips=Trip::where('user_id',$user->id)->get();
-        }
-        $code=200;
-        $message='this is all trips ';
-        return ['trips'=>TripResource::collection($trips),'message'=>$message,'code'=>$code];
+
+        $code = 200;
+        $message = 'this is all trips ';
+        return ['trips' => TripResource::collection($trips), 'message' => $message, 'code' => $code];
     }
+
     public function store($request)
     {
         $this->authorize('create', Trip::class);
         if (isset($request['improvements']) && is_array($request['improvements'])) {
             $request['improvements'] = json_encode($request['improvements']);
         }
-        $trip =Auth::user()->trips()->create($request);
-        if($request['discount']!=null)
-            $trip->update(['new_price'=>$request['price']-$request['price']*$request['discount']/100]);
+        $trip = Auth::user()->trips()->create($request);
+        if ($request['discount'] != null)
+            $trip->update(['new_price' => $request['price'] - $request['price'] * $request['discount'] / 100]);
         if (isset($request['tags'])) {
             foreach ($request['tags'] as $tag) {
-                $tagName=TagName::where('body',$tag)->where('follow_to','trip')->first();
+                $tagName = TagName::where('body', $tag)->where('follow_to', 'trip')->first();
                 $trip->tags()->create(["tag_name_id" => $tagName->id]);
             }
         }
@@ -76,45 +85,47 @@ class TripService
             }
         }
 
-        if (isset($request['timelines']) ) {
+        if (isset($request['timelines'])) {
 
             foreach ($request['timelines'] as $timelineData) {
                 $timeline = $trip->timelines()->create([
                     "day_number" => $timelineData['day'] ?? null
                 ]);
 
-                if (isset($timelineData['sections']) ) {
+                if (isset($timelineData['sections'])) {
                     foreach ($timelineData['sections'] as $section) {
                         $timeline->sections()->create([
                             "time" => $section['time'] ?? null,
                             "title" => $section['title'] ?? null,
                             "description" => $section['description'] ?? null,
-                            "longitude"=>$section['longitude']??null,
-                            "latitude"=>$section['latitude']??null,
+                            "longitude" => $section['longitude'] ?? null,
+                            "latitude" => $section['latitude'] ?? null,
                         ]);
                     }
                 }
             }
         }
         $trip->user->adminProfile->increment('number_of_trips');
-        $code=201;
-        $message='trip created';
-        return ['trip'=>new TripResource($trip),'message'=>$message,'code'=>$code];
+        $code = 201;
+        $message = 'trip created';
+        return ['trip' => new TripResource($trip), 'message' => $message, 'code' => $code];
     }
+
     public function show($id)
     {
-        $t=Trip::find($id);
-        if($t){
-            $trip=new TripResource($t);
-            $code=200;
-            $message='trip founded';
-        }else{
-            $trip=null;
-            $code=404;
-            $message='not found';
+        $t = Trip::find($id);
+        if ($t) {
+            $trip = new TripResource($t);
+            $code = 200;
+            $message = 'trip founded';
+        } else {
+            $trip = null;
+            $code = 404;
+            $message = 'not found';
         }
-        return ['trip'=>$trip,'message'=>$message,'code'=>$code];
+        return ['trip' => $trip, 'message' => $message, 'code' => $code];
     }
+
     public function update($request, $id)
     {
         $trip = Trip::findOrFail($id);
@@ -129,57 +140,74 @@ class TripService
                 }
             }
         }
-        $code=201;
-        $message='trip updated';
-        return ['message'=>$message,'code'=>$code];
+        $code = 201;
+        $message = 'trip updated';
+        return ['message' => $message, 'code' => $code];
     }
 
-    public function companyTrips( $id)
+    public function companyTrips($id)
     {
+        $tokenPresent = (bool) request()->bearerToken();
+        $user = $tokenPresent ? Auth::user() : null;
 
-        $user=Auth::user();
-        if(!$user||$user->hasRole('client'))
-        {
-            $tag=request()->query('tag');
-            if($tag=="الكل")
-                $trips=Trip::where('user_id',$id)->where('start_date','>',now())->whereColumn('tickets', '>', 'reserved_tickets')->get();
-            else{
+        if (!$user || ($user && $user->hasRole('client'))) {
+            $tag = request()->query('tag');
+            if ($tag == "الكل") {
+                $trips = Trip::where('user_id', $id)
+                    ->where('start_date', '>', now())
+                    ->whereColumn('tickets', '>', 'reserved_tickets')
+                    ->get();
+            } else {
                 $tagName = TagName::where('body', $tag)->where('follow_to', 'trip')->first();
                 if ($tagName) {
                     $tagIds = $tagName->tags()->whereNotNull('trip_id')->pluck('trip_id');
-                    $trips = Trip::whereIn('id', $tagIds)->where('user_id',$id)->where('start_date','>',now())->whewhereColumn('tickets', '>', 'reserved_tickets')->get();
+                    $trips = Trip::whereIn('id', $tagIds)
+                        ->where('user_id', $id)
+                        ->where('start_date', '>', now())
+                        ->whereColumn('tickets', '>', 'reserved_tickets')
+                        ->get();
                 } else {
-                    $trips = [];
+                    $trips = collect([]);
                 }
             }
+
             if ($user) {
                 $trips = $trips->filter(function ($trip) use ($user) {
                     return !$trip->bookings()->where('user_id', $user->id)->exists();
                 })->values();
             }
+        } else {
+            $trips = Trip::where('user_id', $id)->get();
         }
-        else
-            $trips=Trip::where('user_id',$id)->get();
+
         if ($trips) {
             $trips = TripResource::collection($trips);
             $code = 200;
-            $message = 'this is all trips for company'.$id;
+            $message = 'this is all trips for company' . $id;
         } else {
             $trips = null;
             $code = 404;
-            $message = 'not found any trip for company'.$id;
+            $message = 'not found any trip for company' . $id;
         }
-        return ['trips'=>$trips,'message'=>$message,'code'=>$code];
+        return ['trips' => $trips, 'message' => $message, 'code' => $code];
     }
+
     public function offers()
     {
-        $user=Auth::user();
-        $trips=Trip::where('discount','>',0)->where('start_date','>',now())->whereColumn('tickets', '>', 'reserved_tickets')->get();
-         if ($user) {
+        $tokenPresent = (bool) request()->bearerToken();
+        $user = $tokenPresent ? Auth::user() : null;
+
+        $trips = Trip::where('discount', '>', 0)
+            ->where('start_date', '>', now())
+            ->whereColumn('tickets', '>', 'reserved_tickets')
+            ->get();
+
+        if ($user) {
             $trips = $trips->filter(function ($trip) use ($user) {
                 return !$trip->bookings()->where('user_id', $user->id)->exists();
             })->values();
         }
+
         if ($trips) {
             $trips = TripResource::collection($trips);
             $code = 200;
@@ -189,8 +217,9 @@ class TripService
             $code = 404;
             $message = 'not found any trip with offer';
         }
-        return ['trips'=>$trips,'message'=>$message,'code'=>$code];
+        return ['trips' => $trips, 'message' => $message, 'code' => $code];
     }
+
     public function similarTrips($id)
     {
         $currentTrip = Trip::with('tags')->find($id);
@@ -238,7 +267,9 @@ class TripService
             })
             ->values();
 
-        $user=Auth::user();
+        $tokenPresent = (bool) request()->bearerToken();
+        $user = $tokenPresent ? Auth::user() : null;
+
         if ($user) {
             $similarTrips = $similarTrips->filter(function ($trip) use ($user) {
                 return !$trip->bookings()->where('user_id', $user->id)->exists();
@@ -253,52 +284,49 @@ class TripService
 
     public function cancel($id)
     {
-        $trip=Trip::find($id);
+        $trip = Trip::find($id);
         $this->authorize('delete', $trip);
-        if($trip&&$trip->status=="لم تبدأ بعد"&&$trip->start_date->diffInDays(now())==3){
-            foreach($trip->bookings() as $booking){
-                if($booking->is_paid==true)
-                {
-                    $user=$booking->user;
+        if ($trip && $trip->status == "لم تبدأ بعد" && $trip->start_date->diffInDays(now()) == 3) {
+            foreach ($trip->bookings() as $booking) {
+                if ($booking->is_paid == true) {
+                    $user = $booking->user;
                     //refund
                     //send notification
                 }
             }
-            $trip->update(['status'=>'تم الالغاء']);
-            $code=201;
-            $message='trip canceled';
+            $trip->update(['status' => 'تم الالغاء']);
+            $code = 201;
+            $message = 'trip canceled';
+        } else {
+            $code = 404;
+            $message = 'trip not found or trip finished';
         }
-        else{
-            $code=404;
-            $message='trip not found or trip finished';
-        }
-        return ['message'=>$message,'code'=>$code];
+        return ['message' => $message, 'code' => $code];
     }
 
-    public function destroy( $id)
+    public function destroy($id)
     {
-        $trip=Trip::find($id);
+        $trip = Trip::find($id);
         $this->authorize('delete', $trip);
-        if($trip&&($trip->status=="تم الالغاء")){
+        if ($trip && ($trip->status == "تم الالغاء")) {
             $trip->delete();
             $trip->user->adminProfile->decrement('number_of_trips');
-            $code=201;
-            $message='trip deleted';
+            $code = 201;
+            $message = 'trip deleted';
+        } else {
+            $code = 404;
+            $message = 'trip not found or trip dont canceled';
         }
-        else{
-            $code=404;
-            $message='trip not found or trip dont canceled';
-        }
-        return ['message'=>$message,'code'=>$code];
+        return ['message' => $message, 'code' => $code];
     }
 
     public function lastTrip()
     {
-        $user=Auth::user();
-        if(!$user->hasRole('super_admin'))
-            return ['message'=>'unauthorized','code'=>403];
+        $user = Auth::user();
+        if (!$user->hasRole('super_admin'))
+            return ['message' => 'unauthorized', 'code' => 403];
         $trips = Trip::orderByDesc('created_at')->take(6)->get();
-        return ['trips'=>TripResource::collection($trips),'message'=>'this is last 6 trips' ,'code'=>200];
+        return ['trips' => TripResource::collection($trips), 'message' => 'this is last 6 trips', 'code' => 200];
     }
 
 }
