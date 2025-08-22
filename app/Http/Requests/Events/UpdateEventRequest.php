@@ -17,9 +17,13 @@ class UpdateEventRequest extends FormRequest
             'description' => 'sometimes|required|string',
             'longitude' => 'sometimes|required|numeric',
             'latitude' => 'sometimes|required|numeric',
-            'place'=>'sometimes|required|string',
+            'place' => 'sometimes|required|string',
+
             'images' => 'nullable|array|max:4',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+
+            'old_images' => 'nullable|array|max:4',
+            'old_images.*' => 'string',
         ];
     }
 }

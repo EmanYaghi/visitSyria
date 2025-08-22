@@ -180,6 +180,12 @@
 							"key": "images[0]",
 							"type": "file",
 							"src": "/C:/Users/Dell/Downloads/09df22ed-c2a5-4892-9b2a-dc8c46483a59.jfif"
+						},
+						{
+							"key": "old_images[0]",
+							"value": "",
+							"type": "text",
+							"disabled": true
 						}
 					]
 				},
@@ -226,6 +232,39 @@
 			"response": []
 		},
 		{
+			"name": "GetPlaceByID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/18",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"18"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "GetAllRestaurants",
 			"request": {
 				"auth": {
@@ -253,6 +292,65 @@
 					],
 					"path": [
 						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllHotels",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/hotels",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"hotels"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAllTouristPlaces",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/tourist",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"tourist"
 					]
 				}
 			},
@@ -365,65 +463,6 @@
 			"response": []
 		},
 		{
-			"name": "GetAllHotels",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}places/hotels",
-					"host": [
-						"{{URL}}places"
-					],
-					"path": [
-						"hotels"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetAllTouristPlaces",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}places/tourist",
-					"host": [
-						"{{URL}}places"
-					],
-					"path": [
-						"tourist"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "GetTopRatedTouristPlaces",
 			"request": {
 				"auth": {
@@ -444,6 +483,87 @@
 					],
 					"path": [
 						"top-rated-tourist"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق",
+							"description": "Optional"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTopRatedRestaurants",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/top-restaurants",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"top-restaurants"
+					],
+					"query": [
+						{
+							"key": "city",
+							"value": "دمشق",
+							"description": "Optional",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetTopRatedHotels",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}places/top-hotels?city=دمشق",
+					"host": [
+						"{{URL}}places"
+					],
+					"path": [
+						"top-hotels"
 					],
 					"query": [
 						{
@@ -561,39 +681,6 @@
 			"response": []
 		},
 		{
-			"name": "GetPlaceByID",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}places/18",
-					"host": [
-						"{{URL}}places"
-					],
-					"path": [
-						"18"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "GetSimilarPlaces",
 			"request": {
 				"auth": {
@@ -655,87 +742,6 @@
 					],
 					"path": [
 						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetTopRatedRestaurants",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}places/top-restaurants",
-					"host": [
-						"{{URL}}places"
-					],
-					"path": [
-						"top-restaurants"
-					],
-					"query": [
-						{
-							"key": "city",
-							"value": "دمشق",
-							"description": "Optional",
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetTopRatedHotels",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}places/top-hotels?city=دمشق",
-					"host": [
-						"{{URL}}places"
-					],
-					"path": [
-						"top-hotels"
-					],
-					"query": [
-						{
-							"key": "city",
-							"value": "دمشق",
-							"description": "Optional"
-						}
 					]
 				}
 			},

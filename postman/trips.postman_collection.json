@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "2e8f3598-c355-4efb-a8be-0abb6e53ac5f",
+		"_postman_id": "82393a8e-70eb-4d9f-9e22-55121f7d0a99",
 		"name": "trips",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38928530"
+		"_exporter_id": "40522740"
 	},
 	"item": [
 		{
@@ -290,7 +290,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{TOKEN}}",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU4NjkxODEsIm5iZiI6MTc1NTg2OTE4MSwianRpIjoiN0xUVDg3SmVQVHZBV09TUCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.tJz7YFYsdDodjJucSy7fID9GDa8SYf5iGOKV8FQE-XQ",
 							"type": "string"
 						}
 					]
@@ -313,24 +313,29 @@
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "postman-cloud:///1efb97d4-5de4-45a0-bf4a-e4f6c722878b"
+							"src": "/C:/Users/Dell/Downloads/c766d5c8-aa25-44ed-b24b-7dc910fed931.jfif"
 						},
 						{
 							"key": "images[1]",
 							"type": "file",
-							"src": "postman-cloud:///1efb97c2-2b22-4c00-b984-b9f2ee5009d7",
+							"src": [],
 							"disabled": true
+						},
+						{
+							"key": "old_images[0]",
+							"value": "kjmnjgfhgdvh13.jpg",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "{{URL}}trip/update/17",
+					"raw": "{{URL}}trip/update/1",
 					"host": [
 						"{{URL}}trip"
 					],
 					"path": [
 						"update",
-						"17"
+						"1"
 					]
 				}
 			},

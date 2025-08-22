@@ -31,7 +31,9 @@ class PlaceUpdateRequest extends FormRequest
                     $fail('Invalid classification for tourist.');
             }],
             'images' => 'nullable|array|max:4',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'old_images' => 'nullable|array|max:4',
+            'old_images.*' => 'string'
         ];
     }
 }

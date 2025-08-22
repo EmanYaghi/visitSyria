@@ -27,18 +27,9 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/events",
-					"protocol": "http",
+					"raw": "{{URL}}events",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"events"
+						"{{URL}}events"
 					]
 				}
 			},
@@ -84,7 +75,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
 							"type": "string"
 						}
 					]
@@ -167,28 +158,20 @@
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+							"src": "/C:/Users/Dell/Downloads/c766d5c8-aa25-44ed-b24b-7dc910fed931.jfif"
 						},
 						{
 							"key": "images[1]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+							"src": [],
+							"disabled": true
 						}
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/events",
-					"protocol": "http",
+					"raw": "{{URL}}events",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8000",
-					"path": [
-						"api",
-						"events"
+						"{{URL}}events"
 					]
 				}
 			},
@@ -316,7 +299,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTI1NzcyODMsImV4cCI6MTc1MjU4MDg4MywibmJmIjoxNzUyNTc3MjgzLCJqdGkiOiJXdWxGa1UydVZCVVN0cTQ5Iiwic3ViIjoiMyIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.Znh7W3txg2GRXdL_RirUAShXm492hFZfo1ONQFCAJZ8",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTYwNzksIm5iZiI6MTc1NTA5NjA3OSwianRpIjoiTEdYR0xJWHNaRTJqNUE3cCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7J1dXwsgS_yN9MqfNQQhDJT_2KZhYs_2Ox5YvoIVFM0",
 							"type": "string"
 						}
 					]
@@ -359,28 +342,27 @@
 						{
 							"key": "images[0]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1f0-035c-4aa0-af9c-b57f59e478c8"
+							"src": "/C:/Users/Dell/Downloads/c766d5c8-aa25-44ed-b24b-7dc910fed931.jfif"
 						},
 						{
 							"key": "images[1]",
 							"type": "file",
-							"src": "postman-cloud:///1f05d1fa-47f7-4070-aec1-bafdb5ddedc8"
+							"src": [],
+							"disabled": true
+						},
+						{
+							"key": "old_images[0]",
+							"value": "http://127.0.0.1:8000/storage/events/limited_event.jpg",
+							"type": "text"
 						}
 					]
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/updateEvent/1",
-					"protocol": "http",
+					"raw": "{{URL}}updateEvent/1",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}updateEvent"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"updateEvent",
 						"1"
 					]
 				}
@@ -408,18 +390,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/events/1",
-					"protocol": "http",
+					"raw": "{{URL}}events/1",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}events"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"events",
 						"1"
 					]
 				}
@@ -447,18 +422,11 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8000/api/events/1",
-					"protocol": "http",
+					"raw": "{{URL}}events/1",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"{{URL}}events"
 					],
-					"port": "8000",
 					"path": [
-						"api",
-						"events",
 						"1"
 					]
 				}

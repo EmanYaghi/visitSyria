@@ -177,48 +177,103 @@ class EventService
     }
 
     public function updateEvent(Request $request, $id)
-    {
-        $this->checkAuthorization();
+{
+    $this->checkAuthorization();
 
-        $event = $this->eventRepository->find($id);
-        if (! $event) {
-            throw new NotFoundHttpException('Event not found.');
-        }
-
-        $data = $request->validated();
-        if (isset($data['status'])) {
-            $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
-        }
-
-        $updatedEvent = $this->eventRepository->update($event, $data);
-
-        if ($request->hasFile('images')) {
-            $images = $request->file('images');
-            if (count($images) > 4) {
-                throw new \InvalidArgumentException('Cannot upload more than 4 images.');
-            }
-
-            $updatedEvent->load('media');
-
-            foreach ($updatedEvent->media as $media) {
-                try {
-                    Storage::disk('public')->delete($media->url);
-                } catch (\Throwable $e) {
-                }
-                $media->delete();
-            }
-
-            foreach ($images as $image) {
-                $path = $image->store('events', 'public');
-                $updatedEvent->media()->create([
-                    'event_id' => $updatedEvent->id,
-                    'url' => $path,
-                ]);
-            }
-        }
-
-        return $this->eventRepository->findWithMedia($updatedEvent->id);
+    $event = $this->eventRepository->find($id);
+    if (! $event) {
+        throw new NotFoundHttpException('Event not found.');
     }
+
+    $data = $request->validated();
+    if (isset($data['status'])) {
+        $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
+    }
+
+    $updatedEvent = $this->eventRepository->update($event, $data);
+
+    $updatedEvent->load('media');
+
+    $oldImagesInput = $request->input('old_images', []);
+    $oldImagesInput = is_array($oldImagesInput) ? array_filter(array_map('trim', $oldImagesInput)) : [];
+
+    $kept = [];
+    foreach ($updatedEvent->media as $media) {
+        $rawPath = (string) $media->url;
+        $storageUrl = null;
+        try {
+            $storageUrl = Storage::disk('public')->url(ltrim($rawPath, '/'));
+        } catch (\Throwable $e) {
+            $storageUrl = null;
+        }
+        $appUrlVariant = url('/' . ltrim($rawPath, '/'));
+        $basename = pathinfo($rawPath, PATHINFO_BASENAME);
+
+        $shouldKeep = false;
+        foreach ($oldImagesInput as $old) {
+            if ($old === '') continue;
+            if ($old === $rawPath) {
+                $shouldKeep = true;
+                break;
+            }
+            if ($storageUrl && $old === $storageUrl) {
+                $shouldKeep = true;
+                break;
+            }
+            if ($old === $appUrlVariant) {
+                $shouldKeep = true;
+                break;
+            }
+            if (basename($old) === $basename) {
+                $shouldKeep = true;
+                break;
+            }
+        }
+
+        if ($shouldKeep) {
+            $kept[] = $media;
+        }
+    }
+
+    foreach ($updatedEvent->media as $media) {
+        $isKept = false;
+        foreach ($kept as $k) {
+            if ($k->id === $media->id) {
+                $isKept = true;
+                break;
+            }
+        }
+        if (! $isKept) {
+            try {
+                Storage::disk('public')->delete($media->url);
+            } catch (\Throwable $e) {
+
+            }
+            $media->delete();
+        }
+    }
+
+    $currentKeptCount = count($kept);
+    $maxTotal = 4;
+    $allowedNew = max($maxTotal - $currentKeptCount, 0);
+
+    if ($request->hasFile('images')) {
+        $images = $request->file('images');
+        if (count($images) > $allowedNew) {
+            throw new \InvalidArgumentException("Cannot upload more than {$allowedNew} new image(s). Total images cannot exceed {$maxTotal}.");
+        }
+
+        foreach ($images as $image) {
+            $path = $image->store('events', 'public');
+            $updatedEvent->media()->create([
+                'event_id' => $updatedEvent->id,
+                'url' => $path,
+            ]);
+        }
+    }
+
+    return $this->eventRepository->findWithMedia($updatedEvent->id);
+}
 
     public function deleteEvent($id)
     {

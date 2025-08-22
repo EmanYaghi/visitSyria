@@ -64,16 +64,14 @@ class PlaceService
         return $this->placeRepo->getAll($filters);
     }
 
-public function getTopRatedTouristPlaces(array $filters = [])
+    public function getTopRatedTouristPlaces(array $filters = [])
     {
         $filters['type'] = 'tourist';
-        // allow passing 'city' as name
         if (!empty($filters['city']) && is_string($filters['city'])) {
             $city = City::where('name', trim($filters['city']))->first();
             if ($city) {
                 $filters['city_id'] = $city->id;
             } else {
-                // if city not found return empty collection
                 return collect();
             }
             unset($filters['city']);
@@ -106,7 +104,6 @@ public function getTopRatedTouristPlaces(array $filters = [])
         return $places;
     }
 
-
     public function getTopRatedHotels(array $filters = [])
     {
         $filters['type'] = 'hotel';
@@ -126,6 +123,7 @@ public function getTopRatedTouristPlaces(array $filters = [])
         }
         return $places;
     }
+
     public function getTouristPlacesByClassification($classification)
     {
         return $this->placeRepo->getTouristPlacesByClassification($classification);
@@ -140,12 +138,11 @@ public function getTopRatedTouristPlaces(array $filters = [])
     {
         return $this->placeRepo->getHotelsByCityName($cityName);
     }
-    
-    public function getTouristPlacesByCityName(string $cityName)
-{
-    return $this->placeRepo->getTouristPlacesByCityName($cityName);
-}
 
+    public function getTouristPlacesByCityName(string $cityName)
+    {
+        return $this->placeRepo->getTouristPlacesByCityName($cityName);
+    }
 
     public function getTouristPlacesByClassificationAndCity($classification, $cityId)
     {
@@ -160,52 +157,8 @@ public function getTopRatedTouristPlaces(array $filters = [])
         return $places;
     }
 
-public function storeImages($images, $place)
-{
-    $created = [];
-    foreach ($images as $image) {
-        $path = $image->store('places', 'public');
-        $m = Media::create([
-            'place_id' => $place->id,
-            'url' => $path,
-        ]);
-        $created[] = $m;
-    }
-
-    $place->load('media');
-
-    return collect($created);
-}
-
-     public function replaceImages($images, $place)
+    public function storeImages($images, $place)
     {
-        // enforce max 4
-        if (!is_array($images) && $images instanceof \Illuminate\Support\Collection) {
-            $images = $images->all();
-        }
-        $count = is_array($images) ? count($images) : 0;
-        if ($count > 4) {
-            throw new \InvalidArgumentException('Cannot upload more than 4 images.');
-        }
-
-        // delete files and records for existing media
-        $place->loadMissing('media');
-        foreach ($place->media as $media) {
-            try {
-                if (!empty($media->url)) {
-                    Storage::disk('public')->delete(ltrim($media->url, '/'));
-                }
-            } catch (\Throwable $e) {
-                // ignore deletion errors, continue to delete record
-            }
-            try {
-                $media->delete();
-            } catch (\Throwable $e) {
-                // ignore
-            }
-        }
-
-        // store new images
         $created = [];
         foreach ($images as $image) {
             $path = $image->store('places', 'public');
@@ -216,7 +169,98 @@ public function storeImages($images, $place)
             $created[] = $m;
         }
 
-        // reload media relation
+        $place->load('media');
+
+        return collect($created);
+    }
+
+    public function replaceImages($images, $place, array $oldImages = [])
+    {
+        if (!is_array($images) && $images instanceof \Illuminate\Support\Collection) {
+            $images = $images->all();
+        }
+        $images = is_array($images) ? array_values($images) : [];
+        $oldImages = array_filter(array_map('trim', $oldImages ?? []));
+
+        $maxTotal = 4;
+
+        $place->loadMissing('media');
+
+        $kept = [];
+        foreach ($place->media as $media) {
+            $rawPath = (string)$media->url;
+            $storageUrl = null;
+            try {
+                $storageUrl = Storage::disk('public')->url(ltrim($rawPath, '/'));
+            } catch (\Throwable $e) {
+                $storageUrl = null;
+            }
+            $appUrlVariant = url('/' . ltrim($rawPath, '/'));
+            $basename = pathinfo($rawPath, PATHINFO_BASENAME);
+
+            $shouldKeep = false;
+            foreach ($oldImages as $old) {
+                if ($old === '') continue;
+                if ($old === $rawPath) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if ($storageUrl && $old === $storageUrl) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if ($old === $appUrlVariant) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if (basename($old) === $basename) {
+                    $shouldKeep = true;
+                    break;
+                }
+            }
+
+            if ($shouldKeep) {
+                $kept[] = $media;
+            }
+        }
+
+        foreach ($place->media as $media) {
+            $isKept = false;
+            foreach ($kept as $k) {
+                if ($k->id === $media->id) {
+                    $isKept = true;
+                    break;
+                }
+            }
+            if (! $isKept) {
+                try {
+                    Storage::disk('public')->delete(ltrim($media->url, '/'));
+                } catch (\Throwable $e) {
+                }
+                try {
+                    $media->delete();
+                } catch (\Throwable $e) {
+                }
+            }
+        }
+
+        $currentKeptCount = count($kept);
+        $allowedNew = max($maxTotal - $currentKeptCount, 0);
+
+        if (count($images) > $allowedNew) {
+            throw new \InvalidArgumentException("Cannot upload more than {$allowedNew} new image(s). Total images cannot exceed {$maxTotal}.");
+        }
+
+        $created = [];
+        foreach ($images as $image) {
+            $path = $image->store('places', 'public');
+            $m = Media::create([
+                'place_id' => $place->id,
+                'url' => $path,
+            ]);
+            $created[] = $m;
+        }
+
         $place->load('media');
 
         return collect($created);
@@ -272,7 +316,7 @@ public function storeImages($images, $place)
             return $places->take($limit)->pluck('id')->map(fn($id) => (int)$id)->toArray();
         });
     }
-    
+
     public function annotateWithGlobalTouristRank($places, int $limit = 10): void
     {
         if (! $places instanceof Collection) return;

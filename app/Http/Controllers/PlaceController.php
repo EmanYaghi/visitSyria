@@ -75,26 +75,25 @@ class PlaceController extends Controller
         return new PlaceResource($place);
     }
 
-public function store(PlaceStoreRequest $request)
-{
-    $data = $request->validated();
-    $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
-    $place = $this->placeService->store($data);
+    public function store(PlaceStoreRequest $request)
+    {
+        $data = $request->validated();
+        $data['city_id'] = City::where('name', $data['city_name'])->firstOrFail()->id;
+        $place = $this->placeService->store($data);
 
-    if ($request->hasFile('images')) {
-        $this->placeService->storeImages($request->file('images'), $place);
+        if ($request->hasFile('images')) {
+            $this->placeService->storeImages($request->file('images'), $place);
+        }
+
+        $place = $this->placeService->getById($place->id);
+        $user = $request->user('api');
+        $this->placeService->annotateIsSavedForModel($place, $user);
+        $this->placeService->annotateSingleWithGlobalTouristRank($place);
+
+        return response()->json(['place' => new PlaceResource($place)], 201);
     }
 
-    // reload full place with media and relations
-    $place = $this->placeService->getById($place->id);
-    $user = $request->user('api');
-    $this->placeService->annotateIsSavedForModel($place, $user);
-    $this->placeService->annotateSingleWithGlobalTouristRank($place);
-
-    return response()->json(['place' => new PlaceResource($place)], 201);
-}
-
-public function update(PlaceUpdateRequest $request, $id)
+    public function update(PlaceUpdateRequest $request, $id)
     {
         $data = $request->validated();
         if (isset($data['city_name'])) {
@@ -104,11 +103,11 @@ public function update(PlaceUpdateRequest $request, $id)
 
         $place = $this->placeService->update($id, $data);
 
-        if ($request->hasFile('images')) {
-            $this->placeService->replaceImages($request->file('images'), $place);
+        $oldImages = $request->input('old_images', []);
+        if ($request->hasFile('images') || !empty($oldImages)) {
+            $this->placeService->replaceImages($request->file('images') ?: [], $place, $oldImages);
         }
 
-        // reload fresh model with media and relations
         $place = $this->placeService->getById($place->id);
 
         $user = $request->user('api');
@@ -153,29 +152,30 @@ public function update(PlaceUpdateRequest $request, $id)
         $this->placeService->annotateWithGlobalTouristRank($places);
         return PlaceResource::collection($places);
     }
-public function getTopRatedTouristPlaces(Request $request)
-{
-    $places = $this->placeService->getTopRatedTouristPlaces($request->all());
-    $user = $request->user('api');
-    $this->placeService->annotateIsSavedForCollection($places, $user);
-    return PlaceResource::collection($places);
-}
 
-public function getTopRatedRestaurants(Request $request)
-{
-    $places = $this->placeService->getTopRatedRestaurants($request->all());
-    $user = $request->user('api');
-    $this->placeService->annotateIsSavedForCollection($places, $user);
-    return PlaceResource::collection($places);
-}
+    public function getTopRatedTouristPlaces(Request $request)
+    {
+        $places = $this->placeService->getTopRatedTouristPlaces($request->all());
+        $user = $request->user('api');
+        $this->placeService->annotateIsSavedForCollection($places, $user);
+        return PlaceResource::collection($places);
+    }
 
-public function getTopRatedHotels(Request $request)
-{
-    $places = $this->placeService->getTopRatedHotels($request->all());
-    $user = $request->user('api');
-    $this->placeService->annotateIsSavedForCollection($places, $user);
-    return PlaceResource::collection($places);
-}
+    public function getTopRatedRestaurants(Request $request)
+    {
+        $places = $this->placeService->getTopRatedRestaurants($request->all());
+        $user = $request->user('api');
+        $this->placeService->annotateIsSavedForCollection($places, $user);
+        return PlaceResource::collection($places);
+    }
+
+    public function getTopRatedHotels(Request $request)
+    {
+        $places = $this->placeService->getTopRatedHotels($request->all());
+        $user = $request->user('api');
+        $this->placeService->annotateIsSavedForCollection($places, $user);
+        return PlaceResource::collection($places);
+    }
 
     public function getTouristPlacesByClassification($classification)
     {
@@ -222,21 +222,22 @@ public function getTopRatedHotels(Request $request)
         $this->placeService->annotateWithGlobalTouristRank($hotels);
         return PlaceResource::collection($hotels);
     }
-public function getTouristPlacesByCity(Request $request)
-{
-    $request->validate([
-        'city' => 'required|string|exists:cities,name'
-    ]);
 
-    $cityName = $request->input('city');
-    $places = $this->placeService->getTouristPlacesByCityName($cityName);
+    public function getTouristPlacesByCity(Request $request)
+    {
+        $request->validate([
+            'city' => 'required|string|exists:cities,name'
+        ]);
 
-    $user = $request->user('api');
-    $this->placeService->annotateIsSavedForCollection($places, $user);
-    $this->placeService->annotateWithGlobalTouristRank($places);
+        $cityName = $request->input('city');
+        $places = $this->placeService->getTouristPlacesByCityName($cityName);
 
-    return PlaceResource::collection($places);
-}
+        $user = $request->user('api');
+        $this->placeService->annotateIsSavedForCollection($places, $user);
+        $this->placeService->annotateWithGlobalTouristRank($places);
+
+        return PlaceResource::collection($places);
+    }
 
     private function handleImages($request, $place, $replace = false)
     {
