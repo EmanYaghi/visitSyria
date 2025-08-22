@@ -5,7 +5,10 @@ namespace App\Services;
 use App\Http\Resources\Auth\AdminProfileResource;
 use App\Http\Resources\Auth\AdminResource;
 use App\Http\Resources\CompanyResource;
+use App\Http\Resources\companyWithEarningResource;
 use App\Models\AdminProfile;
+use App\Models\Booking;
+use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,7 +73,7 @@ class CompanyService
                 'code' => 400
             ];
         return [
-            'companies' => AdminResource::collection($companies),
+            'companies' => companyWithEarningResource::collection($companies),
             'message' => 'this is top company',
             'code' => 200
         ];
@@ -109,6 +112,73 @@ class CompanyService
             'company' =>new AdminResource($company),
             'message' => 'this is top company',
             'code' => 200
+        ];
+    }
+
+    public function getEarning()
+    {
+        if(!Auth::user()->hasRole('super_admin'))
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        $trip = Booking::whereNotNull('trip_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/5??0;
+        $tripLastWeek=Booking::whereNotNull('trip_id')->where('is_paid', true)->where('created_at','<', now()->subDays(7))->where('created_at','>=', now()->subDays(14))->sum('price')/20??0;
+        $event=Booking::whereNotNull('event_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/5??0;
+        $eventLastWeek=Booking::whereNotNull('event_id')->where('is_paid', true)->where('created_at','<', now()->subDays(7))->where('created_at','>=', now()->subDays(14))->sum('price')/20??0;
+        $earnings=$trip+$event;
+        $earningsLastWeek=$tripLastWeek+$eventLastWeek;
+        $changeFromLastWeek = $earningsLastWeek
+            ? (($earnings - $earningsLastWeek) / $earningsLastWeek) * 100
+            : 0;
+        return [
+            "earnings"=>$earnings,
+            "changeFromLastWeek"=>$changeFromLastWeek,
+            "message" =>'earnings of super admin',
+            'code'=>200
+        ];
+    }
+   public function getUser()
+    {
+        if(!Auth::user()->hasRole('super_admin'))
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        $users = User::role('client')
+            ->where('created_at','>=', now()->subDays(1))
+            ->count();
+        $users_last_day = User::role('client')
+            ->where('created_at','<', now()->subDays(1))
+            ->where('created_at','>=', now()->subDays(2))
+            ->count() ?? 0;
+        $changeFromLastDay = $users_last_day
+            ? (($users - $users_last_day) / $users_last_day) * 100
+            : 0;
+        return [
+            "users" => $users,
+            "changeFromLastDay" => $changeFromLastDay,
+            "message" => 'number of users today and compare it with yesterday',
+            'code' => 200
+        ];
+    }
+
+    public function getRating()
+    {
+        $ratings = Rating::where('created_at', '>=', now()->subDays(1))
+            ->count() ?? 0;
+        $ratingYesterday = Rating::where('created_at', '<', now()->subDays(1))
+            ->where('created_at', '>=', now()->subDays(2))
+            ->count() ?? 0;
+        $changeFromLastDay = $ratingYesterday
+            ? (($ratings - $ratingYesterday) / $ratingYesterday) * 100
+            : 0;
+
+        return [
+            "ratings"=>$ratings,
+            "changeFromLastWeek"=>$changeFromLastDay,
+            "message" =>'earnings of super admin',
+            'code'=>200
         ];
     }
 }

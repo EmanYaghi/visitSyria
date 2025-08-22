@@ -58,19 +58,39 @@ class CompanyController extends Controller
             $message=$th->getMessage();
             return response()->json(["message"=>$message]);
         }
-    }/*
-    getEarning()
-    {
-        allearning
-        nspa mooawia lziada aw neqsan last week
     }
-    getUser()
+    public function getEarning()
     {
-        allusers
-        nspa mooawia lziada aw neqsan yesterday
+        $data=[];
+        try{
+            $data=$this->companyService->getEarning();
+            return response()->json(["earnings"=>$data['earnings']??null,"changeFromLastWeek"=>$data['changeFromLastWeek']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
     }
-    getRating()
+    public function getUser()
     {
 
-    }*/
+        $data=[];
+        try{
+            $data=$this->companyService->getUser();
+            return response()->json(["users"=>$data['users']??null,"changeFromLastDay"=>$data['changeFromLastDay']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function getRating()
+    {
+        $data=[];
+        try{
+            $data=$this->companyService->getRating();
+            return response()->json(["ratings"=>$data['ratings']??null,"changeFromLastDay"=>$data['changeFromLastDay']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

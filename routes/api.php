@@ -187,7 +187,11 @@ use Stripe\Token;
         Route::get('mostActiveUsers',[UserController::class,'mostActiveUsers']);
         Route::post('changeUserStatus',[UserController::class,'changeUserStatus']);
         Route::get('userActivities/{id}',[UserController::class,'userActivities']);
-            Route::get('users/{id}', [UserController::class, 'getUser']);
+        Route::get('users/{id}', [UserController::class, 'getUser']);
+
+        Route::get('superAdmin/getEarning',[CompanyController::class,'getEarning']);
+        Route::get('superAdmin/getUser',[CompanyController::class,'getUser']);
+        Route::get('superAdmin/getRating',[CompanyController::class,'getRating']);
 
     });
 

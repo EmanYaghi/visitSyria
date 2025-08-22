@@ -1,0 +1,116 @@
+{
+	"info": {
+		"_postman_id": "8d6b660c-5522-452a-a823-db6de3636c7d",
+		"name": "statistics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38928530"
+	},
+	"item": [
+		{
+			"name": "Get Earnings for super admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU3MDAxMDMsIm5iZiI6MTc1NTcwMDEwMywianRpIjoiSHN5clB3Q0dZVlM3VWk3TiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7f5rC9UlAEJrHbz0sPsbOegNeAsPP8h6Sg6qlVvyLoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}superAdmin/getEarning",
+					"host": [
+						"{{URL}}superAdmin"
+					],
+					"path": [
+						"getEarning"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get number of users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU3NDEyNDgsIm5iZiI6MTc1NTc0MTI0OCwianRpIjoiemJXWGNLelVwZFZZMXdtQiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.jbvEoOtpYmi8WjTwQyPXEMEyeEBrfwdIE2xSZIrRejI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}superAdmin/getUser",
+					"host": [
+						"{{URL}}superAdmin"
+					],
+					"path": [
+						"getUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get number of rating",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU3MDAxMDMsIm5iZiI6MTc1NTcwMDEwMywianRpIjoiSHN5clB3Q0dZVlM3VWk3TiIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.7f5rC9UlAEJrHbz0sPsbOegNeAsPP8h6Sg6qlVvyLoI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}superAdmin/getRating",
+					"host": [
+						"{{URL}}superAdmin"
+					],
+					"path": [
+						"getRating"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key:'Accept',\r",
+					"    value:'application/json'\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
