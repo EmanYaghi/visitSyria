@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Preference;
 use App\Models\Support;
 use App\Models\Tag;
 use App\Models\TagName;
@@ -26,6 +27,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             BookingSeeder::class,
             SupportSeeder::class,
+            PreferencesSeeder::class,
 
         ]);
         Trip::factory()->count(10)->create()->each(function ($trip) {

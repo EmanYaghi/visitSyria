@@ -117,61 +117,71 @@ class UserService
             'code' => 200
         ];
     }
-    public function changeUserStatus($request)
-    {
-        if(!Auth::user()->hasRole('super_admin'))
-            return [
-                'message' => 'unauthorized',
-                'code' => 403
-            ];
-        $user = User::findOrFail($request['user_id']);
-        $profile=$user->profile;
-        if($request['status']=='block')
-        {
-            if (in_array($request['duration'], ['minute', 'hour', 'day','week', 'month', 'year']))
-            {
-                switch ($request['duration']) {
-                    case 'minute':
-                        $date = now()->addMinute();
-                        break;
-                    case 'hour':
-                        $date = now()->addHour();
-                        break;
-                    case 'day':
-                        $date = now()->addDay();
-                        break;
-                    case 'week':
-                        $date = now()->addWeek();
-                        break;
-                    case 'month':
-                        $date = now()->addMonth();
-                        break;
-                    case 'year':
-                        $date = now()->addYear();
-                        break;
-                }
-
-                $profile->account_status='حظر مؤقت';
-                $profile->date_of_unblock=$date;
-
-            }
-            else
-            {
-                $profile->account_status='حظر نهائي';
-            }
-        }
-        else if($request['status']=='unblock')
-        {
-            $profile->account_status='نشط';
-            $profile->date_of_unblock=null;
-        }
-        $profile->save();
+public function changeUserStatus($request)
+{
+    if (!Auth::user()->hasRole('super_admin')) {
         return [
-            'user' => new UserResource($user),
-            'message' => 'this is all users',
-            'code' => 200
+            'message' => 'unauthorized',
+            'code' => 403
         ];
     }
+
+    $user = User::findOrFail($request['user_id']);
+    $profile = $user->profile;
+    if (! $profile) {
+        // إذا لم يوجد بروفايل، أنشئ واحد فارغ لتجنب أخطاء الحفظ
+        $profile = $user->profile()->create([]);
+    }
+
+    if (($request['status'] ?? '') === 'block') {
+        $duration = $request['duration'] ?? null;
+
+        if ($duration && in_array($duration, ['minute', 'hour', 'day', 'week', 'month', 'year'], true)) {
+            switch ($duration) {
+                case 'minute':
+                    $date = now()->addMinute();
+                    break;
+                case 'hour':
+                    $date = now()->addHour();
+                    break;
+                case 'day':
+                    $date = now()->addDay();
+                    break;
+                case 'week':
+                    $date = now()->addWeek();
+                    break;
+                case 'month':
+                    $date = now()->addMonth();
+                    break;
+                case 'year':
+                    $date = now()->addYear();
+                    break;
+                default:
+                    $date = null;
+                    break;
+            }
+
+            $profile->account_status = 'حظر مؤقت';
+            $profile->date_of_unblock = $date;
+        } else {
+            $profile->account_status = 'حظر نهائي';
+            $profile->date_of_unblock = null;
+        }
+
+    } elseif (($request['status'] ?? '') === 'unblock') {
+        $profile->account_status = 'نشط';
+        $profile->date_of_unblock = null;
+    }
+
+    $profile->save();
+
+    return [
+        'user' => new UserResource($user),
+        'message' => 'user status changed',
+        'code' => 200
+    ];
+}
+
 
     public function userActivities($id)
     {
