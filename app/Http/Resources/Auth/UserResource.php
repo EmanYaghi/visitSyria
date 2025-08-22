@@ -10,19 +10,14 @@ class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $profile = $this->profile;
+        if ($this->resource->relationLoaded('profile') && $this->resource->profile) {
+        $this->resource->profile->refreshIfUnblocked();
+        $this->resource->load('profile');
+    }
 
-        $remaining = null;
-        if ($profile->date_of_unblock) {
-            $diff = now()->diff(Carbon::parse($profile->date_of_unblock));
-            $remaining = [
-                'years'   => $diff->y,
-                'months'  => $diff->m,
-                'days'    => $diff->d,
-                'hours'   => $diff->h,
-                'minutes' => $diff->i,
-            ];
-        }
+    $profile = $this->resource->profile;
+    $remaining = $profile ? $profile->remainingUnblockInterval() : null;
+
 
         return [
             'id'                => $this->id,
