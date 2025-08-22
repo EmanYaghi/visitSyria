@@ -107,4 +107,22 @@ class PostService
 
         return $query->get();
     }
+    public function deletePost(Post $post): void
+{
+    DB::transaction(function () use ($post) {
+        foreach ($post->media as $media) {
+            if ($media->url && Storage::disk('public')->exists(str_replace('/storage/', '', $media->url))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $media->url));
+            }
+            $media->delete();
+        }
+
+        $post->comments()->delete();
+        $post->likes()->delete();
+        $post->saves()->delete();
+        $post->tags()->detach();
+        $post->delete();
+    });
+}
+
 }

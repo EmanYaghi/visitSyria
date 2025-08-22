@@ -105,6 +105,7 @@ use Stripe\Token;
 
         Route::post('posts', [PostController::class, 'store']);
         Route::post('posts/status', [PostController::class, 'updateStatus']);
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
 
         Route::post('/posts/{post}/like', [FeedbackController::class, 'toggleLike']);
 

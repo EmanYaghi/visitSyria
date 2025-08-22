@@ -210,5 +210,28 @@ public function topActiveUsers(Request $request)
 
         return PostResource::collection($posts);
     }
+    public function destroy(Request $request, Post $post)
+{
+    $user = $request->user();
+    if (! $user) {
+        return response()->json(['message' => 'Unauthenticated'], 401);
+    }
+    if (! $user->hasRole('super_admin')) {
+        return response()->json(['message' => 'Forbidden'], 403);
+    }
+    try {
+        $this->postService->deletePost($post);
+
+        return response()->json([
+            'message' => 'Post deleted successfully'
+        ], 200);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => true,
+            'message' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 }
