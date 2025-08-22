@@ -73,18 +73,16 @@ class PostResource extends JsonResource
         $user = $this->user;
         $authUser = $request->user();
 
-        // profile photo preference
         $profilePhotoPath = null;
         if ($user) {
-            if (isset($user->profile) && !empty($user->profile->photo)) {
+            if (!empty($user->profile->photo ?? null)) {
                 $profilePhotoPath = $user->profile->photo;
-            } elseif (method_exists($user, 'media') && $user->media) {
-                $profilePhotoPath = $user->media->url ?? null;
+            } else {
+                $profilePhotoPath = optional($user->media->first())->url;
             }
         }
         $profilePhotoFull = $this->toFullUrl($profilePhotoPath);
 
-        // post image: first media record
         $postMedia = $this->media->first() ?? null;
         $imageFull = $postMedia && !empty($postMedia->url) ? $this->toFullUrl($postMedia->url) : null;
 
@@ -118,9 +116,7 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'image' => $imageFull,
             'tags' => $tags,
-            // اضافه الحقل status لو لسا ما اضفته:
             'status' => $this->status,
-            // counts
             'likes_count' => (int) $likesCount,
             'comments_count' => (int) $commentsCount,
             'saves_count' => (int) $savesCount,
