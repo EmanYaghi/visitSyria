@@ -28,7 +28,18 @@ class UserController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-
+    public function getUser($id)
+    {
+        try {
+            $data = $this->userService->getUserById($id);
+            return response()->json([
+                'user'    => $data['user'] ?? null,
+                'message' => $data['message'] ?? null
+            ], $data['code'] ?? 200);
+        } catch (Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
     public function mostActiveUsers()
     {
         $data=[];

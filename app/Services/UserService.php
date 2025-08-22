@@ -27,7 +27,46 @@ class UserService
             'code' => 200
         ];
     }
+    public function getUserById($id)
+    {
+        $user = User::with('profile')
+            ->withCount('posts')
+            ->withCount(['bookings as reserved_trips_count' => function ($query) {
+                $query->whereNotNull('trip_id');
+            }])
+            ->withCount(['bookings as reserved_events_count' => function ($query) {
+                $query->whereNotNull('event_id');
+            }])
+            ->find($id);
 
+        if (! $user) {
+            return [
+                'message' => 'not found',
+                'code'    => 404,
+            ];
+        }
+
+        $authUser = Auth::user();
+        if (! $authUser) {
+            return [
+                'message' => 'unauthenticated',
+                'code'    => 401,
+            ];
+        }
+
+        if (! $authUser->hasRole('super_admin') && $authUser->id !== $user->id) {
+            return [
+                'message' => 'unauthorized',
+                'code'    => 403,
+            ];
+        }
+
+        return [
+            'user'    => new UserResource($user),
+            'message' => 'user retrieved',
+            'code'    => 200,
+        ];
+    }
     public function mostActiveUsers()
     {
         $by=request()->query('by');

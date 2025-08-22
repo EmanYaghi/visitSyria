@@ -110,7 +110,6 @@ use Stripe\Token;
 
         Route::post('bookFlight', [FlightController::class, 'bookFlight']);
 
-
     });
     Route::get('trips', [TripController::class,'index']);
     Route::get('trips/{id}', [TripController::class,'show']);
@@ -187,6 +186,8 @@ use Stripe\Token;
         Route::get('mostActiveUsers',[UserController::class,'mostActiveUsers']);
         Route::post('changeUserStatus',[UserController::class,'changeUserStatus']);
         Route::get('userActivities/{id}',[UserController::class,'userActivities']);
+            Route::get('users/{id}', [UserController::class, 'getUser']);
+
     });
 
     Route::middleware('auth:api')->group(function () {
