@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "3611c0e5-7315-403a-ae23-5c7c885e065a",
+		"_postman_id": "ae02308b-2c65-40e3-8c9c-e4d7f727cc19",
 		"name": "Places",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "40522740"
+		"_exporter_id": "38928530"
 	},
 	"item": [
 		{
@@ -697,6 +697,36 @@
 							"description": "Optional",
 							"disabled": true
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Top 3 places",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}getTopPlaces",
+					"host": [
+						"{{URL}}getTopPlaces"
 					]
 				}
 			},

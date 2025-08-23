@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Http\Resources\PlaceResource;
 use App\Repositories\PlaceRepository;
 use App\Models\Media;
+use App\Models\Place;
 use App\Models\Save;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
@@ -87,7 +89,7 @@ class PlaceService
     {
         return $this->placeRepo->getHotelsByCityName($cityName);
     }
-    
+
     public function getTouristPlacesByCityName(string $cityName)
 {
     return $this->placeRepo->getTouristPlacesByCityName($cityName);
@@ -219,7 +221,7 @@ public function storeImages($images, $place)
             return $places->take($limit)->pluck('id')->map(fn($id) => (int)$id)->toArray();
         });
     }
-    
+
     public function annotateWithGlobalTouristRank($places, int $limit = 10): void
     {
         if (! $places instanceof Collection) return;
@@ -278,5 +280,17 @@ public function storeImages($images, $place)
             ->where('place_id', (int)$place->getKey())
             ->whereNotNull('place_id')
             ->exists();
+    }
+
+    public function getTopPlaces()
+    {
+        $places=Place::orderByDesc('rating')
+            ->limit(3)
+            ->get();
+        return [
+            "places" => PlaceResource::collection($places),
+            "message" => 'these are top 3 places',
+            'code' => 200
+        ];
     }
 }

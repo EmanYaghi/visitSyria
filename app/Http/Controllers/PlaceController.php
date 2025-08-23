@@ -9,6 +9,7 @@ use App\Models\City;
 use App\Models\Place;
 use App\Services\PlaceService;
 use Illuminate\Http\Request;
+use Throwable;
 
 class PlaceController extends Controller
 {
@@ -232,6 +233,21 @@ public function getTouristPlacesByCity(Request $request)
             } else {
                 $this->placeService->storeImages($images, $place);
             }
+        }
+    }
+
+    public function getTopPlaces()
+    {
+        $data=[];
+        try{
+            $data=$this->placeService->getTopPlaces();
+            return response()->json([
+                "places"=>$data['places']??null,
+                "message" =>$data['message']
+            ], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
         }
     }
 }
