@@ -7,6 +7,40 @@
 	},
 	"item": [
 		{
+			"name": "Toggle Like",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}posts/2/like",
+					"host": [
+						"{{URL}}posts"
+					],
+					"path": [
+						"2",
+						"like"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "SetSave",
 			"request": {
 				"auth": {
@@ -28,69 +62,6 @@
 					],
 					"path": [
 						"6"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "trip"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DeleteSave",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{URL}}saves/6?type=trip",
-					"host": [
-						"{{URL}}saves"
-					],
-					"path": [
-						"6"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "trip"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Saves",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
-							"type": "string"
-						}
-					]
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{URL}}saves?type=trip",
-					"host": [
-						"{{URL}}saves"
 					],
 					"query": [
 						{
@@ -127,39 +98,6 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "{{URL}}ratings/5?type=trip",
-					"host": [
-						"{{URL}}ratings"
-					],
-					"path": [
-						"5"
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "trip"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "DeleteRating",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{TOKEN}}",
-							"type": "string"
-						}
-					]
-				},
-				"method": "DELETE",
-				"header": [],
 				"url": {
 					"raw": "{{URL}}ratings/5?type=trip",
 					"host": [
@@ -222,6 +160,120 @@
 			"response": []
 		},
 		{
+			"name": "Set/Update Rating & Comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "rating_value",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "body",
+							"value": "this is comment",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}feedback/2?type=place",
+					"host": [
+						"{{URL}}feedback"
+					],
+					"path": [
+						"2"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "place"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteRating",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{TOKEN}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}ratings/5?type=trip",
+					"host": [
+						"{{URL}}ratings"
+					],
+					"path": [
+						"5"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteSave",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}saves/6?type=trip",
+					"host": [
+						"{{URL}}saves"
+					],
+					"path": [
+						"6"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "DeleteComment",
 			"request": {
 				"auth": {
@@ -249,6 +301,36 @@
 			"response": []
 		},
 		{
+			"name": "Saves",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTMxODUwMTcsImV4cCI6MTc1MzE4ODYxNywibmJmIjoxNzUzMTg1MDE3LCJqdGkiOiJBTVhJVWxqYVg2bU5pdW95Iiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.-RnjXH5JtNRZggHJJ0ClJ2RRbwV1qqSI7tXCg68EeEE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}saves?type=trip",
+					"host": [
+						"{{URL}}saves"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "trip"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get Rating & Comments",
 			"request": {
 				"method": "GET",
@@ -270,40 +352,6 @@
 							"key": "rating",
 							"value": "negative"
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Toggle Like",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUwOTgxMDMsIm5iZiI6MTc1NTA5ODEwMywianRpIjoiZEFzQTA3UVBJR01DNTRtQyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wOyUuJFxgQLm73jnOB8iWwHIwoA77O9UGDe_fL8_StI",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Accept",
-						"value": "application/json",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{URL}}posts/2/like",
-					"host": [
-						"{{URL}}posts"
-					],
-					"path": [
-						"2",
-						"like"
 					]
 				}
 			},

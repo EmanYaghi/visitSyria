@@ -50,6 +50,132 @@ class FeedbackService
         }
         return ['message' => $message, 'code' => $code];
     }
+public function setRatingAndComment(array $payload, $id)
+{
+    $user = Auth::user();
+    if (! $user) {
+        return ['message' => 'Unauthenticated', 'code' => 401];
+    }
+
+    $type = request()->query('type');
+    $allowedCommentTypes = [
+        'trip'  => 'trip_id',
+        'place' => 'place_id',
+        'post'  => 'post_id',
+    ];
+    $allowedRatingTypes = [
+        'trip'  => 'trip_id',
+        'place' => 'place_id',
+    ];
+
+    if (! isset($allowedCommentTypes[$type])) {
+        return ['message' => 'type not supported', 'code' => 400];
+    }
+
+    $colComment = $allowedCommentTypes[$type];
+    $colRating = $allowedRatingTypes[$type] ?? null;
+
+    $exists = match ($type) {
+        'trip' => Trip::find($id),
+        'place' => Place::find($id),
+        'post' => Post::find($id),
+        default => null,
+    };
+
+    if (! $exists) {
+        return ['message' => 'target not found', 'code' => 404];
+    }
+
+    $ratingValue = array_key_exists('rating_value', $payload) ? $payload['rating_value'] : null;
+    $body = array_key_exists('body', $payload) ? trim((string)$payload['body']) : null;
+
+    $existingRating = $colRating ? Rating::where('user_id', $user->id)->where($colRating, $id)->first() : null;
+    $existingComment = Comment::where('user_id', $user->id)->where($colComment, $id)->first();
+
+    if ($body !== null && $body !== '' && $ratingValue === null && ! $existingRating) {
+        return ['message' => 'Cannot add comment without a rating (either create rating first or include rating_value in this request).', 'code' => 422];
+    }
+
+    DB::beginTransaction();
+    try {
+        $finalRating = null;
+        $finalComment = null;
+
+        if ($ratingValue !== null) {
+            if ($colRating === null) {
+                DB::rollBack();
+                return ['message' => 'rating not supported for this type', 'code' => 400];
+            }
+            $classification = ((int)$ratingValue >= 3) ? 'positive' : 'negative';
+            if ($existingRating) {
+                $existingRating->rating_value = (int)$ratingValue;
+                $existingRating->classification = $classification;
+                $existingRating->save();
+                $finalRating = $existingRating->fresh();
+            } else {
+                $finalRating = $user->ratings()->create([
+                    $colRating => $id,
+                    'rating_value' => (int)$ratingValue,
+                    'classification' => $classification,
+                ]);
+            }
+        } else {
+            $finalRating = $existingRating ? $existingRating->fresh() : null;
+        }
+
+        if ($body !== null && $body !== '') {
+            if ($existingComment) {
+                $existingComment->body = $body;
+                $existingComment->save();
+                $finalComment = $existingComment->fresh();
+            } else {
+                $finalComment = $user->comments()->create([
+                    $colComment => $id,
+                    'body' => $body,
+                ]);
+            }
+        } else {
+            $finalComment = $existingComment ? $existingComment->fresh() : null;
+        }
+
+        DB::commit();
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        return ['message' => $e->getMessage(), 'code' => 500];
+    }
+
+    $formatRating = null;
+    if ($finalRating) {
+        $formatRating = [
+            'id' => $finalRating->id,
+            'user_id' => $finalRating->user_id,
+            $colRating => $finalRating->{$colRating},
+            'rating_value' => (int) $finalRating->rating_value,
+            'classification' => $finalRating->classification,
+            'created_at' => $finalRating->created_at ? $finalRating->created_at->toDateString() : null,
+            'updated_at' => $finalRating->updated_at ? $finalRating->updated_at->toDateString() : null,
+        ];
+    }
+
+    $formatComment = null;
+    if ($finalComment) {
+        $formatComment = [
+            'id' => $finalComment->id,
+            'user_id' => $finalComment->user_id,
+            $colComment => $finalComment->{$colComment},
+            'comment' => $finalComment->body ?? $finalComment->comment ?? null,
+            'created_at' => $finalComment->created_at ? $finalComment->created_at->toDateString() : null,
+            'updated_at' => $finalComment->updated_at ? $finalComment->updated_at->toDateString() : null,
+        ];
+    }
+
+    return [
+        'comment' => $formatComment,
+        'rating' => $formatRating,
+        'message' => 'feedback set successfully',
+        'code' => 201
+    ];
+}
 
     public function deleteSave($id)
     {

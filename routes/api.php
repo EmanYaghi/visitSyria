@@ -97,6 +97,9 @@ use Stripe\Token;
         Route::post('saves/{id}',[FeedbackController::class,'setSave']);
         Route::post('comments/{id}',[FeedbackController::class,'setComment']);
         Route::post('ratings/{id}',[FeedbackController::class,'setRating']);
+        Route::post('feedback/{id}',[FeedbackController::class,'setRatingAndComment']);
+
+
         Route::delete('saves/{id}',[FeedbackController::class,'deleteSave']);
         Route::delete('comments/{id}',[FeedbackController::class,'deleteComment']);
         Route::delete('ratings/{id}',[FeedbackController::class,'deleteRating']);

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\FeedbackService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 use Throwable;
 
 class FeedbackController extends Controller
@@ -122,6 +124,36 @@ class FeedbackController extends Controller
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
+
+public function setRatingAndComment(Request $request, $id)
+{
+    try {
+        $validator = Validator::make($request->all(), [
+            'rating_value' => 'nullable|integer|min:1|max:5',
+            'body' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        if (! $request->filled('rating_value') && ! $request->filled('body')) {
+            return response()->json(['message' => 'either rating_value or body is required'], 422);
+        }
+
+        $data = $validator->validated();
+
+        $res = $this->feedbackService->setRatingAndComment($data, $id);
+
+        return response()->json([
+            'comment' => $res['comment'] ?? null,
+            'rating' => $res['rating'] ?? null,
+            'message' => $res['message'] ?? null
+        ], $res['code'] ?? 200);
+    } catch (\Throwable $th) {
+        return response()->json(['message' => $th->getMessage()], 500);
+    }
+}
 
     public function toggleLike(Request $request, $id)
     {
