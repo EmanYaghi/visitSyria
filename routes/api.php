@@ -214,7 +214,10 @@ use Stripe\Token;
     Route::get('topCompanies',[CompanyController::class,'topCompanies'])->middleware('auth:api');
     Route::get('getCompaniesOnHold',[CompanyController::class,'getCompaniesOnHold'])->middleware('auth:api');
     Route::post('changeCompanyStatus',[CompanyController::class,'changeCompanyStatus'])->middleware('auth:api');
+    Route::get('showCompany/{id}',[CompanyController::class,'show'])->middleware('auth:api');
+    Route::get('earningThisYearSA',[CompanyController::class,'earningThisYearSA'])->middleware('auth:api');
     Route::get('search',[FeedbackController::class,'search']);
+    Route::get('getTopPlaces',[PlaceController::class,'getTopPlaces'])->middleware('auth:api');
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/itinerary', [TripPlannerController::class, 'generateTrip']);

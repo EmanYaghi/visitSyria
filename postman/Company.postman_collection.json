@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
 							"type": "string"
 						}
 					]
@@ -46,14 +46,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}topCompanies?by=earning",
+					"raw": "{{URL}}topCompanies?by=trip",
 					"host": [
 						"{{URL}}topCompanies"
 					],
 					"query": [
 						{
 							"key": "by",
-							"value": "earning",
+							"value": "trip",
 							"description": "trip-rating-earning"
 						}
 					]
@@ -69,7 +69,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2MzY5MzMsIm5iZiI6MTc1NTYzNjkzMywianRpIjoiVXY3UExhNFQ5d3JDN0owNSIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.BQk6gj551YSZQv11C9Es3MsE6Godcl1VuiS8xsM8t40",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
 							"type": "string"
 						}
 					]
@@ -110,7 +110,7 @@
 						},
 						{
 							"key": "status",
-							"value": "قيد الحذف",
+							"value": "accept",
 							"description": "reject-accept-فعالة-تم الانذاز-قيد الحذف",
 							"type": "text"
 						},
@@ -497,6 +497,33 @@
 					"body": "{\n    \"company\": {\n        \"user\": {\n            \"id\": 1,\n            \"email\": \"admin@example.com\",\n            \"email_verified_at\": \"2025-08-20T13:19:54.000000Z\",\n            \"is_verified\": 1,\n            \"verification_code\": null,\n            \"verification_code_sent_at\": null,\n            \"verification_attempts\": 0,\n            \"status\": \"reject\",\n            \"stripe_customer_id\": null,\n            \"created_at\": \"2025-08-20T13:19:54.000000Z\",\n            \"updated_at\": \"2025-08-20T21:21:55.000000Z\"\n        },\n        \"id\": 1,\n        \"name_of_company\": \"company1\",\n        \"name_of_owner\": \"owner1\",\n        \"founding_date\": \"2025-07-22\",\n        \"license_number\": \"754544\",\n        \"image\": null,\n        \"documents\": [],\n        \"phone\": \"0987654321\",\n        \"country_code\": \"+963\",\n        \"description\": \"jhfdhg kdjgh yeyghgj dkhgb kjdh\",\n        \"location\": \"دمشق-باب توما\",\n        \"latitude\": \"34.44\",\n        \"longitude\": \"45.7\",\n        \"status\": \"قيد الحذف\",\n        \"number_of_trips\": 0,\n        \"rating\": 0\n    },\n    \"message\": \"this is top company\"\n}"
 				}
 			]
+		},
+		{
+			"name": "show company",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}showCompany/1",
+					"host": [
+						"{{URL}}showCompany"
+					],
+					"path": [
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

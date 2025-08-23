@@ -93,4 +93,28 @@ class CompanyController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
+    public function show($id)
+    {
+        $data=[];
+        try{
+            $data=$this->companyService->show($id);
+            return response()->json(["company"=>$data['company']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+
+    public function earningThisYearSA()
+    {
+        $data=[];
+        try{
+            $data=$this->companyService->earningThisYearSA();
+            return response()->json(["monthlyEarnings"=>$data['monthlyEarnings']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

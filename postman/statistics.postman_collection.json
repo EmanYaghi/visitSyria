@@ -86,6 +86,30 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Earning This Year Super Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTU2ODgwNDEsIm5iZiI6MTc1NTY4ODA0MSwianRpIjoiMjhseVlUcjU3ZW9PRVhQTCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.IInAIy_V0tNd_fcwOOESBZ148wcOJVPZFzto-UUMBlA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}earningThisYearSA",
+					"host": [
+						"{{URL}}earningThisYearSA"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

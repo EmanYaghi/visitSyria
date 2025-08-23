@@ -22,12 +22,15 @@ class CompanyService
         if (!$user || $user->hasRole('client')) {
             $companies = User::role('admin')->with('adminProfile')->get();
             $companies = $companies->filter(function ($company) {
-                return $company->adminProfile && $company->adminProfile->status === 'فعالة';
+                return $company->adminProfile && $company->status=='accept';
             });
             $companies = CompanyResource::collection($companies);
         } else if ($user->hasRole('super_admin')) {
-            $companies=AdminProfile::all();
-            $companies = AdminResource::collection($companies);
+            $companies = User::role('admin')->with('adminProfile')->get();
+            $companies = $companies->filter(function ($company) {
+                return $company->adminProfile && $company->status=='accept';
+            });
+            $companies = companyWithEarningResource::collection($companies->pluck('adminProfile'));
         }
         else{
             $companies=null;
@@ -36,6 +39,20 @@ class CompanyService
         return [
             'companies' => $companies,
             'message' => 'this is all company',
+            'code' => 200
+        ];
+    }
+    public function show($id)
+    {
+        $company=AdminProfile::find($id);
+        if(!$company)
+            return [
+                'message' => 'not found',
+                'code' => 404
+            ];
+        return [
+            'company' =>new companyWithEarningResource( $company),
+            'message' => 'this is company that user id is '.$id,
             'code' => 200
         ];
     }
@@ -99,15 +116,14 @@ class CompanyService
                 'message' => 'unauthorized',
                 'code' => 403
             ];
-        $user = User::findOrFail($request['company_id']);
+        $company = AdminProfile::findOrFail($request['company_id']);
         if($request['status']=='accept'||$request['status']=='reject')
             {
-                $user->update(['status'=>$request['status']]);
-                $user->adminProfile->update(['status' => 'فعالة']);
+                $company->user->update(['status'=>$request['status']]);
+                $company->update(['status' => 'فعالة']);
             }
         else
-            $user->adminProfile->update(['status' => $request['status']]);
-        $company=$user->adminProfile;
+            $company->update(['status' => $request['status']]);
         return [
             'company' =>new AdminResource($company),
             'message' => 'this is top company',
@@ -122,9 +138,9 @@ class CompanyService
                 'message' => 'unauthorized',
                 'code' => 403
             ];
-        $trip = Booking::whereNotNull('trip_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/5??0;
+        $trip = Booking::whereNotNull('trip_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/20??0;
         $tripLastWeek=Booking::whereNotNull('trip_id')->where('is_paid', true)->where('created_at','<', now()->subDays(7))->where('created_at','>=', now()->subDays(14))->sum('price')/20??0;
-        $event=Booking::whereNotNull('event_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/5??0;
+        $event=Booking::whereNotNull('event_id')->where('is_paid', true)->where('created_at','>=', now()->subDays(7))->sum('price')/20??0;
         $eventLastWeek=Booking::whereNotNull('event_id')->where('is_paid', true)->where('created_at','<', now()->subDays(7))->where('created_at','>=', now()->subDays(14))->sum('price')/20??0;
         $earnings=$trip+$event;
         $earningsLastWeek=$tripLastWeek+$eventLastWeek;
@@ -134,7 +150,7 @@ class CompanyService
         return [
             "earnings"=>$earnings,
             "changeFromLastWeek"=>$changeFromLastWeek,
-            "message" =>'earnings of super admin',
+            "message" =>'earnings of super admin this weak and compare it with last weak',
             'code'=>200
         ];
     }
@@ -177,8 +193,39 @@ class CompanyService
         return [
             "ratings"=>$ratings,
             "changeFromLastWeek"=>$changeFromLastDay,
-            "message" =>'earnings of super admin',
+            "message" =>'number of user that rate the super admin today and compare it with yesterday',
             'code'=>200
         ];
     }
+
+    public function earningThisYearSA()
+    {
+        if (!Auth::user()->hasRole('super_admin')) {
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        }
+        $monthlyEarnings = [];
+        for ($month = 12; $month >0; $month--) {
+            $startOfMonth = now()->subMonths($month)->startOfMonth();
+            $endOfMonth   = now()->subMonths($month-1)->endOfMonth();
+            $trip = Booking::whereNotNull('trip_id')
+                ->where('is_paid', true)
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->sum('price') / 20;
+            $event = Booking::whereNotNull('event_id')
+                ->where('is_paid', true)
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->sum('price') / 20;
+            $monthlyEarnings[12-$month] =($trip + $event)??0;
+        }
+
+    return [
+        "monthlyEarnings" => $monthlyEarnings,
+        "message" => 'earnings of super admin for this year (per month)',
+        'code' => 200
+    ];
+}
+
 }

@@ -89,9 +89,7 @@ class PostController extends Controller
 
         if ($status) {
             $query->where('status', $status);
-        } else {
-            $query->where('status', 'Approved');
-        }
+        } 
 
         if ($tag) {
             $query->whereHas('tags', function ($q) use ($tag) {
