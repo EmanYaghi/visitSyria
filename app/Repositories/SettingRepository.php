@@ -24,29 +24,32 @@ class SettingRepository
         return $this->model->find($id);
     }
 
-    /**
-     * إرجاع كل السجلات بحسب النوع (قد تكون أكثر من سجل)
-     */
     public function findByType(string $type, ?string $category = null): Collection
     {
         $q = $this->model->where('type', $type);
         if ($category !== null) {
-            $q->where('category', $category);
+            if ($category === 'app') {
+                $q->whereIn('category', ['app', 'appandadmin']);
+            } elseif ($category === 'admin') {
+                $q->whereIn('category', ['admin', 'appandadmin']);
+            } elseif ($category === 'appandadmin') {
+                $q->where('category', 'appandadmin');
+            }
         }
         return $q->get();
     }
 
-    /**
-     * إرجاع كل السجلات بحسب الفئة category
-     */
     public function findByCategory(string $category): Collection
     {
+        if ($category === 'app') {
+            return $this->model->whereIn('category', ['app', 'appandadmin'])->get();
+        }
+        if ($category === 'admin') {
+            return $this->model->whereIn('category', ['admin', 'appandadmin'])->get();
+        }
         return $this->model->where('category', $category)->get();
     }
 
-    /**
-     * إرجاع سجل واحد بحسب النوع والفئة (مفيد للـ upsert).
-     */
     public function findOneByTypeAndCategory(string $type, string $category): ?Setting
     {
         return $this->model->where('type', $type)
@@ -76,16 +79,10 @@ class SettingRepository
         return $this->model->findOrFail($id);
     }
 
-    /**
-     * عدّاد: عدد الإعدادات لنوع معيّن مفصّل حسب الفئة (app/admin).
-     *
-     * @param string $type
-     * @return array{app:int, admin:int}
-     */
     public function countByType(string $type): array
     {
-        $appCount = $this->model->where('type', $type)->where('category', 'app')->count();
-        $adminCount = $this->model->where('type', $type)->where('category', 'admin')->count();
+        $appCount = $this->model->where('type', $type)->whereIn('category', ['app', 'appandadmin'])->count();
+        $adminCount = $this->model->where('type', $type)->whereIn('category', ['admin', 'appandadmin'])->count();
 
         return [
             'app' => (int) $appCount,

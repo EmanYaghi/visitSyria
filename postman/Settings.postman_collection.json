@@ -28,18 +28,20 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}settings?type=privacy_policy&category=app&title=سياسة الخصوصية 1&description=لرتؤلاينمىؤبمسينبةكخقيخكتةروىربيترىبي",
+					"raw": "{{URL}}settings?type=privacy_policy&category=appandadmin&title=سياسة الخصوصية 1&description=لرتؤلاينمىؤبمسينبةكخقيخكتةروىربيترىبي",
 					"host": [
 						"{{URL}}settings"
 					],
 					"query": [
 						{
 							"key": "type",
-							"value": "privacy_policy"
+							"value": "privacy_policy",
+							"description": "( privacy_policy , common_question , about_app ) "
 						},
 						{
 							"key": "category",
-							"value": "app"
+							"value": "appandadmin",
+							"description": "( app , admin , appandadmin )"
 						},
 						{
 							"key": "title",
@@ -76,21 +78,27 @@
 					}
 				],
 				"url": {
-					"raw": "{{URL}}settings/1?type=privacy_policy&title=سياسة الخصوصية 1 معدل&description=لرتؤلاينمىؤبمسينبةكخقيخكتةروىربيترىبي",
+					"raw": "{{URL}}settings/7?type=privacy_policy&category=appandadmin&title=new new&description=لرتؤلاينمىؤبمسينبةكخقيخكتةروىربيترىبي",
 					"host": [
 						"{{URL}}settings"
 					],
 					"path": [
-						"1"
+						"7"
 					],
 					"query": [
 						{
 							"key": "type",
-							"value": "privacy_policy"
+							"value": "privacy_policy",
+							"description": "( privacy_policy , common_question , about_app ) "
+						},
+						{
+							"key": "category",
+							"value": "appandadmin",
+							"description": "( app , admin , appandadmin )"
 						},
 						{
 							"key": "title",
-							"value": "سياسة الخصوصية 1 معدل"
+							"value": "new new"
 						},
 						{
 							"key": "description",
@@ -135,7 +143,7 @@
 						{
 							"key": "category",
 							"value": "app\n",
-							"description": "(Optional)"
+							"description": "( app , admin , appandadmin ) -> Optional"
 						}
 					]
 				}

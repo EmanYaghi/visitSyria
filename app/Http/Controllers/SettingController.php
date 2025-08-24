@@ -22,13 +22,11 @@ class SettingController extends Controller
     public function index(Request $request)
     {
         $type = $request->query('type');
-        $categoryFilter = $request->query('category'); // optional
+        $categoryFilter = $request->query('category');
         $limit = $request->query('limit');
 
         if ($type !== null) {
-            // إذا طُلب النوع، نرجع العدّ أولاً ثم البيانات (بالفلتر إن وُجد)
             $counts = $this->service->countByType($type);
-
             $settings = $this->service->findByType($type, $categoryFilter);
 
             if ($limit !== null && is_numeric($limit)) {
@@ -41,7 +39,6 @@ class SettingController extends Controller
             ], 200);
         }
 
-        // السلوك الافتراضي: رجْع كل الإعدادات (مع دعم limit)
         $all = $this->service->getAll();
 
         if ($limit !== null && is_numeric($limit)) {
@@ -80,9 +77,8 @@ class SettingController extends Controller
 
     public function getByType(Request $request, $type)
     {
-        $category = $request->query('category'); // optional
+        $category = $request->query('category');
         $settings = $this->service->findByType($type, $category);
-
         $counts = $this->service->countByType($type);
 
         return response()->json([
@@ -101,8 +97,13 @@ class SettingController extends Controller
     {
         $data = $request->only(['title', 'description', 'category']);
 
-        if (empty($data['category']) || !in_array($data['category'], ['app', 'admin'])) {
-            return response()->json(['message' => 'category is required and must be one of: app, admin'], 422);
+        if (empty($data['category']) || !in_array($data['category'], ['app', 'admin', 'appandadmin'])) {
+            return response()->json(['message' => 'category is required and must be one of: app, admin, appandadmin'], 422);
+        }
+
+        if ($data['category'] === 'appandadmin') {
+            $setting = $this->service->upsertByType($type, 'appandadmin', $data);
+            return new SettingResource($setting);
         }
 
         $setting = $this->service->upsertByType($type, $data['category'], $data);

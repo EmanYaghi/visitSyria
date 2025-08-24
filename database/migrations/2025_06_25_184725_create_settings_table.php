@@ -16,7 +16,7 @@ class CreateSettingsTable extends Migration
         'about_app'
     ]);
     $table->index('type');
-    $table->enum('category', ['app', 'admin'])->default('app');
+    $table->enum('category', ['app', 'admin', 'appandadmin'])->default('app');
     $table->index('category');
     $table->string('title');
     $table->longText('description')->nullable();

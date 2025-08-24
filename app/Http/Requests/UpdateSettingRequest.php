@@ -19,7 +19,7 @@ class UpdateSettingRequest extends FormRequest
             'type' => 'required|in:privacy_policy,support,common_question,about_app',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|in:app,admin',
+            'category' => 'required|in:app,admin,appandadmin',
         ];
     }
 }
