@@ -15,6 +15,7 @@ use App\Models\AdminProfile;
 use App\Models\FcmToken;
 use App\Models\Preference;
 use App\Models\Profile;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +23,12 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
+    protected NotificationService $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
      public function register( $request)
     {
         $user=User::create([
@@ -255,7 +262,17 @@ class AuthService
                 }
                 $message='user logged in successfully';
                 $code=200;
-            }
+                if($user->fcmTokens->count()>1)
+                    $user->notify(new UserNotification('warning','your account has been accessed from another device'));
+               if ($user->fcmTokens()->count() > 1) {
+                    $this->notificationService->send(
+                        $user,
+                        'تنبيه أمني',
+                        'تم الدخول إلى حسابك من جهاز آخر',
+                        'تحذير'
+                    );
+    }
+}
         }else{
             $message='user not found';
             $code=404;

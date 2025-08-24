@@ -110,8 +110,8 @@
 						},
 						{
 							"key": "status",
-							"value": "accept",
-							"description": "reject-accept-فعالة-تم الانذاز-قيد الحذف",
+							"value": "تم الانذار",
+							"description": "reject-accept-فعالة-تم الانذار-قيد الحذف",
 							"type": "text"
 						},
 						{

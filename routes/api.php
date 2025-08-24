@@ -16,6 +16,7 @@ use App\Http\Controllers\PlaceController;
     use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\TripPlannerController;
@@ -224,4 +225,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/itineraries', [ItineraryController::class, 'index']);
     Route::get('/itineraries/{itinerary}', [ItineraryController::class, 'show']);
 });
+
+Route::get('getRole', [AuthController::class, 'getRole'])->middleware('auth:api');
+
 ?>

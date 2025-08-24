@@ -117,11 +117,15 @@ class CompanyService
                 'code' => 403
             ];
         $company = AdminProfile::findOrFail($request['company_id']);
-        if($request['status']=='accept'||$request['status']=='reject')
+        if($request['status']=='accept')
             {
                 $company->user->update(['status'=>$request['status']]);
                 $company->update(['status' => 'فعالة']);
             }
+        else if ($request['status']=='reject')
+        {
+            $company->user->update(['status'=>$request['status']]);
+        }
         else
             $company->update(['status' => $request['status']]);
         return [
