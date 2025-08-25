@@ -27,6 +27,7 @@ use App\Http\Resources\Auth\{
     PreferenceResource,
     ProfileResource,
 };
+use App\Http\Resources\companyWithEarningResource;
 use App\Services\AuthService;
 use App\Services\GoogleAuthService;
 use Illuminate\Support\Facades\Auth;
@@ -171,6 +172,7 @@ class AuthController extends Controller
             $data['image']=str::random(32).".".$request->image->getClientOriginalExtension();
             Storage::disk('public')->put($data['image'],file_get_contents($request->image));
         }
+        $data['documents'] = $request->file('documents');
         return $this->handle(fn() => $this->authService->setAdminProfile(
             $data
         ));
@@ -200,7 +202,7 @@ class AuthController extends Controller
         return [
             'message'=>$message,
             'code'=>$code,
-            'profile'=>new AdminProfileResource($user->adminProfile),
+            'profile'=>new companyWithEarningResource($user->adminProfile),
         ];
     }
 
@@ -218,6 +220,12 @@ class AuthController extends Controller
         return $this->handle(fn() => $this->authService->registerCompanyBySuperAdmin(
             $data
         ));
+    }
+
+    public function getRole()
+    {
+        $user=Auth::user();
+        return response()->json(['role'=>$user->getRoleNames()->first() ]);
     }
 
 }

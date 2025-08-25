@@ -117,11 +117,15 @@ class CompanyService
                 'code' => 403
             ];
         $company = AdminProfile::findOrFail($request['company_id']);
-        if($request['status']=='accept'||$request['status']=='reject')
+        if($request['status']=='accept')
             {
                 $company->user->update(['status'=>$request['status']]);
                 $company->update(['status' => 'فعالة']);
             }
+        else if ($request['status']=='reject')
+        {
+            $company->user->update(['status'=>$request['status']]);
+        }
         else
             $company->update(['status' => $request['status']]);
         return [
@@ -221,11 +225,63 @@ class CompanyService
             $monthlyEarnings[12-$month] =($trip + $event)??0;
         }
 
-    return [
-        "monthlyEarnings" => $monthlyEarnings,
-        "message" => 'earnings of super admin for this year (per month)',
-        'code' => 200
-    ];
-}
+        return [
+            "monthlyEarnings" => $monthlyEarnings,
+            "message" => 'earnings of super admin for this year (per month)',
+            'code' => 200
+        ];
+    }
+     public function earningThisYearA()
+    {
+        if (!Auth::user()->hasRole('admin')) {
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        }
+        $monthlyEarnings = [];
+        for ($month = 12; $month >0; $month--) {
+            $startOfMonth = now()->subMonths($month)->startOfMonth();
+            $endOfMonth   = now()->subMonths($month-1)->endOfMonth();
+            $monthlyEarnings[12-$month] = (
+                Booking::where('trip_id',Auth::user()->id)
+                ->where('is_paid', true)
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->sum('price') / 5
+            )??0;
+        }
+
+        return [
+            "monthlyEarnings" => $monthlyEarnings,
+            "message" => 'earnings of admin for this year (per month)',
+            'code' => 200
+        ];
+    }
+    public function ratingThisYearA()
+    {
+
+        if (!Auth::user()->hasRole('admin')) {
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        }
+        $monthlyRatings = [];
+        for ($month = 12; $month >0; $month--) {
+            $startOfMonth = now()->subMonths($month)->startOfMonth();
+            $endOfMonth   = now()->subMonths($month-1)->endOfMonth();
+            $monthlyRatings[12-$month] = (
+                Rating::where('trip_id',Auth::user()->id)
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->count()
+            )??0;
+        }
+
+        return [
+            "monthlyRatings" => $monthlyRatings,
+            "message" => 'ratings of admin for this year (per month)',
+            'code' => 200
+        ];
+    }
 
 }

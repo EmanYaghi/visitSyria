@@ -16,6 +16,7 @@ use App\Http\Controllers\PlaceController;
     use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\TripController;
     use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\TripPlannerController;
@@ -216,6 +217,8 @@ use Stripe\Token;
     Route::post('changeCompanyStatus',[CompanyController::class,'changeCompanyStatus'])->middleware('auth:api');
     Route::get('showCompany/{id}',[CompanyController::class,'show'])->middleware('auth:api');
     Route::get('earningThisYearSA',[CompanyController::class,'earningThisYearSA'])->middleware('auth:api');
+    Route::get('earningThisYearA',[CompanyController::class,'earningThisYearA'])->middleware('auth:api');
+    Route::get('ratingThisYearA',[CompanyController::class,'ratingThisYearA'])->middleware('auth:api');
     Route::get('search',[FeedbackController::class,'search']);
     Route::get('getTopPlaces',[PlaceController::class,'getTopPlaces'])->middleware('auth:api');
 
@@ -224,4 +227,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/itineraries', [ItineraryController::class, 'index']);
     Route::get('/itineraries/{itinerary}', [ItineraryController::class, 'show']);
 });
+
+Route::get('getRole', [AuthController::class, 'getRole'])->middleware('auth:api');
+
 ?>

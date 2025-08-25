@@ -10,7 +10,7 @@ class companyWithEarningResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-          $companyId=$this->id;
+        $companyId=$this->id;
         $user=$this->user;
          return [
             'user' =>$user,

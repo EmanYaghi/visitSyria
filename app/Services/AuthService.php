@@ -6,6 +6,7 @@ use App\Http\Resources\Auth\AdminProfileResource;
 use App\Http\Resources\Auth\AdminResource;
 use App\Http\Resources\Auth\ProfileResource;
 use App\Http\Resources\CompanyResource;
+use App\Http\Resources\companyWithEarningResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -15,6 +16,7 @@ use App\Models\AdminProfile;
 use App\Models\FcmToken;
 use App\Models\Preference;
 use App\Models\Profile;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -22,7 +24,13 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
-     public function register( $request)
+    protected NotificationService $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+    public function register( $request)
     {
         $user=User::create([
             'email'=>$request['email'],
@@ -255,7 +263,17 @@ class AuthService
                 }
                 $message='user logged in successfully';
                 $code=200;
-            }
+                if($user->fcmTokens->count()>1)
+                    $user->notify(new UserNotification('warning','your account has been accessed from another device'));
+               if ($user->fcmTokens()->count() > 1) {
+                    $this->notificationService->send(
+                        $user,
+                        'تنبيه أمني',
+                        'تم الدخول إلى حسابك من جهاز آخر',
+                        'تحذير'
+                    );
+    }
+}
         }else{
             $message='user not found';
             $code=404;
@@ -346,18 +364,35 @@ class AuthService
             'user_id'=>$user->id,
             ...$request
         ]);
+        if (isset($request['documents']) && is_array($request['documents'])) {
+            foreach ($request['documents'] as $document) {
+                if ($document instanceof \Illuminate\Http\UploadedFile) {
+                    $url = $document->store('document_images');
+                    $user->media()->create(['url' => $url]);
+                }
+            }
+        }
         $user->assignRole('admin');
         $message= 'profile created';
         $code=201;
-        return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
+        return ['adminProfile'=>new companyWithEarningResource($p),'message'=>$message,'code'=>$code];
     }
       public function updateAdminProfile( $request)
     {
         $user = Auth::user();
         $user->adminProfile->update($request);
+        if (isset($request['documents']) && is_array($request['documents'])) {
+            foreach ($request['documents'] as $document) {
+                if ($document instanceof \Illuminate\Http\UploadedFile) {
+                    $url = $document->store('document_images');
+                    $user->media()->create(['url' => $url]);
+                }
+            }
+        }
+        $user->assignRole('admin');
         $message= 'profile updated';
         $code=200;
-        return ['adminProfile'=>new AdminProfileResource($user->load('adminProfile')),'message'=>$message,'code'=>$code];
+        return ['adminProfile'=>new companyWithEarningResource($user->adminProfile),'message'=>$message,'code'=>$code];
     }
 
 

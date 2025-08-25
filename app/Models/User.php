@@ -109,10 +109,6 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     {
         return $this->hasMany(Flight::class);
     }
-    public function notifications()
-    {
-        return $this->hasMany(Notification::class);
-    }
      public function fcmTokens()
     {
         return $this->hasMany(FcmToken::class);
@@ -120,6 +116,11 @@ class User extends Authenticatable implements JWTSubject,MustVerifyEmail
     public function routeNotificationForFcm()
     {
         return $this->fcmTokens;
+    }
+    public function notifications()
+    {
+        return $this->morphMany(Notification::class, 'notifiable')
+                    ->orderBy('created_at', 'desc');
     }
         public function Itineraries()
     {
