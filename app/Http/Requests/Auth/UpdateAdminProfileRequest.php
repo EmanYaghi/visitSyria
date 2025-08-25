@@ -23,7 +23,9 @@ class UpdateAdminProfileRequest extends FormRequest
             'location'=>'sometimes',
             'latitude'=>'sometimes',
             'longitude'=>'sometimes|string',
-            'image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'image'=>'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'documents'=>'nullable|array|min:1|max:10',
+            'documents.*'=>'image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 }

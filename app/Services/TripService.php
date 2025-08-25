@@ -53,9 +53,21 @@ class TripService
         } else if ($user->hasRole('super_admin')) {
             $trips = Trip::all();
         } else if ($user->hasRole('admin')) {
-            $trips = Trip::where('user_id', $user->id)->get();
+            $tag = request()->query('tag');
+             if ($tag == "الكل") {
+                $trips = Trip::where('user_id', $user->id)->get();
+            } else {
+                $tagName = TagName::where('body', $tag)->where('follow_to', 'trip')->first();
+                if ($tagName) {
+                    $tagIds = $tagName->tags()->whereNotNull('trip_id')->pluck('trip_id');
+                    $trips = Trip::whereIn('id', $tagIds)
+                        ->where('user_id', $user->id)
+                        ->get();
+                } else {
+                    $trips = collect([]);
+                }
+            }
         } else {
-            // fallback - no trips
             $trips = collect([]);
         }
 
@@ -309,11 +321,13 @@ class TripService
     {
         $trip = Trip::find($id);
         $this->authorize('delete', $trip);
-        if ($trip && $trip->status == "لم تبدأ بعد" && $trip->start_date->diffInDays(now()) == 3) {
+        if ($trip && $trip->status == "لم تبدأ بعد" && now()->diffInDays(\Carbon\Carbon::parse($trip->start_date)) >= 3) {
             foreach ($trip->bookings() as $booking) {
                 if ($booking->is_paid == true) {
+                    $stripe=new StripePaymentService();
+                    $stripe->refund($booking);
                     $user = $booking->user;
-                    //refund
+
                     //send notification
                 }
             }

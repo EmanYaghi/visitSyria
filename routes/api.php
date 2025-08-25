@@ -217,6 +217,8 @@ use Stripe\Token;
     Route::post('changeCompanyStatus',[CompanyController::class,'changeCompanyStatus'])->middleware('auth:api');
     Route::get('showCompany/{id}',[CompanyController::class,'show'])->middleware('auth:api');
     Route::get('earningThisYearSA',[CompanyController::class,'earningThisYearSA'])->middleware('auth:api');
+    Route::get('earningThisYearA',[CompanyController::class,'earningThisYearA'])->middleware('auth:api');
+    Route::get('ratingThisYearA',[CompanyController::class,'ratingThisYearA'])->middleware('auth:api');
     Route::get('search',[FeedbackController::class,'search']);
     Route::get('getTopPlaces',[PlaceController::class,'getTopPlaces'])->middleware('auth:api');
 

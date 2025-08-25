@@ -62,17 +62,7 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-    public function destroy( $id)
-    {
-         $data=[];
-        try{
-            $data=$this->tripService->destroy($id);
-            return response()->json(["message" =>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
-        }
-    }
+
     public function companyTrips( $id)
     {
          $data=[];
@@ -118,7 +108,17 @@ class TripController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
-
+    public function destroy( $id)
+    {
+         $data=[];
+        try{
+            $data=$this->tripService->destroy($id);
+            return response()->json(["message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
     public function lastTrip()
     {
         $data=[];

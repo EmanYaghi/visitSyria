@@ -117,4 +117,26 @@ class CompanyController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+    public function earningThisYearA()
+    {
+        $data=[];
+        try{
+            $data=$this->companyService->earningThisYearA();
+            return response()->json(["monthlyEarnings"=>$data['monthlyEarnings']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function ratingThisYearA()
+    {
+        $data=[];
+        try{
+            $data=$this->companyService->ratingThisYearA();
+            return response()->json(["monthlyRatings"=>$data['monthlyRatings']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

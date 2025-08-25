@@ -524,6 +524,54 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Earning This Year for this company",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxMTMwMzEsIm5iZiI6MTc1NjExMzAzMSwianRpIjoiSXJ5OWl3WE9uT2l3emM4TCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wWCqajsGld9PlQrp_XvMLbe6ZsrcKYqheSoMvMOKT4k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}earningThisYearA",
+					"host": [
+						"{{URL}}earningThisYearA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rating This Year For this company",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxMTMwMzEsIm5iZiI6MTc1NjExMzAzMSwianRpIjoiSXJ5OWl3WE9uT2l3emM4TCIsInN1YiI6IjEiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.wWCqajsGld9PlQrp_XvMLbe6ZsrcKYqheSoMvMOKT4k",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}ratingThisYearA",
+					"host": [
+						"{{URL}}ratingThisYearA"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
