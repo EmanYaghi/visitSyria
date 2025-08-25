@@ -53,8 +53,8 @@ class StripePaymentService
                 $booking->is_paid=false;
 
             }
-            $booking->save();
-            return ['message'=>'you refund this booking','booking'=>$booking];
+            $booking->delete();
+            return ['message'=>'you refund this booking ','booking'=>$booking];
         } catch (\Exception $e) {
             throw $e;
         }
