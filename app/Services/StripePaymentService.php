@@ -44,14 +44,16 @@ class StripePaymentService
     public function refund(Booking $booking)
     {
         try {
-            $refund = Refund::create([
-                'charge' => $booking->stripe_payment_id,
-            ]);
-            $booking->stripe_payment_id=null;
-            if($refund->status=='succeeded'){
-                $booking->payment_status ='refunded';
-                $booking->is_paid=false;
-
+            if($booking->is_paid==1)
+            {
+                $refund = Refund::create([
+                    'charge' => $booking->stripe_payment_id,
+                ]);
+                $booking->stripe_payment_id=null;
+                if($refund->status=='succeeded'){
+                    $booking->payment_status ='refunded';
+                    $booking->is_paid=false;
+                }
             }
             $booking->delete();
             return ['message'=>'you refund this booking ','booking'=>$booking];
