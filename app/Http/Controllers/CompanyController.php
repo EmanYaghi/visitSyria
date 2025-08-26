@@ -10,7 +10,6 @@ use Throwable;
 class CompanyController extends Controller
 {
     protected $companyService;
-
     public function __construct(CompanyService $companyService)
     {
         $this->companyService = $companyService;
@@ -139,4 +138,6 @@ class CompanyController extends Controller
             return response()->json(["message"=>$message]);
         }
     }
+
+
 }

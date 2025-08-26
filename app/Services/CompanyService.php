@@ -8,6 +8,7 @@ use App\Http\Resources\CompanyResource;
 use App\Http\Resources\companyWithEarningResource;
 use App\Models\AdminProfile;
 use App\Models\Booking;
+use App\Models\Notification;
 use App\Models\Rating;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -283,5 +284,6 @@ class CompanyService
             'code' => 200
         ];
     }
+
 
 }

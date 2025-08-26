@@ -1,0 +1,161 @@
+{
+	"info": {
+		"_postman_id": "34b201cb-b054-470a-96e4-8a8cbe30c050",
+		"name": "Notification",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38928530"
+	},
+	"item": [
+		{
+			"name": "Send Notification By Super Admin",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYyMTkyNDIsIm5iZiI6MTc1NjIxOTI0MiwianRpIjoiOGVqNTByRzI0ZTJCRlNUMCIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.32sT6BbBwygdK56vVbb9XuD6xOK89D1BUhzgWSAQ4fQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "category",
+							"value": "user",
+							"description": "user-company",
+							"type": "text"
+						},
+						{
+							"key": "title",
+							"value": "hello",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "aaaa   yyy aaaa",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}sendNotificationBySA",
+					"host": [
+						"{{URL}}sendNotificationBySA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "destroy a Notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxNDYyNDMsIm5iZiI6MTc1NjE0NjI0MywianRpIjoiMk82ZGVJVmJWc2pWYjBFbSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FdBdhNUYOV18j_rtN04AfTRVP4CglhdrkXegZfvcXH8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}destroyNotification/c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5",
+					"host": [
+						"{{URL}}destroyNotification"
+					],
+					"path": [
+						"c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "mark a Notification As Read",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxNDYyNDMsIm5iZiI6MTc1NjE0NjI0MywianRpIjoiMk82ZGVJVmJWc2pWYjBFbSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FdBdhNUYOV18j_rtN04AfTRVP4CglhdrkXegZfvcXH8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}markNotificationAsRead/c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5",
+					"host": [
+						"{{URL}}markNotificationAsRead"
+					],
+					"path": [
+						"c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get notification",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxNDYyNDMsIm5iZiI6MTc1NjE0NjI0MywianRpIjoiMk82ZGVJVmJWc2pWYjBFbSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FdBdhNUYOV18j_rtN04AfTRVP4CglhdrkXegZfvcXH8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}getAllNotifications/read",
+					"host": [
+						"{{URL}}getAllNotifications"
+					],
+					"path": [
+						"read"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"pm.request.headers.add({\r",
+					"    key:'Accept',\r",
+					"    value:'application/json'\r",
+					"})"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
