@@ -165,7 +165,7 @@ class BookingService
              return [
                 'bookings'   => null,
                 'message' => 'No '.$type.' reserved.',
-                'code'    => 404,
+                'code'    => 200,
             ];
         }
         $b= ReservationResource::collection($bookings);

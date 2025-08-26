@@ -57,9 +57,7 @@ class PaymentController extends Controller
             return response()->json([
                 'unauthorized'
             ],403);
-        if ($booking->payment_status!='succeeded') {
-            return response()->json(['error' => 'No payment found'], 404);
-        }
+
         $data = $this->stripe->refund($booking);
         if($booking->payment_status=='refunded'&&$booking->trip_id!=null)
         {
