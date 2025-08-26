@@ -11,20 +11,16 @@ class CommentResource extends JsonResource
     {
         $user = $this->whenLoaded('user') ?? $this->user ?? null;
 
-        // flexible body: support both 'body' and 'comment' DB column names
         $body = $this->body ?? $this->comment ?? null;
 
-        // user display
         $userName = null;
         $profilePhoto = null;
         if ($user) {
-            // try profile names, fallback to user->name or email
             $first = $user->profile->first_name ?? null;
             $last  = $user->profile->last_name ?? null;
             $userName = trim(($first . ' ' . $last) ?: ($user->name ?? $user->email ?? null));
 
-            // get photo from profile->photo or user->media->url
-            $photoPath = $user->profile->photo ?? ($user->media->url ?? null);
+            $photoPath = $user->profile->photo ?? optional($user->media->first())->url ?? null;
             $profilePhoto = $photoPath ? $this->buildFullUrl($photoPath) : null;
         }
 
@@ -35,7 +31,6 @@ class CommentResource extends JsonResource
                 'name' => $userName,
                 'profile_photo' => $profilePhoto,
             ] : null,
-            // return comment text under 'comment' key (matches your expected output)
             'comment' => $body,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d') : null,
         ];
@@ -51,12 +46,10 @@ class CommentResource extends JsonResource
             return $path;
         }
 
-        // already has /storage prefix
         if (Str::startsWith($path, '/storage')) {
             return url($path);
         }
 
-        // otherwise assume it's a storage path (e.g. 'posts/xxx.jpg')
         return url('storage/' . ltrim($path, '/'));
     }
 }
