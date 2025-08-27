@@ -79,33 +79,6 @@
 			"response": []
 		},
 		{
-			"name": "mark a Notification As Read",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxNDYyNDMsIm5iZiI6MTc1NjE0NjI0MywianRpIjoiMk82ZGVJVmJWc2pWYjBFbSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FdBdhNUYOV18j_rtN04AfTRVP4CglhdrkXegZfvcXH8",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "{{URL}}markNotificationAsRead/c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5",
-					"host": [
-						"{{URL}}markNotificationAsRead"
-					],
-					"path": [
-						"c28b14c6-e4b2-4c1e-9c48-f2ba15ac0be5"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "get notification",
 			"request": {
 				"auth": {

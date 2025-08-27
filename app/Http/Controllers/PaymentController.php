@@ -57,7 +57,13 @@ class PaymentController extends Controller
             return response()->json([
                 'unauthorized'
             ],403);
-
+        if(($booking->trip_id!=null&&$booking->trip->status == "لم تبدأ بعد" && now()->diffInDays(\Carbon\Carbon::parse($booking->trip->start_date)) < 3)
+            ||($booking->event!=null&&$booking->event->date>now() && now()->diffInDays(\Carbon\Carbon::parse($booking->event->date)) < 3))
+        {
+           return response()->json([
+                'message'=>'the cancel time finished you must cacel befor three days from start date',
+           ],200);
+        }
         $data = $this->stripe->refund($booking);
         if($booking->payment_status=='refunded'&&$booking->trip_id!=null)
         {

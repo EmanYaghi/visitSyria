@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use Illuminate\Support\Facades\Auth;
 use Stripe\Stripe;
 use Stripe\Refund;
 use Stripe\Charge;
@@ -30,6 +31,8 @@ class StripePaymentService
             $booking->payment_status     = $charge->status;
             if($charge->status=='succeeded')
             {
+                $notificationService=new NotificationService();
+                $notificationService->send(Auth::user(),'success','the reservation has been made and you have paid .only you can cancel the reservation three days before it start');
                 $booking->is_paid=true;
             }
             $booking->save();

@@ -80,18 +80,6 @@ class UserController extends Controller
         }
     }
 
-
-    public function markNotificationAsRead($id)
-    {
-        $data=[];
-        try{
-            $data=$this->notificationService->markAsRead($id);
-            return response()->json(["message" =>$data['message']], $data['code']);
-        }catch(Throwable $th){
-            $message=$th->getMessage();
-            return response()->json(["message"=>$message]);
-        }
-    }
     public function destroyNotification($id)
     {
         $data=[];

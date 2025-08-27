@@ -64,21 +64,6 @@ class NotificationService
             return 0;
         }
     }
-    public function markAsRead($notificationId)
-    {
-        $notification = Auth::user()->notifications()->find($notificationId);
-        if(isset($notification)) {
-            $notification->markAsRead();
-             return [
-                "message" => 'the notification mark as read',
-                'code' => 200
-            ];
-        }else
-             return [
-                "message" => 'the notification not found',
-                'code' => 404
-            ];
-    }
     public function destroy($id)
     {
         $notification = Auth::user()->notifications()->find($id);
@@ -99,7 +84,11 @@ class NotificationService
         if($type=='read')
             $notifications = Auth::user()->readNotifications;
         else
+        {
             $notifications = Auth::user()->unreadNotifications;
+            foreach($notifications as $n)
+                $n->markAsRead();
+        }
         return [
             "notifications"=>$notifications,
             "message" => 'these are notifiction that '.$type,
