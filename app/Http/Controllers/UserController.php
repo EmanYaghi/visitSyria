@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\BlockUserRequest;
 use App\Http\Requests\ChangeUserRequest;
+use App\Http\Requests\NotificationRequest;
+use App\Services\NotificationService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Throwable;
@@ -11,10 +13,11 @@ use Throwable;
 class UserController extends Controller
 {
     protected $userService;
-
-    public function __construct(UserService $userService)
+    protected $notificationService;
+    public function __construct(UserService $userService,NotificationService $notificationService)
     {
         $this->userService = $userService;
+        $this->notificationService=$notificationService;
     }
 
     public function allUser()
@@ -77,4 +80,37 @@ class UserController extends Controller
         }
     }
 
+    public function destroyNotification($id)
+    {
+        $data=[];
+        try{
+            $data=$this->notificationService->destroy($id);
+            return response()->json(["message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function getAllNotifications($type)
+    {
+        $data=[];
+        try{
+            $data=$this->notificationService->getAllNotifications($type);
+            return response()->json(["notifications"=>$data['notifications']??null,"message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
+    public function sendNotificationBySA(NotificationRequest $request)
+    {
+        $data=[];
+        try{
+            $data=$this->notificationService->sendNotificationBySA($request->validated());
+            return response()->json(["message" =>$data['message']], $data['code']);
+        }catch(Throwable $th){
+            $message=$th->getMessage();
+            return response()->json(["message"=>$message]);
+        }
+    }
 }

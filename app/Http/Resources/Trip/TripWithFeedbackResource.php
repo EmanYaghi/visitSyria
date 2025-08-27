@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Trip;
 
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\FeedbackResource;
 use App\Models\Rating;
 use App\Models\Trip;
 use Illuminate\Http\Request;
@@ -10,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Traits\TripPath;
 use App\Services\RouteService;
 
-class TripResource extends JsonResource
+class TripWithFeedbackResource extends JsonResource
 {
     use TripPath;
 
@@ -80,11 +82,9 @@ class TripResource extends JsonResource
                     ->avg('rating_value')
                     : null,
             ],
-
-            'is_saved' => $user
-                ? $this->saves()->where('user_id', $user->id)->exists()
-                : false,
-
+            'feedback' => $this->comments
+                ? FeedbackResource::collection($this->comments)
+                : [],
         ];
     }
 }

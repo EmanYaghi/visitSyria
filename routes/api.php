@@ -230,4 +230,10 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 Route::get('getRole', [AuthController::class, 'getRole'])->middleware('auth:api');
 
+Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::post('sendNotificationBySA', [UserController::class, 'sendNotificationBySA']);
+    Route::delete('destroyNotification/{id}', [UserController::class, 'destroyNotification']);
+    Route::get('getAllNotifications/{type}', [UserController::class, 'getAllNotifications']);
+});
 ?>

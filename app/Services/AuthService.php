@@ -251,6 +251,14 @@ class AuthService
                 $code=403;
             }else{
                 if (!empty($request['fcm_token'])) {
+                     if ($user->fcmTokens()->count() >= 1&&$user->fcmTokens()->where('token',$request['fcm_token'])->exists()) {
+                        $this->notificationService->send(
+                            $user,
+                            'تنبيه أمني',
+                            'تم الدخول إلى حسابك من جهاز آخر',
+                            'تحذير'
+                        );
+                    }
                     FcmToken::updateOrCreate(
                         [
                             'user_id' => $user->id,
@@ -263,17 +271,7 @@ class AuthService
                 }
                 $message='user logged in successfully';
                 $code=200;
-                if($user->fcmTokens->count()>1)
-                    $user->notify(new UserNotification('warning','your account has been accessed from another device'));
-               if ($user->fcmTokens()->count() > 1) {
-                    $this->notificationService->send(
-                        $user,
-                        'تنبيه أمني',
-                        'تم الدخول إلى حسابك من جهاز آخر',
-                        'تحذير'
-                    );
-    }
-}
+            }
         }else{
             $message='user not found';
             $code=404;

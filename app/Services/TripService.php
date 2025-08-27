@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Http\Resources\Trip\AllTripsResource;
 use App\Http\Resources\Trip\TripResource;
+use App\Http\Resources\Trip\TripWithFeedbackResource;
+use App\Jobs\SendNotificationJob;
 use App\Models\TagName;
 use App\Models\Trip;
 use App\Models\User;
@@ -49,9 +51,12 @@ class TripService
                     return !$trip->bookings()->where('user_id', $user->id)->exists();
                 })->values();
             }
-
+            $trips=TripResource::collection($trips);
         } else if ($user->hasRole('super_admin')) {
+        {
             $trips = Trip::all();
+            $trips=TripWithFeedbackResource::collection($trips);
+        }
         } else if ($user->hasRole('admin')) {
             $tag = request()->query('tag');
              if ($tag == "الكل") {
@@ -67,13 +72,14 @@ class TripService
                     $trips = collect([]);
                 }
             }
+            $trips=TripWithFeedbackResource::collection($trips);
         } else {
             $trips = collect([]);
         }
 
         $code = 200;
         $message = 'this is all trips ';
-        return ['trips' => TripResource::collection($trips), 'message' => $message, 'code' => $code];
+        return ['trips' => $trips, 'message' => $message, 'code' => $code];
     }
 
     public function store($request)
@@ -324,11 +330,10 @@ class TripService
         if ($trip && $trip->status == "لم تبدأ بعد" && now()->diffInDays(\Carbon\Carbon::parse($trip->start_date)) >= 3) {
             foreach ($trip->bookings() as $booking) {
                 if ($booking->is_paid == true) {
+                    $user = $booking->user;
+                    SendNotificationJob::dispatch($user,'alert', 'the trip '.$trip->name.' was caceled and your money was refunded');
                     $stripe=new StripePaymentService();
                     $stripe->refund($booking);
-                    $user = $booking->user;
-
-                    //send notification
                 }
             }
             $trip->update(['status' => 'تم الالغاء']);
