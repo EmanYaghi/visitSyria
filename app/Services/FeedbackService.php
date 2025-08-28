@@ -215,25 +215,25 @@ class FeedbackService
             $saves = TripResource::collection($trips);
         } else if ($type == "post") {
             $posts = $user->saves()->whereNotNull('post_id')->with('post')->get()->pluck('post');
-            $saves = $posts;
+            $saves =PostResource::collection($posts);
         } else if ($type == "restaurant") {
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
             $places = $places->filter(fn($place) => $place->type === 'restaurant');
-            $saves = $places;
+            $saves = PlaceResource::collection($places);
         } else if ($type == "hotel") {
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
             $places = $places->filter(fn($place) => $place->type === 'hotel');
-            $saves = $places;
+            $saves = PlaceResource::collection($places);
         } else if ($type == "tourist") {
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
             $places = $places->filter(fn($place) => $place->type === 'tourist');
-            $saves = $places;
+            $saves = PlaceResource::collection($places);
         } else if ($type == "article") {
             $articles = $user->saves()->whereNotNull('article_id')->with('article')->get()->pluck('article');
-            $saves = $articles;
+            $saves = ArticleResource::collection($articles);
         } else if ($type == "event") {
             $events = $user->saves()->whereNotNull('event_id')->with('event')->get()->pluck('event');
-            $saves = $events;
+            $saves = EventResource::collection($events);
         }
         return ['saves' => $saves];
     }

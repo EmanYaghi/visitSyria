@@ -4,11 +4,14 @@ namespace App\Services;
 
 use App\Models\Post;
 use App\Models\Media;
+use App\Models\Notification;
 use App\Models\TagName;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 
 class PostService
 {
@@ -63,7 +66,16 @@ class PostService
                     'url' => $url,
                 ]);
             }
-
+            \App\Models\Notification::create([
+                'id'              => Str::uuid(),
+                'type'            => 'App\Notifications\UserNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id'   => User::role('super_admin')->first()->id,
+                'data'            => json_encode([
+                    'title'   => 'منشور جديد',
+                    'message' => 'لديك منشور جديد لتوافق عليه او ترفضه',
+                ]),
+            ]);
             return $post->load(['tags', 'media']);
         });
     }
@@ -73,6 +85,11 @@ class PostService
         $post = Post::findOrFail($postId);
         $post->status = $status;
         $post->save();
+        $notificationService=new NotificationService();
+        if($status=='Approved')
+            $notificationService->send($post->user,$status,'Your post has been published successfully');
+        else if($status=='Rejected')
+            $notificationService->send($post->user, $status,'Your post has been rejected for violating our terms of publication.');
         return $post;
     }
 

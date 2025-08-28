@@ -251,7 +251,8 @@ class AuthService
                 $code=403;
             }else{
                 if (!empty($request['fcm_token'])) {
-                     if ($user->fcmTokens()->count() >= 1&&!$user->fcmTokens()->where('token',$request['fcm_token'])->exists()) {
+                    if ($user->hasRole('client')&&$user->fcmTokens()->count() >= 1&&!$user->fcmTokens()->where('token',$request['fcm_token'])->exists())
+                    {
                         $this->notificationService->send(
                             $user,
                             'تنبيه أمني',
@@ -371,6 +372,16 @@ class AuthService
             }
         }
         $user->assignRole('admin');
+        \App\Models\Notification::create([
+                'id'              => Str::uuid(),
+                'type'            => 'App\Notifications\UserNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id'   => User::role('super_admin')->first()->id,
+                'data'            => json_encode([
+                    'title'   => 'شركة جديدة',
+                    'message' => 'هناك طلب من شركة لتوافق عليه او ترفضه',
+                ]),
+            ]);
         $message= 'profile created';
         $code=201;
         return ['adminProfile'=>new companyWithEarningResource($p),'message'=>$message,'code'=>$code];
