@@ -15,8 +15,10 @@ class NotifyUsersBeforeStartBooking extends Command
 
     public function handle()
     {
-        $tomorrow = Carbon::tomorrow()->toDateString();
-        $trips = Trip::whereDate('start_date', $tomorrow)->with(['bookings.user'])->get();
+        $tomorrow = Carbon::tomorrow();
+        $start = $tomorrow->startOfDay();
+        $end   = $tomorrow->endOfDay();
+        $trips=Trip::whereBetween('start_date', [$start, $end])->with('bookings.user')->get();
         foreach ($trips as $trip) {
             foreach ($trip->bookings->where('is_paid', true) as $booking) {
                 if ($booking->user) {
@@ -28,14 +30,14 @@ class NotifyUsersBeforeStartBooking extends Command
                 }
             }
         }
-        $events = Event::whereDate('start_date', $tomorrow)->with(['bookings.user'])->get();
+        $events = Event::whereBetween('date', [$start, $end])->with(['bookings.user'])->get();
         foreach ($events as $event) {
             foreach ($event->bookings->where('is_paid', true) as $booking) {
                 if ($booking->user) {
-                    SendNotificationJob::dispatch(
+                    app(\App\Services\NotificationService::class)->send(
                         $booking->user,
                         'تذكير بالفعالية',
-                        "الفعالية {$event->name} غداً ({$event->start_date->format('Y-m-d H:i')})"
+                        "الفعالية {$event->name} غداً ({$event->date->format('Y-m-d H:i')})"
                     );
                 }
             }

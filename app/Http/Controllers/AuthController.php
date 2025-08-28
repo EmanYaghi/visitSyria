@@ -230,7 +230,7 @@ class AuthController extends Controller
         $role=$user->getRoleNames()->first() ;
         if($role=='admin')
             $user=new AdminResource($user->adminProfile);
-        else
+        else if($role=='client')
             $user=new UserResource($user);
         return response()->json(['role'=>$role,'user'=>$user]);
     }

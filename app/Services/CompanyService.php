@@ -7,6 +7,7 @@ use App\Http\Resources\Auth\AdminResource;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\companyWithEarningResource;
 use App\Models\AdminProfile;
+use Illuminate\Support\Str;
 use App\Models\Booking;
 use App\Models\Notification;
 use App\Models\Rating;
@@ -119,16 +120,78 @@ class CompanyService
             ];
         $company = AdminProfile::findOrFail($request['company_id']);
         if($request['status']=='accept')
-            {
-                $company->user->update(['status'=>$request['status']]);
-                $company->update(['status' => 'فعالة']);
-            }
+        {
+            $company->user->update(['status'=>$request['status']]);
+            $company->update(['status' => 'فعالة']);
+            \App\Models\Notification::create([
+                'id'              => Str::uuid(),
+                'type'            => 'App\Notifications\UserNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id'   => $company->user->id,
+                'data'            => json_encode([
+                    'title'   => $request['status'],
+                    'message' => 'تم قبول شركتك',
+                ]),
+            ]);
+        }
         else if ($request['status']=='reject')
         {
             $company->user->update(['status'=>$request['status']]);
+            \App\Models\Notification::create([
+                'id'              => Str::uuid(),
+                'type'            => 'App\Notifications\UserNotification',
+                'notifiable_type' => 'App\Models\User',
+                'notifiable_id'   => $company->user->id,
+                'data'            => json_encode([
+                    'title'   => $request['status'],
+                    'message' => ' تم رفض شركتك بسبب'.$request['reason'],
+                ]),
+            ]);
         }
         else
+        {
             $company->update(['status' => $request['status']]);
+            if($request['status']=='فعالة')
+            {
+                \App\Models\Notification::create([
+                    'id'              => Str::uuid(),
+                    'type'            => 'App\Notifications\UserNotification',
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id'   => $company->user->id,
+                    'data'            => json_encode([
+                        'title'   => $request['status'],
+                        'message' => 'تم تفعيل شركتك',
+                    ]),
+                ]);
+            }
+            else  if($request['status']=='تم الانذار')
+            {
+                \App\Models\Notification::create([
+                    'id'              => Str::uuid(),
+                    'type'            => 'App\Notifications\UserNotification',
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id'   => $company->user->id,
+                    'data'            => json_encode([
+                        'title'   => $request['status'],
+                        'message' => ' تم انذار شركتك بسبب'.$request['reason'],
+                    ]),
+                ]);
+            }
+            else  if($request['status']=='قيد الحذف')
+            {
+                \App\Models\Notification::create([
+                    'id'              => Str::uuid(),
+                    'type'            => 'App\Notifications\UserNotification',
+                    'notifiable_type' => 'App\Models\User',
+                    'notifiable_id'   => $company->user->id,
+                    'data'            => json_encode([
+                        'title'   => $request['status'],
+                        'message' => ' تم حذف شركتك بسبب'.$request['reason'],
+                    ]),
+                ]);
+            }
+
+        }
         return [
             'company' =>new AdminResource($company),
             'message' => 'this is top company',
