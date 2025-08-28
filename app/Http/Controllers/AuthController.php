@@ -24,8 +24,10 @@ use App\Http\Requests\Auth\{
 };
 use App\Http\Resources\Auth\{
     AdminProfileResource,
+    AdminResource,
     PreferenceResource,
     ProfileResource,
+    UserResource,
 };
 use App\Http\Resources\companyWithEarningResource;
 use App\Services\AuthService;
@@ -225,7 +227,12 @@ class AuthController extends Controller
     public function getRole()
     {
         $user=Auth::user();
-        return response()->json(['role'=>$user->getRoleNames()->first() ]);
+        $role=$user->getRoleNames()->first() ;
+        if($role=='admin')
+            $user=new AdminResource($user->adminProfile);
+        else
+            $user=new UserResource($user);
+        return response()->json(['role'=>$role,'user'=>$user]);
     }
 
 }

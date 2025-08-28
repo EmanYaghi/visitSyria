@@ -25,6 +25,7 @@ public function up()
         $table->enum('price_type', ['free', 'paid'])->default('free');
         $table->boolean('pre_booking')->default(false);
         $table->enum('status', ['active', 'cancelled'])->default('active');
+        $table->enum('status2',['لم تبدأ بعد','منتهية','جارية حاليا','تم الالغاء'])->default('لم تبدأ بعد');
         $table->timestamps();
     });
 }

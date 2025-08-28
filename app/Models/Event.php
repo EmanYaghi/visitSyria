@@ -25,6 +25,7 @@ class Event extends Model
         'price_type',
         'pre_booking',
         'status',
+        'status2'
     ];
 
     protected $casts = [

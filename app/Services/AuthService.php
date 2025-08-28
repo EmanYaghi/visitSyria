@@ -251,7 +251,7 @@ class AuthService
                 $code=403;
             }else{
                 if (!empty($request['fcm_token'])) {
-                     if ($user->fcmTokens()->count() >= 1&&$user->fcmTokens()->where('token',$request['fcm_token'])->exists()) {
+                     if ($user->fcmTokens()->count() >= 1&&!$user->fcmTokens()->where('token',$request['fcm_token'])->exists()) {
                         $this->notificationService->send(
                             $user,
                             'تنبيه أمني',

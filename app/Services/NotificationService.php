@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\NotificationResource;
 use App\Jobs\SendNotificationJob;
 use App\Models\Notification as NotificationModel;
 use App\Models\User;
@@ -90,7 +91,7 @@ class NotificationService
                 $n->markAsRead();
         }
         return [
-            "notifications"=>$notifications,
+            "notifications"=>NotificationResource::collection($notifications),
             "message" => 'these are notifiction that '.$type,
             'code' => 200
         ];
