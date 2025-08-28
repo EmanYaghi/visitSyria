@@ -156,26 +156,48 @@ class BookingService
                 'code'    => 403
             ];
         }
-        $type=request()->query('type');
-        if($type=='flight')
-            $bookings=$user->bookings()->whereNotNull('flight_data')->get();
-        else
-            $bookings = $user->bookings()->whereNotNull($type.'_id')->get();
+        $type = request()->query('type');
+        $category = request()->query('category');
+        $query = $user->bookings();
+        if ($type === 'flight') {
+            $query->whereNotNull('flight_data');
+        } else {
+            $query->whereNotNull($type . '_id');
+        }
+        if ($category && $category != 'الكل') {
+            if ($category == 'غير مكتملة') {
+                $query->where('is_paid', false);
+            } else {
+                if($type=='event')
+                {
+                    $query->where('is_paid',true)->whereHas($type, function ($q) use ($category) {
+                        $q->where('status2', $category);
+                    });
+                }
+                else
+                {
+                    $query->where('is_paid',true)->whereHas($type, function ($q) use ($category) {
+                        $q->where('status', $category);
+                    });
+                }
+
+            }
+        }
+        $bookings = $query->get();
         if ($bookings->isEmpty()) {
-             return [
-                'bookings'   => null,
-                'message' => 'No '.$type.' reserved.',
-                'code'    => 200,
+            return [
+                'bookings' => null,
+                'message'  => 'No ' . $type . ' reserved.',
+                'code'     => 200,
             ];
         }
-        $b= ReservationResource::collection($bookings);
-         return [
-            'bookings'   => $b,
-            'message' => 'All reserved '.$type.' retrieved.',
-            'code'    => 200,
+        return [
+            'bookings' => ReservationResource::collection($bookings),
+            'message'  => 'All reserved ' . $type . ' retrieved.',
+            'code'     => 200,
         ];
-
     }
+
 
    public function person($id, $type)
     {

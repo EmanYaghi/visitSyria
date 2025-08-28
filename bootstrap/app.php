@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withSchedule(function (Illuminate\Console\Scheduling\Schedule $schedule) {
         $schedule->command('trips:update-status')->everyMinute();
+        $schedule->command('events:update-status')->everyMinute();
         $schedule->command('bookings:delete-unpaid')->everyMinute();
         $schedule->command('notify:before-trip')->dailyAt('00:00');
     })

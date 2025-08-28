@@ -14,7 +14,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUxMjAwMzEsIm5iZiI6MTc1NTEyMDAzMSwianRpIjoiYW5kWTN6TzM4Rm4xSjRMTCIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.mkm7b3hnInJQwsZnXEZYfYW3LrbFk8OgL7reqv8x2IQ",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUzNDYyNzUsIm5iZiI6MTc1NTM0NjI3NSwianRpIjoiOUFCWEJXaENmM2doSHMyViIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.xKZJsdm2gYQPdZuMMxTfzHeXDA6j4fS_MMfc1mW98Zc",
 							"type": "string"
 						}
 					]
@@ -55,14 +55,19 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}myBookings?type=flight",
+					"raw": "{{URL}}myBookings?type=trip&category=الكل",
 					"host": [
 						"{{URL}}myBookings"
 					],
 					"query": [
 						{
 							"key": "type",
-							"value": "flight"
+							"value": "trip"
+						},
+						{
+							"key": "category",
+							"value": "الكل",
+							"description": "غير مكتملة-الكل-لم تبدأ بعد-منتهية-جارية حاليا"
 						}
 					]
 				}
@@ -113,7 +118,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUxMDI2MzAsIm5iZiI6MTc1NTEwMjYzMCwianRpIjoiMmZZSFl0SEpzSGo0bGlRSyIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.zkCnQANZi8RnYCocZ1qp09uRIEKefbI5KPHpe9j3waI",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTYxNDYyNDMsIm5iZiI6MTc1NjE0NjI0MywianRpIjoiMk82ZGVJVmJWc2pWYjBFbSIsInN1YiI6IjMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FdBdhNUYOV18j_rtN04AfTRVP4CglhdrkXegZfvcXH8",
 							"type": "string"
 						}
 					]
@@ -174,7 +179,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE3NTUyODA1NTcsIm5iZiI6MTc1NTI4MDU1NywianRpIjoidm5qNjZnNk1ZWmI3VEduMyIsInN1YiI6IjUiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.FnrsYUl8XmYiqSkCJ8rFW8SaMoP0epX4WGNF0VFOhfY",
+							"value": "{{TOKEN}}",
 							"type": "string"
 						}
 					]
@@ -182,7 +187,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{URL}}persons/book/1?type=event",
+					"raw": "{{URL}}persons/book/1?type=trip",
 					"host": [
 						"{{URL}}persons"
 					],
@@ -193,7 +198,7 @@
 					"query": [
 						{
 							"key": "type",
-							"value": "event"
+							"value": "trip"
 						}
 					]
 				}

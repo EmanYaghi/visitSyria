@@ -136,7 +136,7 @@ class TripService
     {
         $t = Trip::find($id);
         if ($t) {
-            $trip = new TripResource($t);
+            $trip=new TripWithFeedbackResource($t);
             $code = 200;
             $message = 'trip founded';
         } else {
@@ -217,12 +217,14 @@ class TripService
                     return !$trip->bookings()->where('user_id', $user->id)->exists();
                 })->values();
             }
+            $trips = TripResource::collection($trips);
         } else {
             $trips = Trip::where('user_id', $id)->get();
+            $trips=TripWithFeedbackResource::collection($trips);
         }
 
         if ($trips) {
-            $trips = TripResource::collection($trips);
+            $trips = $trips;
             $code = 200;
             $message = 'this is all trips for company' . $id;
         } else {
@@ -368,7 +370,7 @@ class TripService
         if (!$user->hasRole('super_admin'))
             return ['message' => 'unauthorized', 'code' => 403];
         $trips = Trip::orderByDesc('created_at')->take(6)->get();
-        return ['trips' => TripResource::collection($trips), 'message' => 'this is last 6 trips', 'code' => 200];
+        return ['trips' => TripWithFeedbackResource::collection($trips), 'message' => 'this is last 6 trips', 'code' => 200];
     }
 
 }
