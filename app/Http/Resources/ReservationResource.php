@@ -36,6 +36,8 @@ class ReservationResource extends JsonResource
                         'email' => $passenger->email,
                         'phone' => $passenger->phone,
                         'country_code' => $passenger->country_code,
+                        'passport_number'=>$passenger->passport_number??null,
+                        'passport_expiry_date'=>$passenger->passport_expiry_date??null
                     ];
                 }),
             ]

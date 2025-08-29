@@ -29,51 +29,50 @@ class UserService
         ];
     }
   public function getUserById($id)
-{
-    $user = User::with('profile')
-        ->withCount('posts')
-        ->withCount(['bookings as reserved_trips_count' => function ($query) {
-            $query->whereNotNull('trip_id');
-        }])
-        ->withCount(['bookings as reserved_events_count' => function ($query) {
-            $query->whereNotNull('event_id');
-        }])
-        ->find($id);
+    {
+        $user = User::with('profile')
+            ->withCount('posts')
+            ->withCount(['bookings as reserved_trips_count' => function ($query) {
+                $query->whereNotNull('trip_id');
+            }])
+            ->withCount(['bookings as reserved_events_count' => function ($query) {
+                $query->whereNotNull('event_id');
+            }])
+            ->find($id);
 
-    if (! $user) {
+        if (! $user) {
+            return [
+                'message' => 'not found',
+                'code'    => 404,
+            ];
+        }
+
+        $authUser = Auth::user();
+        if (! $authUser) {
+            return [
+                'message' => 'unauthenticated',
+                'code'    => 401,
+            ];
+        }
+
+        if (! $authUser->hasRole('super_admin') && $authUser->id !== $user->id) {
+            return [
+                'message' => 'unauthorized',
+                'code'    => 403,
+            ];
+        }
+
+        if ($user->profile) {
+            $user->profile->refreshIfUnblocked();
+            $user->load('profile');
+        }
+
         return [
-            'message' => 'not found',
-            'code'    => 404,
+            'user'    => new UserResource($user),
+            'message' => 'user retrieved',
+            'code'    => 200,
         ];
     }
-
-    $authUser = Auth::user();
-    if (! $authUser) {
-        return [
-            'message' => 'unauthenticated',
-            'code'    => 401,
-        ];
-    }
-
-    if (! $authUser->hasRole('super_admin') && $authUser->id !== $user->id) {
-        return [
-            'message' => 'unauthorized',
-            'code'    => 403,
-        ];
-    }
-
-    if ($user->profile) {
-        $user->profile->refreshIfUnblocked();
-        $user->load('profile');
-    }
-
-    return [
-        'user'    => new UserResource($user),
-        'message' => 'user retrieved',
-        'code'    => 200,
-    ];
-}
-
     public function mostActiveUsers()
     {
         $by=request()->query('by');
@@ -124,78 +123,75 @@ class UserService
             'code' => 200
         ];
     }
+    public function changeUserStatus($request)
+    {
+        if (!Auth::user()->hasRole('super_admin')) {
+            return [
+                'message' => 'unauthorized',
+                'code' => 403
+            ];
+        }
 
-public function changeUserStatus($request)
-{
-    if (!Auth::user()->hasRole('super_admin')) {
-        return [
-            'message' => 'unauthorized',
-            'code' => 403
-        ];
-    }
+        $user = User::findOrFail($request['user_id']);
+        $profile = $user->profile;
+        if (! $profile) {
+            $profile = $user->profile()->create([]);
+        }
 
-    $user = User::findOrFail($request['user_id']);
-    $profile = $user->profile;
-    if (! $profile) {
-        $profile = $user->profile()->create([]);
-    }
+        $status = $request['status'] ?? '';
 
-    $status = $request['status'] ?? '';
+        if ($status === 'block') {
+            $duration = $request['duration'] ?? null;
 
-    if ($status === 'block') {
-        $duration = $request['duration'] ?? null;
+            if ($duration === 'always') {
+                $profile->account_status = 'حظر نهائي';
+                $profile->date_of_unblock = null;
+            } elseif (in_array($duration, ['minute', 'hour', 'day', 'week', 'month', 'year'], true)) {
+                $now = Carbon::now();
+                switch ($duration) {
+                    case 'minute':
+                        $unblockAt = $now->copy()->addMinute();
+                        break;
+                    case 'hour':
+                        $unblockAt = $now->copy()->addHour();
+                        break;
+                    case 'day':
+                        $unblockAt = $now->copy()->addDay();
+                        break;
+                    case 'week':
+                        $unblockAt = $now->copy()->addWeek();
+                        break;
+                    case 'month':
+                        $unblockAt = $now->copy()->addMonth();
+                        break;
+                    case 'year':
+                        $unblockAt = $now->copy()->addYear();
+                        break;
+                    default:
+                        $unblockAt = null;
+                        break;
+                }
 
-        if ($duration === 'always') {
-            $profile->account_status = 'حظر نهائي';
-            $profile->date_of_unblock = null;
-        } elseif (in_array($duration, ['minute', 'hour', 'day', 'week', 'month', 'year'], true)) {
-            $now = Carbon::now();
-            switch ($duration) {
-                case 'minute':
-                    $unblockAt = $now->copy()->addMinute();
-                    break;
-                case 'hour':
-                    $unblockAt = $now->copy()->addHour();
-                    break;
-                case 'day':
-                    $unblockAt = $now->copy()->addDay();
-                    break;
-                case 'week':
-                    $unblockAt = $now->copy()->addWeek();
-                    break;
-                case 'month':
-                    $unblockAt = $now->copy()->addMonth();
-                    break;
-                case 'year':
-                    $unblockAt = $now->copy()->addYear();
-                    break;
-                default:
-                    $unblockAt = null;
-                    break;
+                $profile->account_status = 'حظر مؤقت';
+                $profile->date_of_unblock = $unblockAt;
+            } else {
+                $profile->account_status = 'حظر نهائي';
+                $profile->date_of_unblock = null;
             }
-
-            $profile->account_status = 'حظر مؤقت';
-            $profile->date_of_unblock = $unblockAt;
-        } else {
-            $profile->account_status = 'حظر نهائي';
+        } elseif ($status === 'unblock') {
+            $profile->account_status = 'نشط';
             $profile->date_of_unblock = null;
         }
-    } elseif ($status === 'unblock') {
-        $profile->account_status = 'نشط';
-        $profile->date_of_unblock = null;
+
+        $profile->save();
+        $user->refresh();
+
+        return [
+            'user' => new UserResource($user),
+            'message' => 'user status changed',
+            'code' => 200
+        ];
     }
-
-    $profile->save();
-    $user->refresh();
-
-    return [
-        'user' => new UserResource($user),
-        'message' => 'user status changed',
-        'code' => 200
-    ];
-}
-
-
     public function userActivities($id)
     {
         $user = User::find($id);

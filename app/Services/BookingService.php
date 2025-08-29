@@ -38,8 +38,9 @@ class BookingService
                 return [
                     'message' => "you already reserve this flight",
                     'code'    => 400
-            ];
-        }}
+                ];
+            }
+        }
 
         if($request['number_of_tickets']!=count($request['passengers']))
             return['message'=>"the number of tickets must be equal to size of passengers array",'code'=>400];

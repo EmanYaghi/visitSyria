@@ -34,15 +34,15 @@ class FeedbackService
         $user = Auth::user();
         $code = 201;
         $message = 'added to saves';
-        if (Trip::find($id) && $type == "trip" && ! Save::where('user_id', $user->id)->where('trip_id', $id)->first()) {
+        if (Trip::find($id) && $type == "trip" && !Save::where('user_id', $user->id)->where('trip_id', $id)->first()) {
             $user->saves()->create(["trip_id" => $id]);
-        } else if (Post::find($id) && $type == "post" && ! Save::where('user_id', $user->id)->where('post_id', $id)->first()) {
+        } else if (Post::find($id) && $type == "post" && !Save::where('user_id', $user->id)->where('post_id', $id)->first()) {
             $user->saves()->create(["post_id" => $id]);
-        } else if (Place::find($id) && $type == "place" && ! Save::where('user_id', $user->id)->where('place_id', $id)->first()) {
+        } else if (Place::find($id) && $type == "place" && !Save::where('user_id', $user->id)->where('place_id', $id)->first()) {
             $user->saves()->create(["place_id" => $id]);
-        } else if (Article::find($id) && $type == "article" && ! Save::where('user_id', $user->id)->where('article_id', $id)->first()) {
+        } else if (Article::find($id) && $type == "article" && !Save::where('user_id', $user->id)->where('article_id', $id)->first()) {
             $user->saves()->create(["article_id" => $id]);
-        } else if (Event::find($id) && $type == "event" && ! Save::where('user_id', $user->id)->where('event_id', $id)->first()) {
+        } else if (Event::find($id) && $type == "event" && !Save::where('user_id', $user->id)->where('event_id', $id)->first()) {
             $user->saves()->create(["event_id" => $id]);
         } else {
             $code = 404;
@@ -54,22 +54,22 @@ class FeedbackService
     public function setRatingAndComment(array $payload, $id)
     {
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             return ['message' => 'Unauthenticated', 'code' => 401];
         }
 
         $type = request()->query('type');
         $allowedCommentTypes = [
-            'trip'  => 'trip_id',
+            'trip' => 'trip_id',
             'place' => 'place_id',
-            'post'  => 'post_id',
+            'post' => 'post_id',
         ];
         $allowedRatingTypes = [
-            'trip'  => 'trip_id',
+            'trip' => 'trip_id',
             'place' => 'place_id',
         ];
 
-        if (! isset($allowedCommentTypes[$type])) {
+        if (!isset($allowedCommentTypes[$type])) {
             return ['message' => 'type not supported', 'code' => 400];
         }
 
@@ -83,17 +83,17 @@ class FeedbackService
             default => null,
         };
 
-        if (! $exists) {
+        if (!$exists) {
             return ['message' => 'target not found', 'code' => 404];
         }
 
         $ratingValue = array_key_exists('rating_value', $payload) ? $payload['rating_value'] : null;
-        $body = array_key_exists('body', $payload) ? trim((string)$payload['body']) : null;
+        $body = array_key_exists('body', $payload) ? trim((string) $payload['body']) : null;
 
         $existingRating = $colRating ? Rating::where('user_id', $user->id)->where($colRating, $id)->first() : null;
         $existingComment = Comment::where('user_id', $user->id)->where($colComment, $id)->first();
 
-        if ($body !== null && $body !== '' && $ratingValue === null && ! $existingRating) {
+        if ($body !== null && $body !== '' && $ratingValue === null && !$existingRating) {
             return ['message' => 'Cannot add comment without a rating (either create rating first or include rating_value in this request).', 'code' => 422];
         }
 
@@ -107,16 +107,16 @@ class FeedbackService
                     DB::rollBack();
                     return ['message' => 'rating not supported for this type', 'code' => 400];
                 }
-                $classification = ((int)$ratingValue >= 3) ? 'positive' : 'negative';
+                $classification = ((int) $ratingValue >= 3) ? 'positive' : 'negative';
                 if ($existingRating) {
-                    $existingRating->rating_value = (int)$ratingValue;
+                    $existingRating->rating_value = (int) $ratingValue;
                     $existingRating->classification = $classification;
                     $existingRating->save();
                     $finalRating = $existingRating->fresh();
                 } else {
                     $finalRating = $user->ratings()->create([
                         $colRating => $id,
-                        'rating_value' => (int)$ratingValue,
+                        'rating_value' => (int) $ratingValue,
                         'classification' => $classification,
                     ]);
                 }
@@ -215,7 +215,7 @@ class FeedbackService
             $saves = TripResource::collection($trips);
         } else if ($type == "post") {
             $posts = $user->saves()->whereNotNull('post_id')->with('post')->get()->pluck('post');
-            $saves =PostResource::collection($posts);
+            $saves = PostResource::collection($posts);
         } else if ($type == "restaurant") {
             $places = $user->saves()->whereNotNull('place_id')->with('place')->get()->pluck('place');
             $places = $places->filter(fn($place) => $place->type === 'restaurant');
@@ -251,13 +251,13 @@ class FeedbackService
         $message = "set rating successfully";
         $code = 201;
         $allowedTypes = [
-            'trip'  => 'trip_id',
+            'trip' => 'trip_id',
             'place' => 'place_id',
         ];
         if (!isset($allowedTypes[$type])) {
             return [
                 "message" => "the type is not correct",
-                "code"    => 400
+                "code" => 400
             ];
         }
         $column = $allowedTypes[$type];
@@ -280,13 +280,13 @@ class FeedbackService
         $user = Auth::user();
         $type = request()->query('type');
         $allowedTypes = [
-            'trip'  => 'trip_id',
+            'trip' => 'trip_id',
             'place' => 'place_id',
         ];
         if (!isset($allowedTypes[$type])) {
             return [
                 "message" => "the type is not correct",
-                "code"    => 400
+                "code" => 400
             ];
         }
         $column = $allowedTypes[$type];
@@ -304,14 +304,14 @@ class FeedbackService
         $message = "set comment successfully";
         $code = 201;
         $allowedTypes = [
-            'trip'  => 'trip_id',
+            'trip' => 'trip_id',
             'place' => 'place_id',
-            'post'  => 'post_id'
+            'post' => 'post_id'
         ];
         if (!isset($allowedTypes[$type])) {
             return [
                 "message" => "the type is not correct",
-                "code"    => 400,
+                "code" => 400,
             ];
         }
         $column = $allowedTypes[$type];
@@ -333,105 +333,106 @@ class FeedbackService
         return ["message" => $message, "code" => $code];
     }
 
-   public function getFeedback($id)
-{
-    $type = request()->query('type');
-    $ratingFilter = strtolower((string) request()->query('rating', 'all'));
-    $allowedFilterValues = ['all', 'positive', 'negative'];
-    if (!in_array($ratingFilter, $allowedFilterValues, true)) {
-        $ratingFilter = 'all';
-    }
-    $allowedTypes = [
-        'trip'    => 'trip_id',
-        'place'   => 'place_id',
-        'post'    => 'post_id',
-        'event'   => 'event_id',
-        'article' => 'article_id',
-    ];
-    if (!isset($allowedTypes[$type])) {
-        return ['message' => 'type not supported', 'code' => 400];
-    }
-    $column = $allowedTypes[$type];
-    $comments = Comment::where($column, $id)
-        ->with(['user.profile', 'user.media'])
-        ->orderByDesc('created_at')
-        ->get();
-    $userIds = $comments->pluck('user_id')->filter()->unique()->values()->all();
-    $ratingsByUser = collect([]);
-    if (in_array($type, ['trip', 'place'], true) && !empty($userIds)) {
-        $ratingsByUser = Rating::where($column, $id)
-            ->whereIn('user_id', $userIds)
-            ->get()
-            ->keyBy('user_id');
-    }
-    $filtered = $comments->filter(function ($c) use ($ratingsByUser, $ratingFilter) {
-        if ($ratingFilter === 'all') return true;
-        $r = $ratingsByUser->get($c->user_id);
-        return $r && $r->classification === $ratingFilter;
-    })->values();
-    $result = $filtered->map(function ($c) use ($ratingsByUser) {
-        $user = $c->user;
-        $name = null;
-        $photo = null;
-        if ($user) {
-            if (isset($user->profile) && ($user->profile->first_name || $user->profile->last_name)) {
-                $first = trim((string)($user->profile->first_name ?? ''));
-                $last = trim((string)($user->profile->last_name ?? ''));
-                $name = trim("$first $last");
-            }
-            if (empty($name) && !empty($user->name)) {
-                $name = $user->name;
-            }
-            if (empty($name)) {
-                $name = $user->email ?? null;
-            }
-
-            // FIX: احصل على قيمة string مباشرة — لا تستخدم nested optional() بشكل خاطئ
-            $photo = optional($user->profile)->photo ?? optional($user->media->first())->url ?? null;
-
-            if (!empty($photo) && !filter_var($photo, FILTER_VALIDATE_URL)) {
-                if (!is_string($photo)) {
-                    $photo = (string) $photo;
-                }
-                try {
-                    $photo = Storage::url($photo);
-                } catch (\Throwable $e) {
-                    $photo = url('/storage/' . ltrim((string)$photo, '/'));
-                }
-            }
+    public function getFeedback($id)
+    {
+        $type = request()->query('type');
+        $ratingFilter = strtolower((string) request()->query('rating', 'all'));
+        $allowedFilterValues = ['all', 'positive', 'negative'];
+        if (!in_array($ratingFilter, $allowedFilterValues, true)) {
+            $ratingFilter = 'all';
         }
-        $userRating = $ratingsByUser->get($user->id ?? null);
-        return [
-            'id' => $c->id,
-            'body' => $c->body,
-            'user' => [
-                'id' => $user->id ?? null,
-                'name' => $name,
-                'profile_photo' => $photo,
-            ],
-            'user_rating' => $userRating ? [
-                'id' => $userRating->id,
-                'rating_value' => (int) $userRating->rating_value,
-                'classification' => $userRating->classification,
-            ] : null,
-            'created_at' => optional($c->created_at)->format('Y-m-d'),
+        $allowedTypes = [
+            'trip' => 'trip_id',
+            'place' => 'place_id',
+            'post' => 'post_id',
+            'event' => 'event_id',
+            'article' => 'article_id',
         ];
-    })->values();
-    return [
-        'comments' => $result,
-        'code' => 200
-    ];
-}
+        if (!isset($allowedTypes[$type])) {
+            return ['message' => 'type not supported', 'code' => 400];
+        }
+        $column = $allowedTypes[$type];
+        $comments = Comment::where($column, $id)
+            ->with(['user.profile', 'user.media'])
+            ->orderByDesc('created_at')
+            ->get();
+        $userIds = $comments->pluck('user_id')->filter()->unique()->values()->all();
+        $ratingsByUser = collect([]);
+        if (in_array($type, ['trip', 'place'], true) && !empty($userIds)) {
+            $ratingsByUser = Rating::where($column, $id)
+                ->whereIn('user_id', $userIds)
+                ->get()
+                ->keyBy('user_id');
+        }
+        $filtered = $comments->filter(function ($c) use ($ratingsByUser, $ratingFilter) {
+            if ($ratingFilter === 'all')
+                return true;
+            $r = $ratingsByUser->get($c->user_id);
+            return $r && $r->classification === $ratingFilter;
+        })->values();
+        $result = $filtered->map(function ($c) use ($ratingsByUser) {
+            $user = $c->user;
+            $name = null;
+            $photo = null;
+            if ($user) {
+                if (isset($user->profile) && ($user->profile->first_name || $user->profile->last_name)) {
+                    $first = trim((string) ($user->profile->first_name ?? ''));
+                    $last = trim((string) ($user->profile->last_name ?? ''));
+                    $name = trim("$first $last");
+                }
+                if (empty($name) && !empty($user->name)) {
+                    $name = $user->name;
+                }
+                if (empty($name)) {
+                    $name = $user->email ?? null;
+                }
+
+                // FIX: احصل على قيمة string مباشرة — لا تستخدم nested optional() بشكل خاطئ
+                $photo = optional($user->profile)->photo ?? optional($user->media->first())->url ?? null;
+
+                if (!empty($photo) && !filter_var($photo, FILTER_VALIDATE_URL)) {
+                    if (!is_string($photo)) {
+                        $photo = (string) $photo;
+                    }
+                    try {
+                        $photo = Storage::url($photo);
+                    } catch (\Throwable $e) {
+                        $photo = url('/storage/' . ltrim((string) $photo, '/'));
+                    }
+                }
+            }
+            $userRating = $ratingsByUser->get($user->id ?? null);
+            return [
+                'id' => $c->id,
+                'body' => $c->body,
+                'user' => [
+                    'id' => $user->id ?? null,
+                    'name' => $name,
+                    'profile_photo' => $photo,
+                ],
+                'user_rating' => $userRating ? [
+                    'id' => $userRating->id,
+                    'rating_value' => (int) $userRating->rating_value,
+                    'classification' => $userRating->classification,
+                ] : null,
+                'created_at' => optional($c->created_at)->format('Y-m-d'),
+            ];
+        })->values();
+        return [
+            'comments' => $result,
+            'code' => 200
+        ];
+    }
 
     public function toggleLike(int $postId)
     {
         $user = Auth::user();
-        if (! $user) {
+        if (!$user) {
             return ['message' => 'Unauthenticated', 'code' => 401];
         }
 
         $post = Post::find($postId);
-        if (! $post) {
+        if (!$post) {
             return ['message' => 'Post not found', 'code' => 404];
         }
 
@@ -453,69 +454,76 @@ class FeedbackService
         });
     }
 
-   public function search($type, $sub)
+    public function search($type, $sub)
     {
         $user = Auth::user();
         $isClient = !$user || $user->hasRole('client');
         $isAdmin = $user->hasRole('admin');
         switch ($type) {
             case 'event':
-                $query = Event::where('name','LIKE',"%$sub%");
-                if ($isClient) $query->where('date','>', now()) ->whereColumn('tickets', '>', 'reserved_tickets');
+                $query = Event::where('name', 'LIKE', "%$sub%");
+                if ($isClient)
+                    $query->where('date', '>', now())->whereColumn('tickets', '>', 'reserved_tickets');
                 $results = $query->get();
                 $resource = EventResource::class;
-                if($isAdmin) $results=[];
+                if ($isAdmin)
+                    $results = [];
                 break;
             case 'trip':
-                $query = Trip::where('name','LIKE',"%$sub%");
-                if ($isClient) $query->where('start_date','>', now()) ->whereColumn('tickets', '>', 'reserved_tickets');
+                $query = Trip::where('name', 'LIKE', "%$sub%");
+                if ($isClient)
+                    $query->where('start_date', '>', now())->whereColumn('tickets', '>', 'reserved_tickets');
                 $results = $query->get();
                 $resource = TripResource::class;
-                if($isAdmin) $results=[];
+                if ($isAdmin)
+                    $results = [];
                 break;
             case 'tourist':
             case 'restaurant':
             case 'hotel':
                 $results = Place::where('type', $type)
-                    ->where('name','LIKE',"%$sub%")
+                    ->where('name', 'LIKE', "%$sub%")
                     ->get();
                 $resource = PlaceResource::class;
                 break;
             case 'article':
-                $results = Article::where('title','LIKE',"%$sub%")->get();
+                $results = Article::where('title', 'LIKE', "%$sub%")->get();
                 $resource = ArticleResource::class;
-                if($isAdmin) $results=[];
+                if ($isAdmin)
+                    $results = [];
                 break;
             case 'company':
                 if ($isClient) {
-                    $results = AdminProfile::with('user')->where('name_of_company','LIKE',"%$sub%")->get()->pluck('user');
+                    $results = AdminProfile::with('user')->where('name_of_company', 'LIKE', "%$sub%")->get()->pluck('user');
                     $resource = CompanyResource::class;
-                }
-                else  if($isAdmin) $results=[];
-                else{
-                    $results = AdminProfile::with('user')->where('name_of_company','LIKE',"%$sub%")->get();
-                    $resource=AdminProfileResource::class;
+                } else if ($isAdmin)
+                    $results = [];
+                else {
+                    $results = AdminProfile::with('user')->where('name_of_company', 'LIKE', "%$sub%")->get();
+                    $resource = AdminProfileResource::class;
                 }
                 break;
             case 'post':
-                $results = Post::where('description','LIKE',"%$sub%")->get();
+                $results = Post::where('description', 'LIKE', "%$sub%")->get();
                 $resource = PostResource::class;
-                if($isAdmin) $results=[];
+                if ($isAdmin)
+                    $results = [];
                 break;
             case 'user':
                 $results = Profile::where('first_name', 'LIKE', "%$sub%")->orWhere('last_name', 'LIKE', "%$sub%")->get();
                 $results = $results->map(fn($profile) => $profile->user);
                 $resource = UserResource::class;
-                if($isClient||$isAdmin) $results=[];
+                if ($isClient || $isAdmin)
+                    $results = [];
                 break;
             default:
-                return ['results'=>[], 'message'=>'invalid type', 'code'=>400];
+                return ['results' => [], 'message' => 'invalid type', 'code' => 400];
         }
 
         return [
             'results' => $resource::collection($results),
             'message' => 'this is all results',
-            'code'    => 200,
+            'code' => 200,
         ];
 
     }
