@@ -29,71 +29,71 @@ class EventService
     }
 
     public function getAllEvents()
-{
-    $events = $this->eventRepository->getAll();
-    $now = Carbon::now();
-    $events = $events->filter(function ($e) use ($now) {
-        if (!empty($e->status) && $e->status === 'cancelled') {
-            return false;
-        }
-        $start = null;
-        try {
-            if ($e->date instanceof Carbon) {
-                $start = $e->date;
-            } elseif (!empty($e->date)) {
-                $start = Carbon::parse($e->date);
-            }
-        } catch (\Throwable $ex) {
-            $start = null;
-        }
-
-        $days  = intval($e->duration_days ?? 0);
-        $hours = intval($e->duration_hours ?? 0);
-
-        if ($start) {
-            $end = (clone $start)->addDays($days)->addHours($hours);
-            if (! $now->lt($start)) {
+    {
+        $events = $this->eventRepository->getAll();
+        $now = Carbon::now();
+        $events = $events->filter(function ($e) use ($now) {
+            if (!empty($e->status) && $e->status === 'cancelled') {
                 return false;
             }
+            $start = null;
+            try {
+                if ($e->date instanceof Carbon) {
+                    $start = $e->date;
+                } elseif (!empty($e->date)) {
+                    $start = Carbon::parse($e->date);
+                }
+            } catch (\Throwable $ex) {
+                $start = null;
+            }
+
+            $days  = intval($e->duration_days ?? 0);
+            $hours = intval($e->duration_hours ?? 0);
+
+            if ($start) {
+                $end = (clone $start)->addDays($days)->addHours($hours);
+                if (! $now->lt($start)) {
+                    return false;
+                }
+            }
+
+            $ticketsTotal = isset($e->tickets) && $e->tickets !== null ? (int) $e->tickets : null;
+            $reserved = isset($e->reserved_tickets) ? (int) $e->reserved_tickets : 0;
+
+            if ($ticketsTotal !== null) {
+                $remaining = max($ticketsTotal - $reserved, 0);
+                return $remaining > 0;
+            }
+
+            return true;
+        });
+        $tokenPresent = (bool) request()->bearerToken();
+        $user = $tokenPresent ? auth('api')->user() : null;
+
+
+        if ($user) {
+            $events = $events->filter(function ($event) use ($user) {
+                return ! $event->bookings()->where('user_id', $user->id)->exists();
+            })->values();
         }
 
-        $ticketsTotal = isset($e->tickets) && $e->tickets !== null ? (int) $e->tickets : null;
-        $reserved = isset($e->reserved_tickets) ? (int) $e->reserved_tickets : 0;
-
-        if ($ticketsTotal !== null) {
-            $remaining = max($ticketsTotal - $reserved, 0);
-            return $remaining > 0;
+        if ($user) {
+            $events->load(['saves' => function ($q) use ($user) {
+                $q->where('user_id', $user->id)->whereNotNull('event_id');
+            }]);
         }
 
-        return true;
-    });
-    $tokenPresent = (bool) request()->bearerToken();
-    $user = $tokenPresent ? auth('api')->user() : null;
-
-
-    if ($user) {
-        $events = $events->filter(function ($event) use ($user) {
-            return ! $event->bookings()->where('user_id', $user->id)->exists();
+        return $events->map(function ($event) use ($user) {
+            if (! $user) {
+                $event->is_saved = null;
+            } else {
+                $event->is_saved = (bool) ($event->relationLoaded('saves')
+                    ? $event->saves->isNotEmpty()
+                    : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
+            }
+            return $event;
         })->values();
     }
-
-    if ($user) {
-        $events->load(['saves' => function ($q) use ($user) {
-            $q->where('user_id', $user->id)->whereNotNull('event_id');
-        }]);
-    }
-
-    return $events->map(function ($event) use ($user) {
-        if (! $user) {
-            $event->is_saved = null;
-        } else {
-            $event->is_saved = (bool) ($event->relationLoaded('saves')
-                ? $event->saves->isNotEmpty()
-                : $event->saves()->where('user_id', $user->id)->whereNotNull('event_id')->exists());
-        }
-        return $event;
-    })->values();
-}
 
 
     public function getAllEventsForAdmin()
@@ -177,103 +177,103 @@ class EventService
     }
 
     public function updateEvent(Request $request, $id)
-{
-    $this->checkAuthorization();
+    {
+        $this->checkAuthorization();
 
-    $event = $this->eventRepository->find($id);
-    if (! $event) {
-        throw new NotFoundHttpException('Event not found.');
-    }
+        $event = $this->eventRepository->find($id);
+        if (! $event) {
+            throw new NotFoundHttpException('Event not found.');
+        }
 
-    $data = $request->validated();
-    if (isset($data['status'])) {
-        $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
-    }
+        $data = $request->validated();
+        if (isset($data['status'])) {
+            $data['status'] = ($data['status'] === 'cancelled') ? 'cancelled' : 'active';
+        }
 
-    $updatedEvent = $this->eventRepository->update($event, $data);
+        $updatedEvent = $this->eventRepository->update($event, $data);
 
-    $updatedEvent->load('media');
+        $updatedEvent->load('media');
 
-    $oldImagesInput = $request->input('old_images', []);
-    $oldImagesInput = is_array($oldImagesInput) ? array_filter(array_map('trim', $oldImagesInput)) : [];
+        $oldImagesInput = $request->input('old_images', []);
+        $oldImagesInput = is_array($oldImagesInput) ? array_filter(array_map('trim', $oldImagesInput)) : [];
 
-    $kept = [];
-    foreach ($updatedEvent->media as $media) {
-        $rawPath = (string) $media->url;
-        $storageUrl = null;
-        try {
-            $storageUrl = Storage::disk('public')->url(ltrim($rawPath, '/'));
-        } catch (\Throwable $e) {
+        $kept = [];
+        foreach ($updatedEvent->media as $media) {
+            $rawPath = (string) $media->url;
             $storageUrl = null;
-        }
-        $appUrlVariant = url('/' . ltrim($rawPath, '/'));
-        $basename = pathinfo($rawPath, PATHINFO_BASENAME);
-
-        $shouldKeep = false;
-        foreach ($oldImagesInput as $old) {
-            if ($old === '') continue;
-            if ($old === $rawPath) {
-                $shouldKeep = true;
-                break;
-            }
-            if ($storageUrl && $old === $storageUrl) {
-                $shouldKeep = true;
-                break;
-            }
-            if ($old === $appUrlVariant) {
-                $shouldKeep = true;
-                break;
-            }
-            if (basename($old) === $basename) {
-                $shouldKeep = true;
-                break;
-            }
-        }
-
-        if ($shouldKeep) {
-            $kept[] = $media;
-        }
-    }
-
-    foreach ($updatedEvent->media as $media) {
-        $isKept = false;
-        foreach ($kept as $k) {
-            if ($k->id === $media->id) {
-                $isKept = true;
-                break;
-            }
-        }
-        if (! $isKept) {
             try {
-                Storage::disk('public')->delete($media->url);
+                $storageUrl = Storage::disk('public')->url(ltrim($rawPath, '/'));
             } catch (\Throwable $e) {
-
+                $storageUrl = null;
             }
-            $media->delete();
+            $appUrlVariant = url('/' . ltrim($rawPath, '/'));
+            $basename = pathinfo($rawPath, PATHINFO_BASENAME);
+
+            $shouldKeep = false;
+            foreach ($oldImagesInput as $old) {
+                if ($old === '') continue;
+                if ($old === $rawPath) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if ($storageUrl && $old === $storageUrl) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if ($old === $appUrlVariant) {
+                    $shouldKeep = true;
+                    break;
+                }
+                if (basename($old) === $basename) {
+                    $shouldKeep = true;
+                    break;
+                }
+            }
+
+            if ($shouldKeep) {
+                $kept[] = $media;
+            }
         }
+
+        foreach ($updatedEvent->media as $media) {
+            $isKept = false;
+            foreach ($kept as $k) {
+                if ($k->id === $media->id) {
+                    $isKept = true;
+                    break;
+                }
+            }
+            if (! $isKept) {
+                try {
+                    Storage::disk('public')->delete($media->url);
+                } catch (\Throwable $e) {
+
+                }
+                $media->delete();
+            }
+        }
+
+        $currentKeptCount = count($kept);
+        $maxTotal = 4;
+        $allowedNew = max($maxTotal - $currentKeptCount, 0);
+
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            if (count($images) > $allowedNew) {
+                throw new \InvalidArgumentException("Cannot upload more than {$allowedNew} new image(s). Total images cannot exceed {$maxTotal}.");
+            }
+
+            foreach ($images as $image) {
+                $path = $image->store('events', 'public');
+                $updatedEvent->media()->create([
+                    'event_id' => $updatedEvent->id,
+                    'url' => $path,
+                ]);
+            }
+        }
+
+        return $this->eventRepository->findWithMedia($updatedEvent->id);
     }
-
-    $currentKeptCount = count($kept);
-    $maxTotal = 4;
-    $allowedNew = max($maxTotal - $currentKeptCount, 0);
-
-    if ($request->hasFile('images')) {
-        $images = $request->file('images');
-        if (count($images) > $allowedNew) {
-            throw new \InvalidArgumentException("Cannot upload more than {$allowedNew} new image(s). Total images cannot exceed {$maxTotal}.");
-        }
-
-        foreach ($images as $image) {
-            $path = $image->store('events', 'public');
-            $updatedEvent->media()->create([
-                'event_id' => $updatedEvent->id,
-                'url' => $path,
-            ]);
-        }
-    }
-
-    return $this->eventRepository->findWithMedia($updatedEvent->id);
-}
 
     public function deleteEvent($id)
     {

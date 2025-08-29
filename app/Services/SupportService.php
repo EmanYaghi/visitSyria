@@ -41,9 +41,9 @@ class SupportService
         ];
     }
 
-public function monthlyRatingsCounts(?int $year = null): array
-{
-    return $this->repo->getMonthlyRatingsCounts($year);
-}
+    public function monthlyRatingsCounts(?int $year = null): array
+    {
+        return $this->repo->getMonthlyRatingsCounts($year);
+    }
 
 }

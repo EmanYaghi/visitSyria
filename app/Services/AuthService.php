@@ -404,7 +404,6 @@ class AuthService
         return ['adminProfile'=>new companyWithEarningResource($user->adminProfile),'message'=>$message,'code'=>$code];
     }
 
-
     public function registerCompanyBySuperAdmin( $request)
     {
         $superAdmin = Auth::user();
