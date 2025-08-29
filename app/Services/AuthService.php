@@ -417,7 +417,9 @@ class AuthService
         $user=User::create([
             'email'=>$request['email'],
             'password'=>Hash::make(Str::random(12)),
-            'status'=>'accept'
+            'status'=>'accept',
+            'email_verified_at'=>now(),
+            'is_verified'=>true,
         ]);
         if (isset($request['documents']) && is_array($request['documents'])) {
             foreach ($request['documents'] as $document) {

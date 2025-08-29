@@ -190,7 +190,6 @@ class TripService
     {
         $tokenPresent = (bool) request()->bearerToken();
         $user = $tokenPresent ? Auth::user() : null;
-
         if (!$user || ($user && $user->hasRole('client'))) {
             $tag = request()->query('tag');
             if ($tag == "الكل") {
@@ -228,8 +227,8 @@ class TripService
             $code = 200;
             $message = 'this is all trips for company' . $id;
         } else {
-            $trips = null;
-            $code = 404;
+            $trips = [];
+            $code = 200;
             $message = 'not found any trip for company' . $id;
         }
         return ['trips' => $trips, 'message' => $message, 'code' => $code];
@@ -256,8 +255,8 @@ class TripService
             $code = 200;
             $message = 'this is all trips that it has an offer';
         } else {
-            $trips = null;
-            $code = 404;
+            $trips = [];
+            $code = 200;
             $message = 'not found any trip with offer';
         }
         return ['trips' => $trips, 'message' => $message, 'code' => $code];
@@ -276,9 +275,9 @@ class TripService
         $tagIds = $currentTrip->tags->pluck('tag_name_id')->toArray();
         if (empty($tagIds)) {
             return [
-                'trips' => null,
+                'trips' => [],
                 'message' => 'No tags for this trip',
-                'code' => 404
+                'code' => 200
             ];
         }
         $similarTripsData = Trip::select(
@@ -297,9 +296,9 @@ class TripService
 
         if ($similarTripsData->isEmpty()) {
             return [
-                'trips' => null,
+                'trips' => [],
                 'message' => 'No similar trips found',
-                'code' => 404
+                'code' => 200
             ];
         }
         $similarTrips = Trip::with(['tags.tagName', 'media', 'user'])

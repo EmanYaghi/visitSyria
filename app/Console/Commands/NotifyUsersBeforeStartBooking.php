@@ -22,7 +22,7 @@ class NotifyUsersBeforeStartBooking extends Command
         foreach ($trips as $trip) {
             foreach ($trip->bookings->where('is_paid', true) as $booking) {
                 if ($booking->user) {
-                    SendNotificationJob::dispatch(
+                    app(\App\Services\NotificationService::class)->send(
                         $booking->user,
                         'تذكير بالرحلة',
                         "رحلتك إلى {$trip->name} غداً ({$trip->start_date->format('Y-m-d H:i')})"
